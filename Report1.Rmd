@@ -17,10 +17,49 @@ When you save the notebook, an HTML file containing the code and output will be 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
+```{r}
+
+library(janitor)
+library(dplyr)
+library(tibble)
+library(readr)
+library(markdown)
+
+# Part 1
+# Load the data and answer the following questions:
+
+students <- read_csv("students.csv")
+# View(students)
+student_clean <- clean_names(students)
+view(student_clean)
+
+# What is the total number of answers obtained from students? 
+names(student_clean)
+
+student_clean %>% 
+  mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>% 
+  summarise(answers_all = sum(total_answers))
+
+```
+Total number of answers obtained from students
+
+```{r}
+
+professors <- read_csv("professors.csv")
+professors_clean <- clean_names(professors)
+view(professors_clean)
+glimpse(student_clean)
+glimpse(professors_clean)
+names(professors_clean)
+
+professors_clean %>% 
+mutate(total_answers_pros = totally_disagree + disagree + agree + totally_agree) %>% 
+    summarise(answer_all_pros = sum(total_answers_pros))
+
+```
+What is the total number of answers obtained from professors?
 
 
-
-
-
+# Does each question have the same number of answers?
 
 
