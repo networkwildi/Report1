@@ -27,18 +27,17 @@ library(markdown)
 
 # Part 1
 # Load the data and answer the following questions:
+students <- read_csv("students.csv")                                           # read the file
 
-students <- read_csv("students.csv")
-# View(students)
-student_clean <- clean_names(students)
-view(student_clean)
+student_clean <- clean_names(students) %>%                                     # clean names
+  select(question = x1,everything()) %>%                                       # rename x1
+ mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) # summarise row
+
 
 # What is the total number of answers obtained from students? 
-names(student_clean)
 
 student_clean %>% 
-  mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>% 
-  summarise(answers_all = sum(total_answers))
+  summarise(answers_all = sum(total_answers))                   # summarise the total of all answers
 
 ```
 Total number of answers obtained from students
@@ -46,20 +45,64 @@ Total number of answers obtained from students
 ```{r}
 
 professors <- read_csv("professors.csv")
-professors_clean <- clean_names(professors)
-view(professors_clean)
-glimpse(student_clean)
-glimpse(professors_clean)
-names(professors_clean)
 
-professors_clean %>% 
-mutate(total_answers_pros = totally_disagree + disagree + agree + totally_agree) %>% 
-    summarise(answer_all_pros = sum(total_answers_pros))
+professors_clean <- clean_names(professors) %>% 
+select(question = x1,everything()) %>%                                       # rename x1
+ mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) # summarise row
 
 ```
 What is the total number of answers obtained from professors?
+```{r}
+professors_clean %>% 
+    summarise("Total anwers of all professors" = sum(total_answers))
+
+```
 
 
-# Does each question have the same number of answers?
+```{r}
+
+# glimpse(student_clean)
+# glimpse(professors_clean)
+
+
+student_clean %>%
+pull(total_answers) %>%
+unique
+
+```
+Does each question have the same number of answers?
+```{r}
+
+professors_clean %>% 
+  pull(total_answers) %>% 
+  unique()
+
+
+```
+Does each question have the same number of answers?
+
+Part 2
+Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.
+```{r}
+
+
+
+
+
+
+```
+
+Part 3
+With Likert scale data, we cannot use the mean as a measure of central tendency as it has no meaning (i.e. what is the average of strongly agree and disagree?).
+
+The most appropriate measure of central tendency is the mode. Compute the mode for the students and professors for each of the questions
+
+
+```{r}
+
+
+
+
+```
 
 
