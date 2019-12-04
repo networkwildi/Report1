@@ -17,7 +17,20 @@ When you save the notebook, an HTML file containing the code and output will be 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
-```{r}
+
+Code Snippets
+glimpse(student_)
+glimpse(professors_)
+rlang::last_error()
+rlang::last_trace()
+
+
+
+# Part 1
+## Load the data and answer the following questions:
+```{r include=FALSE, echo=FALSE, warning=FALSE}                    
+# surpess warings
+# no visible result output
 
 library(janitor)
 library(dplyr)
@@ -25,84 +38,326 @@ library(tibble)
 library(readr)
 library(markdown)
 
-# Part 1
-# Load the data and answer the following questions:
-students <- read_csv("students.csv")                                           # read the file
 
-student_clean <- clean_names(students) %>%                                     # clean names
-  select(question = x1,everything()) %>%                                       # rename x1
- mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) # summarise row
+students <- read_csv("students.csv")                                                  # read the file
+students_clean <- clean_names(students) %>%                                            #  names, crate new value
+  select(question = x1,everything()) %>%                                       # rename x1, select all collumns
+ mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%     # add column, summarise row
+write_csv("students_clean.csv")                                                         # crate new csv for late use
+# view(students)
 
+```
+## What is the total number of answers obtained from students? 
+```{r}
 
-# What is the total number of answers obtained from students? 
+library(janitor)
+library(dplyr)
+library(tibble)
+library(markdown)
+
 
 student_clean %>% 
-  summarise(answers_all = sum(total_answers))                   # summarise the total of all answers
-
-```
-Total number of answers obtained from students
-
-```{r}
-
-professors <- read_csv("professors.csv")
-
-professors_clean <- clean_names(professors) %>% 
-select(question = x1,everything()) %>%                                       # rename x1
- mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) # summarise row
-
-```
-What is the total number of answers obtained from professors?
-```{r}
-professors_clean %>% 
-    summarise("Total anwers of all professors" = sum(total_answers))
-
+  summarise(answers_all = sum(total_answers)) %>% 
+  paste("    The total number of answers obtained from students?  ")
+  
 ```
 
 
-```{r}
+```{r include=FALSE, echo=FALSE, warning=FALSE}
 
-# glimpse(student_clean)
-# glimpse(professors_clean)
+# surpess warings
+# no visible result output
 
+library(tidyselect)
+library(dplyr)
+library(readr)
+library(markdown)
+library(tidyr)
+library(janitor)
+library(purrr)
+library(tibble)
+library(ggplot2)
 
-student_clean %>%
-pull(total_answers) %>%
-unique
+  professors <- read_csv("professors.csv")                                            # read the file
+professors_clean <- clean_names(professors) %>%                                       #  names, create new val
+  select(question = x1,everything()) %>%                                              # rename x1, select all cols
+ mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%    # create col, summarise row
+  write_csv("professors_clean.csv")                                                   # write a new csv for later use
 
 ```
-Does each question have the same number of answers?
+##  What is the total number of answers obtained from professors?
 ```{r}
 
-professors_clean %>% 
+library(markdown)
+
+professors_clean %>%                                                      # calling data
+  summarise(anwers_allpros = sum(total_answers)) %>%                      # summarising column
+  paste("  The total number of answers obtained from professors ")        # supporting result with text
+  
+```
+
+
+```{r}
+
+
+# library(stringr)
+# library(magrittr)
+
+student_same_amount <- student_clean %>%                                       # create a new val
+pull(total_answers) %>%                                                        # pull value
+unique                                                                         # filter not even val
+  
+
+amount_answers <- c(" Not all questions did get the same amount of anwers  "  )  # creat vector
+# amount_answers                                                                 # run vector 
+
+answer <- c(amount_answers , student_same_amount)                         # combine two vec
+answer                                                                         # run single vec
+
+
+
+```
+
+
+### Does each question have the same number of answers?
+
+```{r}
+
+# rmarkdown::render()
+# LASSEN WIR SO !!!!!!!
+
+library(shiny)
+library(stringr)
+library(glue)
+library(dplyr)
+
+# paste("Not all anwers have the same amount") %>%  
+
+professors_same_amount <- professors_clean %>% 
   pull(total_answers) %>% 
-  unique()
+    unique()
 
+pro_answers <-  c(" Not all anwers have the same amount.  "  )  
+pro_answer_comb <- c(pro_answers, professors_same_amount)
+  pro_answer_comb 
+ 
+
+ 
 
 ```
-Does each question have the same number of answers?
 
-Part 2
-Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.
+
+## Part 2
+### Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.
+```{r}
+
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(plotly)
+library(tibble)
+library(tidyr)
+
+pprofessors_ <-professors_ %>% 
+  select(question, p_totally_disagree = totally_disagree, p_disagree = disagree, p_agree = agree, p_totally_agree = totally_agree )
+
+sstudent_clean <- student_ %>% 
+  select(totally_disagree, disagree, agree, totally_agree)
+view(sstudent_)
+
+studs_pros <- merge(pprofessors_,sstudent_)
+view(studs_pros)
+# plot(studs_pros)
+
+bar_stud_pros <- bind_cols(pprofessors_, sstudent_) %>% 
+  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
+  group_by(question)
+view(bar_stud_pros)
+# plot(bar_stud_pros)
+
+
+bar_stud_pros <- bind_cols(pprofessors_, sstudent_) %>% 
+  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
+  group_by(question)
+# plot(bar_stud_pros)
+
+
+
+##
+# df <- data.frame(trt = c("a", "b", "c"), outcome = c(2.3, 1.9, 3.2))
+# ggplot(df, aes(trt, outcome)) +
+  #geom_col()
+##
+
+# <---------------
+
+library(cowsay)
+library(dplyr)
+
+question_x <- student_
+question_colls <- select(student_, question)
+view(question_x)
+view(question_colls)
+
+
+ggplot(data = bar_stud_pros )+
+    geom_bar(mapping = aes(x = bar_stud_pros , y = question_colls ))+
+#    ggplot(bar_stud_pros, aes(x=Pteal.Length)) + geom_historgram()+
+  labs(title = "Students and professors comapred", x = "Students and Professors", y="questions")
+
+bar_stud_pros %>% 
+ggplot(data, aes(x=group, y=value, fill=group))+
+  geom_boxplot()+
+  labs(title="boxplot of student scores")+
+  theme_classic()
+
+bar_stud_pros %>% 
+ggplot(data, aes_(x=group)) + 
+  geom_boxplot() +
+  labs(title="Box plots of student scores") +
+  theme_classic()
+
+mean(bar_stud_pros)
+
+?aes
+help(aes)  
+
+bar_stud_pros %>% 
+  ggplot(mapping = aes(x = "totally_disagree",y = question))+
+           geom_bar(mapping = aes, data = bar_stud_pros, stat = "count",
+  position = "stack", 1, width = NULL, binwidth = NULL,
+  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+  view(bar_stud_pros)
+  
+  bar_stud_pros %>% 
+  geom_col(mapping = aes(), data = NULL, position = "stack", x,
+  width = NULL, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
+  
+  bar_stud_pros %>% 
+    ggplot(mapping = aes(x = question)+
+             geom_col(stat = "identity"))
+
+glimpse(studs_pros)
+
+# ggplot(bar_stud_pros, aes(class))+
+ # geom_bar()
+
+
+ggplot(mtcars, aes(x = factor(cyl)))+
+  geom_bar()
+view(mtcars)
+
+```
+
+## Part 3
+### With Likert scale data, we cannot use the mean as a measure of central tendenceley as it has no meaning 
+###(i.e. what is the average of strongly agree and disagree?).
+
 ```{r}
 
 
+library(dplyr)
+library(tidyselect)
+library(tidyverse)
+library(tidyr)
+library(janitor)
+library(rlang) 
+library(rlang)
+library(datapasta)
+library(tidyr)
+library(tibble)
+library(readr)
+library(dplyr)
+library(lubridate)
+library(janitor)
+library(cowsay)
+         
+tagree_agree_av <-student_clean %>% 
+select(totally_agree,disagree) %>% 
+    mutate(average = (totally_agree + disagree) / 2)
+  
+total_average <- tagree_agree_av %>% 
+  select(average) %>% 
+summarise(average_sum = sum(average))
+
+total_toal <- c(total_average / 32)    
+
+the_total_is <- c("The total average of totally_agree and disagree is  ")
+answer_average <- c(the_total_is, total_toal)
+answer_average
 
 
+  # student_clean
+# Funktioniert !!! 
+    #totally_agrs <- c(filter(select(student_clean, totally_agree, disagree)))
+    # totally_agrs
+    # totally_agrss <- select(student_clean, totally_agree, disagree)
+    # totally_agrss
+  
 
+# https://achilleaskostoulas.com/2013/02/13/on-likert-scales-ordinal-data-and-mean-values/
+# https://measuringu.com/mean-ordinal/
+# https://rcompanion.org/handbook/E_01.html
+# https://ourcodingclub.github.io/2018/01/29/qualitative.html
+# https://www.princeton.edu/~otorres/sessions/s2r.pdf
+# https://data.library.virginia.edu/using-and-interpreting-cronbachs-alpha/
+# https://learningstatisticswithr.com/lsr-0.6.pdf
+# https://learningstatisticswithr.com/book/datahandling.html
+# http://guianaplants.stir.ac.uk/seminar/resources/R_in_a_Nutshell_Second_Edition.pdf
+# https://cran.r-project.org/web/packages/umx/umx.pdf
 
 ```
-
-Part 3
-With Likert scale data, we cannot use the mean as a measure of central tendency as it has no meaning (i.e. what is the average of strongly agree and disagree?).
-
-The most appropriate measure of central tendency is the mode. Compute the mode for the students and professors for each of the questions
-
+## The most appropriate measure of central tendency is the mode. 
+### Compute the mode for the students and professors for each of the questions
 
 ```{r}
 
+view(student_)
+names(student_)
+
+view(professors_
+     names(professors_)
+
+student_ %>% 
+glimpse(student_)
+     
+     library(tibble)
+    student_ %>% 
+     select(totally_disagree) %>% 
+      pull(totally_disagree)
+    
+selectMethod(f, signature, optional = FALSE, useInherited =,
+             mlist = , fdef = , verbose = , doCache = )
+        
+```
+    
+    
+```{r}
+
+student_ %>% 
+select(disagree) %>% 
+    pull()
+       
+
+
 
 
 
 ```
+```{r}
+
+library(ggplot2)
+ggplot(mtcars, aes(mpg, hp)) +
+geom_point() +
+stat_smooth(method = "lm_robust") +
+theme_bw()
+
+
+
+
+
+```
+
 
 

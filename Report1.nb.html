@@ -1764,85 +1764,365 @@ summary {
 <p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em>.</p>
 <p>When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the <em>Preview</em> button or press <em>Ctrl+Shift+K</em> to preview the HTML file).</p>
 <p>The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike <em>Knit</em>, <em>Preview</em> does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.</p>
+<p>Code Snippets glimpse(student_) glimpse(professors_) rlang::last_error() rlang::last_trace()</p>
+<div id="part-1" class="section level1">
+<h1>Part 1</h1>
+<div id="load-the-data-and-answer-the-following-questions" class="section level2">
+<h2>Load the data and answer the following questions:</h2>
 <!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibmNvbCI6MSwibnJvdyI6MX0sInJkZiI6IlVrUllNd3BZQ2dBQUFBTUFBd1lBQUFNRkFBQUFBQVZWVkVZdE9BQUFCQUlBQUFBQkFBUUFDUUFBQUFGNEFBQURFd0FBQUFFQUFBQU9BQUFBQVVDK1JBQUFBQUFBQUFBRUFnQUFBQUVBQkFBSkFBQUFCVzVoYldWekFBQUFFQUFBQUFFQUJBQUpBQUFBQzJGdWMzZGxjbk5mWVd4c0FBQUVBZ0FBQUFFQUJBQUpBQUFBQldOc1lYTnpBQUFBRUFBQUFBRUFCQUFKQUFBQUNtUmhkR0V1Wm5KaGJXVUFBQVFDQUFBQUFRQUVBQWtBQUFBSmNtOTNMbTVoYldWekFBQUFEUUFBQUFLQUFBQUEvLy8vL3dBQUFQNEFBQVFDQUFBQUFRQUVBQWtBQUFBSGIzQjBhVzl1Y3dBQUFoTUFBQUFGQUFBQUVBQUFBQUVBQkFBSkFBQUFBWElBQUFBUUFBQUFBUUFFQUFrQUFBQVBkVzV1WVcxbFpDMWphSFZ1YXkwekFBQUFDZ0FBQUFFQUFBQUFBQUFBRFFBQUFBRUFBQUFCQUFBQURRQUFBQUVBQUFBQkFBQUVBZ0FBQXY4QUFBQVFBQUFBQlFBRUFBa0FBQUFHWlc1bmFXNWxBQVFBQ1FBQUFBVnNZV0psYkFBRUFBa0FBQUFPY205M2JtRnRaWE11Y0hKcGJuUUFCQUFKQUFBQUNuSnZkM011ZEc5MFlXd0FCQUFKQUFBQUNtTnZiSE11ZEc5MFlXd0FBQUQrQUFBQS9nPT0ifQ== -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["answers_all"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7748"}],"options":{"columns":{"min":{},"max":[10],"total":[1]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Total number of answers obtained from students</p>
+</div>
+<div id="what-is-the-total-number-of-answers-obtained-from-students" class="section level2">
+<h2>What is the total number of answers obtained from students?</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5wcm9mZXNzb3JzIDwtIHJlYWRfY3N2KFwicHJvZmVzc29ycy5jc3ZcIilcblxucHJvZmVzc29yc19jbGVhbiA8LSBjbGVhbl9uYW1lcyhwcm9mZXNzb3JzKSAlPiUgXG5zZWxlY3QocXVlc3Rpb24gPSB4MSxldmVyeXRoaW5nKCkpICU+JSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgcmVuYW1lIHgxXG4gbXV0YXRlKHRvdGFsX2Fuc3dlcnMgPSB0b3RhbGx5X2Rpc2FncmVlICsgZGlzYWdyZWUgKyAgYWdyZWUgKyB0b3RhbGx5X2FncmVlICkgIyBzdW1tYXJpc2Ugcm93XG5cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KGphbml0b3IpXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeSh0aWJibGUpXG5saWJyYXJ5KG1hcmtkb3duKVxuXG5cbnN0dWRlbnRfY2xlYW4gJT4lIFxuICBzdW1tYXJpc2UoYW5zd2Vyc19hbGwgPSBzdW0odG90YWxfYW5zd2VycykpICU+JSBcbiAgcGFzdGUoXCIgICAgVGhlIHRvdGFsIG51bWJlciBvZiBhbnN3ZXJzIG9idGFpbmVkIGZyb20gc3R1ZGVudHM/ICBcIilcbmBgYCJ9 -->
 <pre class="r"><code>
-professors &lt;- read_csv(&quot;professors.csv&quot;)
+library(janitor)
+library(dplyr)
+library(tibble)
+library(markdown)
 
-professors_clean &lt;- clean_names(professors) %&gt;% 
-select(question = x1,everything()) %&gt;%                                       # rename x1
- mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) # summarise row
-</code></pre>
+
+student_clean %&gt;% 
+  summarise(answers_all = sum(total_answers)) %&gt;% 
+  paste(&quot;    The total number of answers obtained from students?  &quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiNzc0OCAgICAgVGhlIHRvdGFsIG51bWJlciBvZiBhbnN3ZXJzIG9idGFpbmVkIGZyb20gc3R1ZGVudHM/ICBcIlxuIn0= -->
+<pre><code>[1] &quot;7748     The total number of answers obtained from students?  &quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICBcbmBgYCJ9 -->
+<pre class="r"><code>  </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>What is the total number of answers obtained from professors?</p>
 <!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibmNvbCI6MSwibnJvdyI6MX0sInJkZiI6IlVrUllNd3BZQ2dBQUFBTUFBd1lBQUFNRkFBQUFBQVZWVkVZdE9BQUFCQUlBQUFBQkFBUUFDUUFBQUFGNEFBQURFd0FBQUFFQUFBQU9BQUFBQVVDc2pBQUFBQUFBQUFBRUFnQUFBQUVBQkFBSkFBQUFCVzVoYldWekFBQUFFQUFBQUFFQUJBQUpBQUFBSGxSdmRHRnNJR0Z1ZDJWeWN5QnZaaUJoYkd3Z2NISnZabVZ6YzI5eWN3QUFCQUlBQUFBQkFBUUFDUUFBQUFWamJHRnpjd0FBQUJBQUFBQUJBQVFBQ1FBQUFBcGtZWFJoTG1aeVlXMWxBQUFFQWdBQUFBRUFCQUFKQUFBQUNYSnZkeTV1WVcxbGN3QUFBQTBBQUFBQ2dBQUFBUC8vLy84QUFBRCtBQUFFQWdBQUFBRUFCQUFKQUFBQUIyOXdkR2x2Ym5NQUFBSVRBQUFBQlFBQUFCQUFBQUFCQUFRQUNRQUFBQUZ5QUFBQUVBQUFBQUVBQkFBSkFBQUFEM1Z1Ym1GdFpXUXRZMmgxYm1zdE1nQUFBQW9BQUFBQkFBQUFBQUFBQUEwQUFBQUJBQUFBQVFBQUFBMEFBQUFCQUFBQUFRQUFCQUlBQUFML0FBQUFFQUFBQUFVQUJBQUpBQUFBQm1WdVoybHVaUUFFQUFrQUFBQUZiR0ZpWld3QUJBQUpBQUFBRG5KdmQyNWhiV1Z6TG5CeWFXNTBBQVFBQ1FBQUFBcHliM2R6TG5SdmRHRnNBQVFBQ1FBQUFBcGpiMnh6TG5SdmRHRnNBQUFBL2dBQUFQND0ifQ== -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Total anwers of all professors"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"3654"}],"options":{"columns":{"min":{},"max":[10],"total":[1]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
+<!-- rnb-text-begin -->
 </div>
-<!-- rnb-frame-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<div id="what-is-the-total-number-of-answers-obtained-from-professors" class="section level2">
+<h2>What is the total number of answers obtained from professors?</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3R1ZGVudF9jbGVhbiAlPiVcbnB1bGwodG90YWxfYW5zd2VycykgJT4lXG51bmlxdWVcblxuYGBgIn0= -->
-<pre class="r"><code>student_clean %&gt;%
-pull(total_answers) %&gt;%
-unique
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDI0NCAyMzMgMjM0IDIzOSAyNDEgMjM4IDIzMFxuIn0= -->
-<pre><code>[1] 244 233 234 239 241 238 230</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Does each question have the same number of answers?</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJvZmVzc29yc19jbGVhbiAlPiUgXG4gIHB1bGwodG90YWxfYW5zd2VycykgJT4lIFxuICB1bmlxdWUoKVxuXG5gYGAifQ== -->
-<pre class="r"><code>professors_clean %&gt;% 
-  pull(total_answers) %&gt;% 
-  unique()
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDExNSAxMTMgMTEyIDExMSAxMDNcbiJ9 -->
-<pre><code>[1] 115 113 112 111 103</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Does each question have the same number of answers?</p>
-<p>Part 2 Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Part 3 With Likert scale data, we cannot use the mean as a measure of central tendency as it has no meaning (i.e. what is the average of strongly agree and disagree?).</p>
-<p>The most appropriate measure of central tendency is the mode. Compute the mode for the students and professors for each of the questions</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KG1hcmtkb3duKVxuXG5wcm9mZXNzb3JzX2NsZWFuICU+JSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgY2FsbGluZyBkYXRhXG4gIHN1bW1hcmlzZShhbndlcnNfYWxscHJvcyA9IHN1bSh0b3RhbF9hbnN3ZXJzKSkgJT4lICAgICAgICAgICAgICAgICAgICAgICMgc3VtbWFyaXNpbmcgY29sdW1uXG4gIHBhc3RlKFwiICBUaGUgdG90YWwgbnVtYmVyIG9mIGFuc3dlcnMgb2J0YWluZWQgZnJvbSBwcm9mZXNzb3JzIFwiKSAgICAgICAgIyBzdXBwb3J0aW5nIHJlc3VsdCB3aXRoIHRleHRcbmBgYCJ9 -->
+<pre class="r"><code>
+library(markdown)
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouIAoKYGBge3J9CnBsb3QoY2FycykKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4KClRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4KCmBgYHtyfQoKbGlicmFyeShqYW5pdG9yKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KHRpYmJsZSkKbGlicmFyeShyZWFkcikKbGlicmFyeShtYXJrZG93bikKCiMgUGFydCAxCiMgTG9hZCB0aGUgZGF0YSBhbmQgYW5zd2VyIHRoZSBmb2xsb3dpbmcgcXVlc3Rpb25zOgpzdHVkZW50cyA8LSByZWFkX2Nzdigic3R1ZGVudHMuY3N2IikgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyByZWFkIHRoZSBmaWxlCgpzdHVkZW50X2NsZWFuIDwtIGNsZWFuX25hbWVzKHN0dWRlbnRzKSAlPiUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBjbGVhbiBuYW1lcwogIHNlbGVjdChxdWVzdGlvbiA9IHgxLGV2ZXJ5dGhpbmcoKSkgJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyByZW5hbWUgeDEKIG11dGF0ZSh0b3RhbF9hbnN3ZXJzID0gdG90YWxseV9kaXNhZ3JlZSArIGRpc2FncmVlICsgIGFncmVlICsgdG90YWxseV9hZ3JlZSApICMgc3VtbWFyaXNlIHJvdwoKCiMgV2hhdCBpcyB0aGUgdG90YWwgbnVtYmVyIG9mIGFuc3dlcnMgb2J0YWluZWQgZnJvbSBzdHVkZW50cz8gCgpzdHVkZW50X2NsZWFuICU+JSAKICBzdW1tYXJpc2UoYW5zd2Vyc19hbGwgPSBzdW0odG90YWxfYW5zd2VycykpICAgICAgICAgICAgICAgICAgICMgc3VtbWFyaXNlIHRoZSB0b3RhbCBvZiBhbGwgYW5zd2VycwoKYGBgClRvdGFsIG51bWJlciBvZiBhbnN3ZXJzIG9idGFpbmVkIGZyb20gc3R1ZGVudHMKCmBgYHtyfQoKcHJvZmVzc29ycyA8LSByZWFkX2NzdigicHJvZmVzc29ycy5jc3YiKQoKcHJvZmVzc29yc19jbGVhbiA8LSBjbGVhbl9uYW1lcyhwcm9mZXNzb3JzKSAlPiUgCnNlbGVjdChxdWVzdGlvbiA9IHgxLGV2ZXJ5dGhpbmcoKSkgJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyByZW5hbWUgeDEKIG11dGF0ZSh0b3RhbF9hbnN3ZXJzID0gdG90YWxseV9kaXNhZ3JlZSArIGRpc2FncmVlICsgIGFncmVlICsgdG90YWxseV9hZ3JlZSApICMgc3VtbWFyaXNlIHJvdwoKYGBgCldoYXQgaXMgdGhlIHRvdGFsIG51bWJlciBvZiBhbnN3ZXJzIG9idGFpbmVkIGZyb20gcHJvZmVzc29ycz8KYGBge3J9CnByb2Zlc3NvcnNfY2xlYW4gJT4lIAogICAgc3VtbWFyaXNlKCJUb3RhbCBhbndlcnMgb2YgYWxsIHByb2Zlc3NvcnMiID0gc3VtKHRvdGFsX2Fuc3dlcnMpKQoKYGBgCgoKYGBge3J9CgojIGdsaW1wc2Uoc3R1ZGVudF9jbGVhbikKIyBnbGltcHNlKHByb2Zlc3NvcnNfY2xlYW4pCgoKc3R1ZGVudF9jbGVhbiAlPiUKcHVsbCh0b3RhbF9hbnN3ZXJzKSAlPiUKdW5pcXVlCgpgYGAKRG9lcyBlYWNoIHF1ZXN0aW9uIGhhdmUgdGhlIHNhbWUgbnVtYmVyIG9mIGFuc3dlcnM/CmBgYHtyfQoKcHJvZmVzc29yc19jbGVhbiAlPiUgCiAgcHVsbCh0b3RhbF9hbnN3ZXJzKSAlPiUgCiAgdW5pcXVlKCkKCgpgYGAKRG9lcyBlYWNoIHF1ZXN0aW9uIGhhdmUgdGhlIHNhbWUgbnVtYmVyIG9mIGFuc3dlcnM/CgpQYXJ0IDIKT2J0YWluIHNpZGUtYnktc2lkZSBiYXIgY2hhcnRzIGNvbXBhcmluZyB0aGUgZGlzdHJpYnV0aW9uIG9mIGFuc3dlcnMgb2YgdGhlIHN0dWRlbnRzIHZlcnN1cyB0aGUgcHJvZmVzc29ycyBmb3IgZWFjaCBxdWVzdGlvbi4KYGBge3J9CgoKCgoKCmBgYAoKUGFydCAzCldpdGggTGlrZXJ0IHNjYWxlIGRhdGEsIHdlIGNhbm5vdCB1c2UgdGhlIG1lYW4gYXMgYSBtZWFzdXJlIG9mIGNlbnRyYWwgdGVuZGVuY3kgYXMgaXQgaGFzIG5vIG1lYW5pbmcgKGkuZS4gd2hhdCBpcyB0aGUgYXZlcmFnZSBvZiBzdHJvbmdseSBhZ3JlZSBhbmQgZGlzYWdyZWU/KS4KClRoZSBtb3N0IGFwcHJvcHJpYXRlIG1lYXN1cmUgb2YgY2VudHJhbCB0ZW5kZW5jeSBpcyB0aGUgbW9kZS4gQ29tcHV0ZSB0aGUgbW9kZSBmb3IgdGhlIHN0dWRlbnRzIGFuZCBwcm9mZXNzb3JzIGZvciBlYWNoIG9mIHRoZSBxdWVzdGlvbnMKCgpgYGB7cn0KCgoKCmBgYAoKCg==</div>
+professors_clean %&gt;%                                                      # calling data
+  summarise(anwers_allpros = sum(total_answers)) %&gt;%                      # summarising column
+  paste(&quot;  The total number of answers obtained from professors &quot;)        # supporting result with text</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiMzY1NCAgIFRoZSB0b3RhbCBudW1iZXIgb2YgYW5zd2VycyBvYnRhaW5lZCBmcm9tIHByb2Zlc3NvcnMgXCJcbiJ9 -->
+<pre><code>[1] &quot;3654   The total number of answers obtained from professors &quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICBcbmBgYCJ9 -->
+<pre class="r"><code>  </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5cbiMgbGlicmFyeShzdHJpbmdyKVxuIyBsaWJyYXJ5KG1hZ3JpdHRyKVxuXG5zdHVkZW50X3NhbWVfYW1vdW50IDwtIHN0dWRlbnRfY2xlYW4gJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBjcmVhdGUgYSBuZXcgdmFsXG5wdWxsKHRvdGFsX2Fuc3dlcnMpICU+JSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBwdWxsIHZhbHVlXG51bmlxdWUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBmaWx0ZXIgbm90IGV2ZW4gdmFsXG4gIFxuXG5hbW91bnRfYW5zd2VycyA8LSBjKFwiIE5vdCBhbGwgcXVlc3Rpb25zIGRpZCBnZXQgdGhlIHNhbWUgYW1vdW50IG9mIGFud2VycyAgXCIgICkgICMgY3JlYXQgdmVjdG9yXG4jIGFtb3VudF9hbnN3ZXJzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHJ1biB2ZWN0b3IgXG5cbmFuc3dlciA8LSBjKGFtb3VudF9hbnN3ZXJzICwgc3R1ZGVudF9zYW1lX2Ftb3VudCkgICAgICAgICAgICAgICAgICAgICAgICAgIyBjb21iaW5lIHR3byB2ZWNcbmFuc3dlciAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHJ1biBzaW5nbGUgdmVjXG5gYGAifQ== -->
+<pre class="r"><code>
+
+# library(stringr)
+# library(magrittr)
+
+student_same_amount &lt;- student_clean %&gt;%                                       # create a new val
+pull(total_answers) %&gt;%                                                        # pull value
+unique                                                                         # filter not even val
+  
+
+amount_answers &lt;- c(&quot; Not all questions did get the same amount of anwers  &quot;  )  # creat vector
+# amount_answers                                                                 # run vector 
+
+answer &lt;- c(amount_answers , student_same_amount)                         # combine two vec
+answer                                                                         # run single vec</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiIE5vdCBhbGwgcXVlc3Rpb25zIGRpZCBnZXQgdGhlIHNhbWUgYW1vdW50IG9mIGFud2VycyAgXCIgXCIyNDRcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzNdIFwiMjMzXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCIyMzRcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzVdIFwiMjM5XCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCIyNDFcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzddIFwiMjM4XCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCIyMzBcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuIn0= -->
+<pre><code>[1] &quot; Not all questions did get the same amount of anwers  &quot; &quot;244&quot;                                                   
+[3] &quot;233&quot;                                                    &quot;234&quot;                                                   
+[5] &quot;239&quot;                                                    &quot;241&quot;                                                   
+[7] &quot;238&quot;                                                    &quot;230&quot;                                                   </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="does-each-question-have-the-same-number-of-answers" class="section level3">
+<h3>Does each question have the same number of answers?</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jIHJtYXJrZG93bjo6cmVuZGVyKClcbiMgTEFTU0VOIFdJUiBTTyAhISEhISEhXG5cbmxpYnJhcnkoc2hpbnkpXG5saWJyYXJ5KHN0cmluZ3IpXG5saWJyYXJ5KGdsdWUpXG5saWJyYXJ5KGRwbHlyKVxuXG4jIHBhc3RlKFwiTm90IGFsbCBhbndlcnMgaGF2ZSB0aGUgc2FtZSBhbW91bnRcIikgJT4lICBcblxucHJvZmVzc29yc19zYW1lX2Ftb3VudCA8LSBwcm9mZXNzb3JzX2NsZWFuICU+JSBcbiAgcHVsbCh0b3RhbF9hbnN3ZXJzKSAlPiUgXG4gICAgdW5pcXVlKClcblxucHJvX2Fuc3dlcnMgPC0gIGMoXCIgTm90IGFsbCBhbndlcnMgaGF2ZSB0aGUgc2FtZSBhbW91bnQuICBcIiAgKSAgXG5wcm9fYW5zd2VyX2NvbWIgPC0gYyhwcm9fYW5zd2VycywgcHJvZmVzc29yc19zYW1lX2Ftb3VudClcbiAgcHJvX2Fuc3dlcl9jb21iIFxuYGBgIn0= -->
+<pre class="r"><code>
+# rmarkdown::render()
+# LASSEN WIR SO !!!!!!!
+
+library(shiny)
+library(stringr)
+library(glue)
+library(dplyr)
+
+# paste(&quot;Not all anwers have the same amount&quot;) %&gt;%  
+
+professors_same_amount &lt;- professors_clean %&gt;% 
+  pull(total_answers) %&gt;% 
+    unique()
+
+pro_answers &lt;-  c(&quot; Not all anwers have the same amount.  &quot;  )  
+pro_answer_comb &lt;- c(pro_answers, professors_same_amount)
+  pro_answer_comb </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiIE5vdCBhbGwgYW53ZXJzIGhhdmUgdGhlIHNhbWUgYW1vdW50LiAgXCIgXCIxMTVcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIjExM1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5bNF0gXCIxMTJcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIjExMVwiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiMTAzXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcbiJ9 -->
+<pre><code>[1] &quot; Not all anwers have the same amount.  &quot; &quot;115&quot;                                     &quot;113&quot;                                    
+[4] &quot;112&quot;                                     &quot;111&quot;                                     &quot;103&quot;                                    </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIFxuXG4gXG5cbmBgYCJ9 -->
+<pre class="r"><code> 
+
+ 
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="part-2" class="section level2">
+<h2>Part 2</h2>
+<div id="obtain-side-by-side-bar-charts-comparing-the-distribution-of-answers-of-the-students-versus-the-professors-for-each-question." class="section level3">
+<h3>Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KGdncGxvdDIpXG5saWJyYXJ5KGdyaWRFeHRyYSlcbmxpYnJhcnkoZHBseXIpXG5saWJyYXJ5KHBsb3RseSlcbmxpYnJhcnkodGliYmxlKVxubGlicmFyeSh0aWR5cilcblxucHByb2Zlc3NvcnNfIDwtcHJvZmVzc29yc18gJT4lIFxuICBzZWxlY3QocXVlc3Rpb24sIHBfdG90YWxseV9kaXNhZ3JlZSA9IHRvdGFsbHlfZGlzYWdyZWUsIHBfZGlzYWdyZWUgPSBkaXNhZ3JlZSwgcF9hZ3JlZSA9IGFncmVlLCBwX3RvdGFsbHlfYWdyZWUgPSB0b3RhbGx5X2FncmVlIClcblxuc3N0dWRlbnRfY2xlYW4gPC0gc3R1ZGVudF8gJT4lIFxuICBzZWxlY3QodG90YWxseV9kaXNhZ3JlZSwgZGlzYWdyZWUsIGFncmVlLCB0b3RhbGx5X2FncmVlKVxudmlldyhzc3R1ZGVudF8pXG5cbnN0dWRzX3Byb3MgPC0gbWVyZ2UocHByb2Zlc3NvcnNfLHNzdHVkZW50XylcbnZpZXcoc3R1ZHNfcHJvcylcbiMgcGxvdChzdHVkc19wcm9zKVxuXG5iYXJfc3R1ZF9wcm9zIDwtIGJpbmRfY29scyhwcHJvZmVzc29yc18sIHNzdHVkZW50XykgJT4lIFxuICBzZWxlY3QocXVlc3Rpb24sIHRvdGFsbHlfZGlzYWdyZWUscF90b3RhbGx5X2Rpc2FncmVlLCBkaXNhZ3JlZSwgcF9kaXNhZ3JlZSwgdG90YWxseV9hZ3JlZSwgcF90b3RhbGx5X2FncmVlLCBhZ3JlZSwgcF9hZ3JlZSkgJT4lIFxuICBncm91cF9ieShxdWVzdGlvbilcbnZpZXcoYmFyX3N0dWRfcHJvcylcbiMgcGxvdChiYXJfc3R1ZF9wcm9zKVxuXG5cbmJhcl9zdHVkX3Byb3MgPC0gYmluZF9jb2xzKHBwcm9mZXNzb3JzXywgc3N0dWRlbnRfKSAlPiUgXG4gIHNlbGVjdChxdWVzdGlvbiwgdG90YWxseV9kaXNhZ3JlZSxwX3RvdGFsbHlfZGlzYWdyZWUsIGRpc2FncmVlLCBwX2Rpc2FncmVlLCB0b3RhbGx5X2FncmVlLCBwX3RvdGFsbHlfYWdyZWUsIGFncmVlLCBwX2FncmVlKSAlPiUgXG4gIGdyb3VwX2J5KHF1ZXN0aW9uKVxuIyBwbG90KGJhcl9zdHVkX3Byb3MpXG5cblxuXG4jI1xuIyBkZiA8LSBkYXRhLmZyYW1lKHRydCA9IGMoXCJhXCIsIFwiYlwiLCBcImNcIiksIG91dGNvbWUgPSBjKDIuMywgMS45LCAzLjIpKVxuIyBnZ3Bsb3QoZGYsIGFlcyh0cnQsIG91dGNvbWUpKSArXG4gICNnZW9tX2NvbCgpXG4jI1xuXG4jIDwtLS0tLS0tLS0tLS0tLS1cblxubGlicmFyeShjb3dzYXkpXG5saWJyYXJ5KGRwbHlyKVxuXG5xdWVzdGlvbl94IDwtIHN0dWRlbnRfXG5xdWVzdGlvbl9jb2xscyA8LSBzZWxlY3Qoc3R1ZGVudF8sIHF1ZXN0aW9uKVxudmlldyhxdWVzdGlvbl94KVxudmlldyhxdWVzdGlvbl9jb2xscylcblxuXG5nZ3Bsb3QoZGF0YSA9IGJhcl9zdHVkX3Byb3MgKStcbiAgICBnZW9tX2JhcihtYXBwaW5nID0gYWVzKHggPSBiYXJfc3R1ZF9wcm9zICwgeSA9IHF1ZXN0aW9uX2NvbGxzICkpK1xuIyAgICBnZ3Bsb3QoYmFyX3N0dWRfcHJvcywgYWVzKHg9UHRlYWwuTGVuZ3RoKSkgKyBnZW9tX2hpc3RvcmdyYW0oKStcbiAgbGFicyh0aXRsZSA9IFwiU3R1ZGVudHMgYW5kIHByb2Zlc3NvcnMgY29tYXByZWRcIiwgeCA9IFwiU3R1ZGVudHMgYW5kIFByb2Zlc3NvcnNcIiwgeT1cInF1ZXN0aW9uc1wiKVxuXG5iYXJfc3R1ZF9wcm9zICU+JSBcbmdncGxvdChkYXRhLCBhZXMoeD1ncm91cCwgeT12YWx1ZSwgZmlsbD1ncm91cCkpK1xuICBnZW9tX2JveHBsb3QoKStcbiAgbGFicyh0aXRsZT1cImJveHBsb3Qgb2Ygc3R1ZGVudCBzY29yZXNcIikrXG4gIHRoZW1lX2NsYXNzaWMoKVxuXG5iYXJfc3R1ZF9wcm9zICU+JSBcbmdncGxvdChkYXRhLCBhZXNfKHg9Z3JvdXApKSArIFxuICBnZW9tX2JveHBsb3QoKSArXG4gIGxhYnModGl0bGU9XCJCb3ggcGxvdHMgb2Ygc3R1ZGVudCBzY29yZXNcIikgK1xuICB0aGVtZV9jbGFzc2ljKClcblxubWVhbihiYXJfc3R1ZF9wcm9zKVxuXG4/YWVzXG5oZWxwKGFlcykgIFxuXG5iYXJfc3R1ZF9wcm9zICU+JSBcbiAgZ2dwbG90KG1hcHBpbmcgPSBhZXMoeCA9IFwidG90YWxseV9kaXNhZ3JlZVwiLHkgPSBxdWVzdGlvbikpK1xuICAgICAgICAgICBnZW9tX2JhcihtYXBwaW5nID0gYWVzLCBkYXRhID0gYmFyX3N0dWRfcHJvcywgc3RhdCA9IFwiY291bnRcIixcbiAgcG9zaXRpb24gPSBcInN0YWNrXCIsIDEsIHdpZHRoID0gTlVMTCwgYmlud2lkdGggPSBOVUxMLFxuICBuYS5ybSA9IEZBTFNFLCBzaG93LmxlZ2VuZCA9IE5BLCBpbmhlcml0LmFlcyA9IFRSVUUpXG4gIHZpZXcoYmFyX3N0dWRfcHJvcylcbiAgXG4gIGJhcl9zdHVkX3Byb3MgJT4lIFxuICBnZW9tX2NvbChtYXBwaW5nID0gYWVzKCksIGRhdGEgPSBOVUxMLCBwb3NpdGlvbiA9IFwic3RhY2tcIiwgeCxcbiAgd2lkdGggPSBOVUxMLCBuYS5ybSA9IEZBTFNFLCBzaG93LmxlZ2VuZCA9IE5BLFxuICBpbmhlcml0LmFlcyA9IFRSVUUpXG4gIFxuICBiYXJfc3R1ZF9wcm9zICU+JSBcbiAgICBnZ3Bsb3QobWFwcGluZyA9IGFlcyh4ID0gcXVlc3Rpb24pK1xuICAgICAgICAgICAgIGdlb21fY29sKHN0YXQgPSBcImlkZW50aXR5XCIpKVxuXG5nbGltcHNlKHN0dWRzX3Byb3MpXG5cbiMgZ2dwbG90KGJhcl9zdHVkX3Byb3MsIGFlcyhjbGFzcykpK1xuICMgZ2VvbV9iYXIoKVxuXG5cbmdncGxvdChtdGNhcnMsIGFlcyh4ID0gZmFjdG9yKGN5bCkpKStcbiAgZ2VvbV9iYXIoKVxudmlldyhtdGNhcnMpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(plotly)
+library(tibble)
+library(tidyr)
+
+pprofessors_ &lt;-professors_ %&gt;% 
+  select(question, p_totally_disagree = totally_disagree, p_disagree = disagree, p_agree = agree, p_totally_agree = totally_agree )
+
+sstudent_clean &lt;- student_ %&gt;% 
+  select(totally_disagree, disagree, agree, totally_agree)
+view(sstudent_)
+
+studs_pros &lt;- merge(pprofessors_,sstudent_)
+view(studs_pros)
+# plot(studs_pros)
+
+bar_stud_pros &lt;- bind_cols(pprofessors_, sstudent_) %&gt;% 
+  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %&gt;% 
+  group_by(question)
+view(bar_stud_pros)
+# plot(bar_stud_pros)
+
+
+bar_stud_pros &lt;- bind_cols(pprofessors_, sstudent_) %&gt;% 
+  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %&gt;% 
+  group_by(question)
+# plot(bar_stud_pros)
+
+
+
+##
+# df &lt;- data.frame(trt = c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), outcome = c(2.3, 1.9, 3.2))
+# ggplot(df, aes(trt, outcome)) +
+  #geom_col()
+##
+
+# &lt;---------------
+
+library(cowsay)
+library(dplyr)
+
+question_x &lt;- student_
+question_colls &lt;- select(student_, question)
+view(question_x)
+view(question_colls)
+
+
+ggplot(data = bar_stud_pros )+
+    geom_bar(mapping = aes(x = bar_stud_pros , y = question_colls ))+
+#    ggplot(bar_stud_pros, aes(x=Pteal.Length)) + geom_historgram()+
+  labs(title = &quot;Students and professors comapred&quot;, x = &quot;Students and Professors&quot;, y=&quot;questions&quot;)
+
+bar_stud_pros %&gt;% 
+ggplot(data, aes(x=group, y=value, fill=group))+
+  geom_boxplot()+
+  labs(title=&quot;boxplot of student scores&quot;)+
+  theme_classic()
+
+bar_stud_pros %&gt;% 
+ggplot(data, aes_(x=group)) + 
+  geom_boxplot() +
+  labs(title=&quot;Box plots of student scores&quot;) +
+  theme_classic()
+
+mean(bar_stud_pros)
+
+?aes
+help(aes)  
+
+bar_stud_pros %&gt;% 
+  ggplot(mapping = aes(x = &quot;totally_disagree&quot;,y = question))+
+           geom_bar(mapping = aes, data = bar_stud_pros, stat = &quot;count&quot;,
+  position = &quot;stack&quot;, 1, width = NULL, binwidth = NULL,
+  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+  view(bar_stud_pros)
+  
+  bar_stud_pros %&gt;% 
+  geom_col(mapping = aes(), data = NULL, position = &quot;stack&quot;, x,
+  width = NULL, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE)
+  
+  bar_stud_pros %&gt;% 
+    ggplot(mapping = aes(x = question)+
+             geom_col(stat = &quot;identity&quot;))
+
+glimpse(studs_pros)
+
+# ggplot(bar_stud_pros, aes(class))+
+ # geom_bar()
+
+
+ggplot(mtcars, aes(x = factor(cyl)))+
+  geom_bar()
+view(mtcars)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="part-3" class="section level2">
+<h2>Part 3</h2>
+<div id="with-likert-scale-data-we-cannot-use-the-mean-as-a-measure-of-central-tendenceley-as-it-has-no-meaning" class="section level3">
+<h3>With Likert scale data, we cannot use the mean as a measure of central tendenceley as it has no meaning</h3>
+<p>###(i.e. what is the average of strongly agree and disagree?).</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5cbmxpYnJhcnkoZHBseXIpXG5saWJyYXJ5KHRpZHlzZWxlY3QpXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmxpYnJhcnkodGlkeXIpXG5saWJyYXJ5KGphbml0b3IpXG5saWJyYXJ5KHJsYW5nKSBcbmxpYnJhcnkocmxhbmcpXG5saWJyYXJ5KGRhdGFwYXN0YSlcbmxpYnJhcnkodGlkeXIpXG5saWJyYXJ5KHRpYmJsZSlcbmxpYnJhcnkocmVhZHIpXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeShsdWJyaWRhdGUpXG5saWJyYXJ5KGphbml0b3IpXG5saWJyYXJ5KGNvd3NheSlcbiAgICAgICAgIFxudGFncmVlX2FncmVlX2F2IDwtc3R1ZGVudF9jbGVhbiAlPiUgXG5zZWxlY3QodG90YWxseV9hZ3JlZSxkaXNhZ3JlZSkgJT4lIFxuICAgIG11dGF0ZShhdmVyYWdlID0gKHRvdGFsbHlfYWdyZWUgKyBkaXNhZ3JlZSkgLyAyKVxuICBcbnRvdGFsX2F2ZXJhZ2UgPC0gdGFncmVlX2FncmVlX2F2ICU+JSBcbiAgc2VsZWN0KGF2ZXJhZ2UpICU+JSBcbnN1bW1hcmlzZShhdmVyYWdlX3N1bSA9IHN1bShhdmVyYWdlKSlcblxudG90YWxfdG9hbCA8LSBjKHRvdGFsX2F2ZXJhZ2UgLyAzMikgICAgXG5cbnRoZV90b3RhbF9pcyA8LSBjKFwiVGhlIHRvdGFsIGF2ZXJhZ2Ugb2YgdG90YWxseV9hZ3JlZSBhbmQgZGlzYWdyZWUgaXMgIFwiKVxuYW5zd2VyX2F2ZXJhZ2UgPC0gYyh0aGVfdG90YWxfaXMsIHRvdGFsX3RvYWwpXG5hbnN3ZXJfYXZlcmFnZVxuYGBgIn0= -->
+<pre class="r"><code>
+
+library(dplyr)
+library(tidyselect)
+library(tidyverse)
+library(tidyr)
+library(janitor)
+library(rlang) 
+library(rlang)
+library(datapasta)
+library(tidyr)
+library(tibble)
+library(readr)
+library(dplyr)
+library(lubridate)
+library(janitor)
+library(cowsay)
+         
+tagree_agree_av &lt;-student_clean %&gt;% 
+select(totally_agree,disagree) %&gt;% 
+    mutate(average = (totally_agree + disagree) / 2)
+  
+total_average &lt;- tagree_agree_av %&gt;% 
+  select(average) %&gt;% 
+summarise(average_sum = sum(average))
+
+total_toal &lt;- c(total_average / 32)    
+
+the_total_is &lt;- c(&quot;The total average of totally_agree and disagree is  &quot;)
+answer_average &lt;- c(the_total_is, total_toal)
+answer_average</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiW1sxXV1cblsxXSBcIlRoZSB0b3RhbCBhdmVyYWdlIG9mIHRvdGFsbHlfYWdyZWUgYW5kIGRpc2FncmVlIGlzICBcIlxuXG4kYXZlcmFnZV9zdW1cblsxXSA1NS42NzE4OFxuIn0= -->
+<pre><code>[[1]]
+[1] &quot;The total average of totally_agree and disagree is  &quot;
+
+$average_sum
+[1] 55.67188</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICAjIHN0dWRlbnRfY2xlYW5cbiMgRnVua3Rpb25pZXJ0ICEhISBcbiAgICAjdG90YWxseV9hZ3JzIDwtIGMoZmlsdGVyKHNlbGVjdChzdHVkZW50X2NsZWFuLCB0b3RhbGx5X2FncmVlLCBkaXNhZ3JlZSkpKVxuICAgICMgdG90YWxseV9hZ3JzXG4gICAgIyB0b3RhbGx5X2FncnNzIDwtIHNlbGVjdChzdHVkZW50X2NsZWFuLCB0b3RhbGx5X2FncmVlLCBkaXNhZ3JlZSlcbiAgICAjIHRvdGFsbHlfYWdyc3NcbiAgXG5cbiMgaHR0cHM6Ly9hY2hpbGxlYXNrb3N0b3VsYXMuY29tLzIwMTMvMDIvMTMvb24tbGlrZXJ0LXNjYWxlcy1vcmRpbmFsLWRhdGEtYW5kLW1lYW4tdmFsdWVzL1xuIyBodHRwczovL21lYXN1cmluZ3UuY29tL21lYW4tb3JkaW5hbC9cbiMgaHR0cHM6Ly9yY29tcGFuaW9uLm9yZy9oYW5kYm9vay9FXzAxLmh0bWxcbiMgaHR0cHM6Ly9vdXJjb2RpbmdjbHViLmdpdGh1Yi5pby8yMDE4LzAxLzI5L3F1YWxpdGF0aXZlLmh0bWxcbiMgaHR0cHM6Ly93d3cucHJpbmNldG9uLmVkdS9+b3RvcnJlcy9zZXNzaW9ucy9zMnIucGRmXG4jIGh0dHBzOi8vZGF0YS5saWJyYXJ5LnZpcmdpbmlhLmVkdS91c2luZy1hbmQtaW50ZXJwcmV0aW5nLWNyb25iYWNocy1hbHBoYS9cbiMgaHR0cHM6Ly9sZWFybmluZ3N0YXRpc3RpY3N3aXRoci5jb20vbHNyLTAuNi5wZGZcbiMgaHR0cHM6Ly9sZWFybmluZ3N0YXRpc3RpY3N3aXRoci5jb20vYm9vay9kYXRhaGFuZGxpbmcuaHRtbFxuIyBodHRwOi8vZ3VpYW5hcGxhbnRzLnN0aXIuYWMudWsvc2VtaW5hci9yZXNvdXJjZXMvUl9pbl9hX051dHNoZWxsX1NlY29uZF9FZGl0aW9uLnBkZlxuIyBodHRwczovL2NyYW4uci1wcm9qZWN0Lm9yZy93ZWIvcGFja2FnZXMvdW14L3VteC5wZGZcblxuYGBgIn0= -->
+<pre class="r"><code>  # student_clean
+# Funktioniert !!! 
+    #totally_agrs &lt;- c(filter(select(student_clean, totally_agree, disagree)))
+    # totally_agrs
+    # totally_agrss &lt;- select(student_clean, totally_agree, disagree)
+    # totally_agrss
+  
+
+# https://achilleaskostoulas.com/2013/02/13/on-likert-scales-ordinal-data-and-mean-values/
+# https://measuringu.com/mean-ordinal/
+# https://rcompanion.org/handbook/E_01.html
+# https://ourcodingclub.github.io/2018/01/29/qualitative.html
+# https://www.princeton.edu/~otorres/sessions/s2r.pdf
+# https://data.library.virginia.edu/using-and-interpreting-cronbachs-alpha/
+# https://learningstatisticswithr.com/lsr-0.6.pdf
+# https://learningstatisticswithr.com/book/datahandling.html
+# http://guianaplants.stir.ac.uk/seminar/resources/R_in_a_Nutshell_Second_Edition.pdf
+# https://cran.r-project.org/web/packages/umx/umx.pdf
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="the-most-appropriate-measure-of-central-tendency-is-the-mode." class="section level2">
+<h2>The most appropriate measure of central tendency is the mode.</h2>
+<div id="compute-the-mode-for-the-students-and-professors-for-each-of-the-questions" class="section level3">
+<h3>Compute the mode for the students and professors for each of the questions</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG52aWV3KHN0dWRlbnRfKVxubmFtZXMoc3R1ZGVudF8pXG5cbnZpZXcocHJvZmVzc29yc19cbiAgICAgbmFtZXMocHJvZmVzc29yc18pXG5cbnN0dWRlbnRfICU+JSBcbmdsaW1wc2Uoc3R1ZGVudF8pXG4gICAgIFxuICAgICBsaWJyYXJ5KHRpYmJsZSlcbiAgICBzdHVkZW50XyAlPiUgXG4gICAgIHNlbGVjdCh0b3RhbGx5X2Rpc2FncmVlKSAlPiUgXG4gICAgICBwdWxsKHRvdGFsbHlfZGlzYWdyZWUpXG4gICAgXG5zZWxlY3RNZXRob2QoZiwgc2lnbmF0dXJlLCBvcHRpb25hbCA9IEZBTFNFLCB1c2VJbmhlcml0ZWQgPSxcbiAgICAgICAgICAgICBtbGlzdCA9ICwgZmRlZiA9ICwgdmVyYm9zZSA9ICwgZG9DYWNoZSA9IClcbiAgICAgICAgXG5gYGAifQ== -->
+<pre class="r"><code>
+view(student_)
+names(student_)
+
+view(professors_
+     names(professors_)
+
+student_ %&gt;% 
+glimpse(student_)
+     
+     library(tibble)
+    student_ %&gt;% 
+     select(totally_disagree) %&gt;% 
+      pull(totally_disagree)
+    
+selectMethod(f, signature, optional = FALSE, useInherited =,
+             mlist = , fdef = , verbose = , doCache = )
+        </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5zdHVkZW50XyAlPiUgXG5zZWxlY3QoZGlzYWdyZWUpICU+JSBcbiAgICBwdWxsKClcbiAgICAgICBcblxuXG5cblxuXG5gYGAifQ== -->
+<pre class="r"><code>
+student_ %&gt;% 
+select(disagree) %&gt;% 
+    pull()
+       
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KGdncGxvdDIpXG5nZ3Bsb3QobXRjYXJzLCBhZXMobXBnLCBocCkpICtcbmdlb21fcG9pbnQoKSArXG5zdGF0X3Ntb290aChtZXRob2QgPSBcImxtX3JvYnVzdFwiKSArXG50aGVtZV9idygpXG5cblxuXG5cblxuYGBgIn0= -->
+<pre class="r"><code>
+library(ggplot2)
+ggplot(mtcars, aes(mpg, hp)) +
+geom_point() +
+stat_smooth(method = &quot;lm_robust&quot;) +
+theme_bw()
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouIAoKYGBge3J9CnBsb3QoY2FycykKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4KClRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4KCgpDb2RlIFNuaXBwZXRzCmdsaW1wc2Uoc3R1ZGVudF8pCmdsaW1wc2UocHJvZmVzc29yc18pCnJsYW5nOjpsYXN0X2Vycm9yKCkKcmxhbmc6Omxhc3RfdHJhY2UoKQoKCgojIFBhcnQgMQojIyBMb2FkIHRoZSBkYXRhIGFuZCBhbnN3ZXIgdGhlIGZvbGxvd2luZyBxdWVzdGlvbnM6CmBgYHtyIGluY2x1ZGU9RkFMU0UsIGVjaG89RkFMU0UsIHdhcm5pbmc9RkFMU0V9ICAgICAgICAgICAgICAgICAgICAKIyBzdXJwZXNzIHdhcmluZ3MKIyBubyB2aXNpYmxlIHJlc3VsdCBvdXRwdXQKCmxpYnJhcnkoamFuaXRvcikKbGlicmFyeShkcGx5cikKbGlicmFyeSh0aWJibGUpCmxpYnJhcnkocmVhZHIpCmxpYnJhcnkobWFya2Rvd24pCgoKc3R1ZGVudHMgPC0gcmVhZF9jc3YoInN0dWRlbnRzLmNzdiIpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHJlYWQgdGhlIGZpbGUKc3R1ZGVudHNfY2xlYW4gPC0gY2xlYW5fbmFtZXMoc3R1ZGVudHMpICU+JSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyAgbmFtZXMsIGNyYXRlIG5ldyB2YWx1ZQogIHNlbGVjdChxdWVzdGlvbiA9IHgxLGV2ZXJ5dGhpbmcoKSkgJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyByZW5hbWUgeDEsIHNlbGVjdCBhbGwgY29sbHVtbnMKIG11dGF0ZSh0b3RhbF9hbnN3ZXJzID0gdG90YWxseV9kaXNhZ3JlZSArIGRpc2FncmVlICsgIGFncmVlICsgdG90YWxseV9hZ3JlZSApICU+JSAgICAgIyBhZGQgY29sdW1uLCBzdW1tYXJpc2Ugcm93CndyaXRlX2Nzdigic3R1ZGVudHNfY2xlYW4uY3N2IikgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIGNyYXRlIG5ldyBjc3YgZm9yIGxhdGUgdXNlCiMgdmlldyhzdHVkZW50cykKCmBgYAojIyBXaGF0IGlzIHRoZSB0b3RhbCBudW1iZXIgb2YgYW5zd2VycyBvYnRhaW5lZCBmcm9tIHN0dWRlbnRzPyAKYGBge3J9CgpsaWJyYXJ5KGphbml0b3IpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkodGliYmxlKQpsaWJyYXJ5KG1hcmtkb3duKQoKCnN0dWRlbnRfY2xlYW4gJT4lIAogIHN1bW1hcmlzZShhbnN3ZXJzX2FsbCA9IHN1bSh0b3RhbF9hbnN3ZXJzKSkgJT4lIAogIHBhc3RlKCIgICAgVGhlIHRvdGFsIG51bWJlciBvZiBhbnN3ZXJzIG9idGFpbmVkIGZyb20gc3R1ZGVudHM/ICAiKQogIApgYGAKCgpgYGB7ciBpbmNsdWRlPUZBTFNFLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQoKIyBzdXJwZXNzIHdhcmluZ3MKIyBubyB2aXNpYmxlIHJlc3VsdCBvdXRwdXQKCmxpYnJhcnkodGlkeXNlbGVjdCkKbGlicmFyeShkcGx5cikKbGlicmFyeShyZWFkcikKbGlicmFyeShtYXJrZG93bikKbGlicmFyeSh0aWR5cikKbGlicmFyeShqYW5pdG9yKQpsaWJyYXJ5KHB1cnJyKQpsaWJyYXJ5KHRpYmJsZSkKbGlicmFyeShnZ3Bsb3QyKQoKICBwcm9mZXNzb3JzIDwtIHJlYWRfY3N2KCJwcm9mZXNzb3JzLmNzdiIpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHJlYWQgdGhlIGZpbGUKcHJvZmVzc29yc19jbGVhbiA8LSBjbGVhbl9uYW1lcyhwcm9mZXNzb3JzKSAlPiUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjICBuYW1lcywgY3JlYXRlIG5ldyB2YWwKICBzZWxlY3QocXVlc3Rpb24gPSB4MSxldmVyeXRoaW5nKCkpICU+JSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHJlbmFtZSB4MSwgc2VsZWN0IGFsbCBjb2xzCiBtdXRhdGUodG90YWxfYW5zd2VycyA9IHRvdGFsbHlfZGlzYWdyZWUgKyBkaXNhZ3JlZSArICBhZ3JlZSArIHRvdGFsbHlfYWdyZWUgKSAlPiUgICAgIyBjcmVhdGUgY29sLCBzdW1tYXJpc2Ugcm93CiAgd3JpdGVfY3N2KCJwcm9mZXNzb3JzX2NsZWFuLmNzdiIpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyB3cml0ZSBhIG5ldyBjc3YgZm9yIGxhdGVyIHVzZQoKYGBgCiMjICBXaGF0IGlzIHRoZSB0b3RhbCBudW1iZXIgb2YgYW5zd2VycyBvYnRhaW5lZCBmcm9tIHByb2Zlc3NvcnM/CmBgYHtyfQoKbGlicmFyeShtYXJrZG93bikKCnByb2Zlc3NvcnNfY2xlYW4gJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBjYWxsaW5nIGRhdGEKICBzdW1tYXJpc2UoYW53ZXJzX2FsbHByb3MgPSBzdW0odG90YWxfYW5zd2VycykpICU+JSAgICAgICAgICAgICAgICAgICAgICAjIHN1bW1hcmlzaW5nIGNvbHVtbgogIHBhc3RlKCIgIFRoZSB0b3RhbCBudW1iZXIgb2YgYW5zd2VycyBvYnRhaW5lZCBmcm9tIHByb2Zlc3NvcnMgIikgICAgICAgICMgc3VwcG9ydGluZyByZXN1bHQgd2l0aCB0ZXh0CiAgCmBgYAoKCmBgYHtyfQoKCiMgbGlicmFyeShzdHJpbmdyKQojIGxpYnJhcnkobWFncml0dHIpCgpzdHVkZW50X3NhbWVfYW1vdW50IDwtIHN0dWRlbnRfY2xlYW4gJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBjcmVhdGUgYSBuZXcgdmFsCnB1bGwodG90YWxfYW5zd2VycykgJT4lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHB1bGwgdmFsdWUKdW5pcXVlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgZmlsdGVyIG5vdCBldmVuIHZhbAogIAoKYW1vdW50X2Fuc3dlcnMgPC0gYygiIE5vdCBhbGwgcXVlc3Rpb25zIGRpZCBnZXQgdGhlIHNhbWUgYW1vdW50IG9mIGFud2VycyAgIiAgKSAgIyBjcmVhdCB2ZWN0b3IKIyBhbW91bnRfYW5zd2VycyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBydW4gdmVjdG9yIAoKYW5zd2VyIDwtIGMoYW1vdW50X2Fuc3dlcnMgLCBzdHVkZW50X3NhbWVfYW1vdW50KSAgICAgICAgICAgICAgICAgICAgICAgICAjIGNvbWJpbmUgdHdvIHZlYwphbnN3ZXIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBydW4gc2luZ2xlIHZlYwoKCgpgYGAKCgojIyMgRG9lcyBlYWNoIHF1ZXN0aW9uIGhhdmUgdGhlIHNhbWUgbnVtYmVyIG9mIGFuc3dlcnM/CgpgYGB7cn0KCiMgcm1hcmtkb3duOjpyZW5kZXIoKQojIExBU1NFTiBXSVIgU08gISEhISEhIQoKbGlicmFyeShzaGlueSkKbGlicmFyeShzdHJpbmdyKQpsaWJyYXJ5KGdsdWUpCmxpYnJhcnkoZHBseXIpCgojIHBhc3RlKCJOb3QgYWxsIGFud2VycyBoYXZlIHRoZSBzYW1lIGFtb3VudCIpICU+JSAgCgpwcm9mZXNzb3JzX3NhbWVfYW1vdW50IDwtIHByb2Zlc3NvcnNfY2xlYW4gJT4lIAogIHB1bGwodG90YWxfYW5zd2VycykgJT4lIAogICAgdW5pcXVlKCkKCnByb19hbnN3ZXJzIDwtICBjKCIgTm90IGFsbCBhbndlcnMgaGF2ZSB0aGUgc2FtZSBhbW91bnQuICAiICApICAKcHJvX2Fuc3dlcl9jb21iIDwtIGMocHJvX2Fuc3dlcnMsIHByb2Zlc3NvcnNfc2FtZV9hbW91bnQpCiAgcHJvX2Fuc3dlcl9jb21iIAogCgogCgpgYGAKCgojIyBQYXJ0IDIKIyMjIE9idGFpbiBzaWRlLWJ5LXNpZGUgYmFyIGNoYXJ0cyBjb21wYXJpbmcgdGhlIGRpc3RyaWJ1dGlvbiBvZiBhbnN3ZXJzIG9mIHRoZSBzdHVkZW50cyB2ZXJzdXMgdGhlIHByb2Zlc3NvcnMgZm9yIGVhY2ggcXVlc3Rpb24uCmBgYHtyfQoKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGdyaWRFeHRyYSkKbGlicmFyeShkcGx5cikKbGlicmFyeShwbG90bHkpCmxpYnJhcnkodGliYmxlKQpsaWJyYXJ5KHRpZHlyKQoKcHByb2Zlc3NvcnNfIDwtcHJvZmVzc29yc18gJT4lIAogIHNlbGVjdChxdWVzdGlvbiwgcF90b3RhbGx5X2Rpc2FncmVlID0gdG90YWxseV9kaXNhZ3JlZSwgcF9kaXNhZ3JlZSA9IGRpc2FncmVlLCBwX2FncmVlID0gYWdyZWUsIHBfdG90YWxseV9hZ3JlZSA9IHRvdGFsbHlfYWdyZWUgKQoKc3N0dWRlbnRfY2xlYW4gPC0gc3R1ZGVudF8gJT4lIAogIHNlbGVjdCh0b3RhbGx5X2Rpc2FncmVlLCBkaXNhZ3JlZSwgYWdyZWUsIHRvdGFsbHlfYWdyZWUpCnZpZXcoc3N0dWRlbnRfKQoKc3R1ZHNfcHJvcyA8LSBtZXJnZShwcHJvZmVzc29yc18sc3N0dWRlbnRfKQp2aWV3KHN0dWRzX3Byb3MpCiMgcGxvdChzdHVkc19wcm9zKQoKYmFyX3N0dWRfcHJvcyA8LSBiaW5kX2NvbHMocHByb2Zlc3NvcnNfLCBzc3R1ZGVudF8pICU+JSAKICBzZWxlY3QocXVlc3Rpb24sIHRvdGFsbHlfZGlzYWdyZWUscF90b3RhbGx5X2Rpc2FncmVlLCBkaXNhZ3JlZSwgcF9kaXNhZ3JlZSwgdG90YWxseV9hZ3JlZSwgcF90b3RhbGx5X2FncmVlLCBhZ3JlZSwgcF9hZ3JlZSkgJT4lIAogIGdyb3VwX2J5KHF1ZXN0aW9uKQp2aWV3KGJhcl9zdHVkX3Byb3MpCiMgcGxvdChiYXJfc3R1ZF9wcm9zKQoKCmJhcl9zdHVkX3Byb3MgPC0gYmluZF9jb2xzKHBwcm9mZXNzb3JzXywgc3N0dWRlbnRfKSAlPiUgCiAgc2VsZWN0KHF1ZXN0aW9uLCB0b3RhbGx5X2Rpc2FncmVlLHBfdG90YWxseV9kaXNhZ3JlZSwgZGlzYWdyZWUsIHBfZGlzYWdyZWUsIHRvdGFsbHlfYWdyZWUsIHBfdG90YWxseV9hZ3JlZSwgYWdyZWUsIHBfYWdyZWUpICU+JSAKICBncm91cF9ieShxdWVzdGlvbikKIyBwbG90KGJhcl9zdHVkX3Byb3MpCgoKCiMjCiMgZGYgPC0gZGF0YS5mcmFtZSh0cnQgPSBjKCJhIiwgImIiLCAiYyIpLCBvdXRjb21lID0gYygyLjMsIDEuOSwgMy4yKSkKIyBnZ3Bsb3QoZGYsIGFlcyh0cnQsIG91dGNvbWUpKSArCiAgI2dlb21fY29sKCkKIyMKCiMgPC0tLS0tLS0tLS0tLS0tLQoKbGlicmFyeShjb3dzYXkpCmxpYnJhcnkoZHBseXIpCgpxdWVzdGlvbl94IDwtIHN0dWRlbnRfCnF1ZXN0aW9uX2NvbGxzIDwtIHNlbGVjdChzdHVkZW50XywgcXVlc3Rpb24pCnZpZXcocXVlc3Rpb25feCkKdmlldyhxdWVzdGlvbl9jb2xscykKCgpnZ3Bsb3QoZGF0YSA9IGJhcl9zdHVkX3Byb3MgKSsKICAgIGdlb21fYmFyKG1hcHBpbmcgPSBhZXMoeCA9IGJhcl9zdHVkX3Byb3MgLCB5ID0gcXVlc3Rpb25fY29sbHMgKSkrCiMgICAgZ2dwbG90KGJhcl9zdHVkX3Byb3MsIGFlcyh4PVB0ZWFsLkxlbmd0aCkpICsgZ2VvbV9oaXN0b3JncmFtKCkrCiAgbGFicyh0aXRsZSA9ICJTdHVkZW50cyBhbmQgcHJvZmVzc29ycyBjb21hcHJlZCIsIHggPSAiU3R1ZGVudHMgYW5kIFByb2Zlc3NvcnMiLCB5PSJxdWVzdGlvbnMiKQoKYmFyX3N0dWRfcHJvcyAlPiUgCmdncGxvdChkYXRhLCBhZXMoeD1ncm91cCwgeT12YWx1ZSwgZmlsbD1ncm91cCkpKwogIGdlb21fYm94cGxvdCgpKwogIGxhYnModGl0bGU9ImJveHBsb3Qgb2Ygc3R1ZGVudCBzY29yZXMiKSsKICB0aGVtZV9jbGFzc2ljKCkKCmJhcl9zdHVkX3Byb3MgJT4lIApnZ3Bsb3QoZGF0YSwgYWVzXyh4PWdyb3VwKSkgKyAKICBnZW9tX2JveHBsb3QoKSArCiAgbGFicyh0aXRsZT0iQm94IHBsb3RzIG9mIHN0dWRlbnQgc2NvcmVzIikgKwogIHRoZW1lX2NsYXNzaWMoKQoKbWVhbihiYXJfc3R1ZF9wcm9zKQoKP2FlcwpoZWxwKGFlcykgIAoKYmFyX3N0dWRfcHJvcyAlPiUgCiAgZ2dwbG90KG1hcHBpbmcgPSBhZXMoeCA9ICJ0b3RhbGx5X2Rpc2FncmVlIix5ID0gcXVlc3Rpb24pKSsKICAgICAgICAgICBnZW9tX2JhcihtYXBwaW5nID0gYWVzLCBkYXRhID0gYmFyX3N0dWRfcHJvcywgc3RhdCA9ICJjb3VudCIsCiAgcG9zaXRpb24gPSAic3RhY2siLCAxLCB3aWR0aCA9IE5VTEwsIGJpbndpZHRoID0gTlVMTCwKICBuYS5ybSA9IEZBTFNFLCBzaG93LmxlZ2VuZCA9IE5BLCBpbmhlcml0LmFlcyA9IFRSVUUpCiAgdmlldyhiYXJfc3R1ZF9wcm9zKQogIAogIGJhcl9zdHVkX3Byb3MgJT4lIAogIGdlb21fY29sKG1hcHBpbmcgPSBhZXMoKSwgZGF0YSA9IE5VTEwsIHBvc2l0aW9uID0gInN0YWNrIiwgeCwKICB3aWR0aCA9IE5VTEwsIG5hLnJtID0gRkFMU0UsIHNob3cubGVnZW5kID0gTkEsCiAgaW5oZXJpdC5hZXMgPSBUUlVFKQogIAogIGJhcl9zdHVkX3Byb3MgJT4lIAogICAgZ2dwbG90KG1hcHBpbmcgPSBhZXMoeCA9IHF1ZXN0aW9uKSsKICAgICAgICAgICAgIGdlb21fY29sKHN0YXQgPSAiaWRlbnRpdHkiKSkKCmdsaW1wc2Uoc3R1ZHNfcHJvcykKCiMgZ2dwbG90KGJhcl9zdHVkX3Byb3MsIGFlcyhjbGFzcykpKwogIyBnZW9tX2JhcigpCgoKZ2dwbG90KG10Y2FycywgYWVzKHggPSBmYWN0b3IoY3lsKSkpKwogIGdlb21fYmFyKCkKdmlldyhtdGNhcnMpCgpgYGAKCiMjIFBhcnQgMwojIyMgV2l0aCBMaWtlcnQgc2NhbGUgZGF0YSwgd2UgY2Fubm90IHVzZSB0aGUgbWVhbiBhcyBhIG1lYXN1cmUgb2YgY2VudHJhbCB0ZW5kZW5jZWxleSBhcyBpdCBoYXMgbm8gbWVhbmluZyAKIyMjKGkuZS4gd2hhdCBpcyB0aGUgYXZlcmFnZSBvZiBzdHJvbmdseSBhZ3JlZSBhbmQgZGlzYWdyZWU/KS4KCmBgYHtyfQoKCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkodGlkeXNlbGVjdCkKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkodGlkeXIpCmxpYnJhcnkoamFuaXRvcikKbGlicmFyeShybGFuZykgCmxpYnJhcnkocmxhbmcpCmxpYnJhcnkoZGF0YXBhc3RhKQpsaWJyYXJ5KHRpZHlyKQpsaWJyYXJ5KHRpYmJsZSkKbGlicmFyeShyZWFkcikKbGlicmFyeShkcGx5cikKbGlicmFyeShsdWJyaWRhdGUpCmxpYnJhcnkoamFuaXRvcikKbGlicmFyeShjb3dzYXkpCiAgICAgICAgIAp0YWdyZWVfYWdyZWVfYXYgPC1zdHVkZW50X2NsZWFuICU+JSAKc2VsZWN0KHRvdGFsbHlfYWdyZWUsZGlzYWdyZWUpICU+JSAKICAgIG11dGF0ZShhdmVyYWdlID0gKHRvdGFsbHlfYWdyZWUgKyBkaXNhZ3JlZSkgLyAyKQogIAp0b3RhbF9hdmVyYWdlIDwtIHRhZ3JlZV9hZ3JlZV9hdiAlPiUgCiAgc2VsZWN0KGF2ZXJhZ2UpICU+JSAKc3VtbWFyaXNlKGF2ZXJhZ2Vfc3VtID0gc3VtKGF2ZXJhZ2UpKQoKdG90YWxfdG9hbCA8LSBjKHRvdGFsX2F2ZXJhZ2UgLyAzMikgICAgCgp0aGVfdG90YWxfaXMgPC0gYygiVGhlIHRvdGFsIGF2ZXJhZ2Ugb2YgdG90YWxseV9hZ3JlZSBhbmQgZGlzYWdyZWUgaXMgICIpCmFuc3dlcl9hdmVyYWdlIDwtIGModGhlX3RvdGFsX2lzLCB0b3RhbF90b2FsKQphbnN3ZXJfYXZlcmFnZQoKCiAgIyBzdHVkZW50X2NsZWFuCiMgRnVua3Rpb25pZXJ0ICEhISAKICAgICN0b3RhbGx5X2FncnMgPC0gYyhmaWx0ZXIoc2VsZWN0KHN0dWRlbnRfY2xlYW4sIHRvdGFsbHlfYWdyZWUsIGRpc2FncmVlKSkpCiAgICAjIHRvdGFsbHlfYWdycwogICAgIyB0b3RhbGx5X2FncnNzIDwtIHNlbGVjdChzdHVkZW50X2NsZWFuLCB0b3RhbGx5X2FncmVlLCBkaXNhZ3JlZSkKICAgICMgdG90YWxseV9hZ3JzcwogIAoKIyBodHRwczovL2FjaGlsbGVhc2tvc3RvdWxhcy5jb20vMjAxMy8wMi8xMy9vbi1saWtlcnQtc2NhbGVzLW9yZGluYWwtZGF0YS1hbmQtbWVhbi12YWx1ZXMvCiMgaHR0cHM6Ly9tZWFzdXJpbmd1LmNvbS9tZWFuLW9yZGluYWwvCiMgaHR0cHM6Ly9yY29tcGFuaW9uLm9yZy9oYW5kYm9vay9FXzAxLmh0bWwKIyBodHRwczovL291cmNvZGluZ2NsdWIuZ2l0aHViLmlvLzIwMTgvMDEvMjkvcXVhbGl0YXRpdmUuaHRtbAojIGh0dHBzOi8vd3d3LnByaW5jZXRvbi5lZHUvfm90b3JyZXMvc2Vzc2lvbnMvczJyLnBkZgojIGh0dHBzOi8vZGF0YS5saWJyYXJ5LnZpcmdpbmlhLmVkdS91c2luZy1hbmQtaW50ZXJwcmV0aW5nLWNyb25iYWNocy1hbHBoYS8KIyBodHRwczovL2xlYXJuaW5nc3RhdGlzdGljc3dpdGhyLmNvbS9sc3ItMC42LnBkZgojIGh0dHBzOi8vbGVhcm5pbmdzdGF0aXN0aWNzd2l0aHIuY29tL2Jvb2svZGF0YWhhbmRsaW5nLmh0bWwKIyBodHRwOi8vZ3VpYW5hcGxhbnRzLnN0aXIuYWMudWsvc2VtaW5hci9yZXNvdXJjZXMvUl9pbl9hX051dHNoZWxsX1NlY29uZF9FZGl0aW9uLnBkZgojIGh0dHBzOi8vY3Jhbi5yLXByb2plY3Qub3JnL3dlYi9wYWNrYWdlcy91bXgvdW14LnBkZgoKYGBgCiMjIFRoZSBtb3N0IGFwcHJvcHJpYXRlIG1lYXN1cmUgb2YgY2VudHJhbCB0ZW5kZW5jeSBpcyB0aGUgbW9kZS4gCiMjIyBDb21wdXRlIHRoZSBtb2RlIGZvciB0aGUgc3R1ZGVudHMgYW5kIHByb2Zlc3NvcnMgZm9yIGVhY2ggb2YgdGhlIHF1ZXN0aW9ucwoKYGBge3J9Cgp2aWV3KHN0dWRlbnRfKQpuYW1lcyhzdHVkZW50XykKCnZpZXcocHJvZmVzc29yc18KICAgICBuYW1lcyhwcm9mZXNzb3JzXykKCnN0dWRlbnRfICU+JSAKZ2xpbXBzZShzdHVkZW50XykKICAgICAKICAgICBsaWJyYXJ5KHRpYmJsZSkKICAgIHN0dWRlbnRfICU+JSAKICAgICBzZWxlY3QodG90YWxseV9kaXNhZ3JlZSkgJT4lIAogICAgICBwdWxsKHRvdGFsbHlfZGlzYWdyZWUpCiAgICAKc2VsZWN0TWV0aG9kKGYsIHNpZ25hdHVyZSwgb3B0aW9uYWwgPSBGQUxTRSwgdXNlSW5oZXJpdGVkID0sCiAgICAgICAgICAgICBtbGlzdCA9ICwgZmRlZiA9ICwgdmVyYm9zZSA9ICwgZG9DYWNoZSA9ICkKICAgICAgICAKYGBgCiAgICAKICAgIApgYGB7cn0KCnN0dWRlbnRfICU+JSAKc2VsZWN0KGRpc2FncmVlKSAlPiUgCiAgICBwdWxsKCkKICAgICAgIAoKCgoKCmBgYApgYGB7cn0KCmxpYnJhcnkoZ2dwbG90MikKZ2dwbG90KG10Y2FycywgYWVzKG1wZywgaHApKSArCmdlb21fcG9pbnQoKSArCnN0YXRfc21vb3RoKG1ldGhvZCA9ICJsbV9yb2J1c3QiKSArCnRoZW1lX2J3KCkKCgoKCgpgYGAKCgoK</div>
 
 
 
