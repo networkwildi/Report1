@@ -19,10 +19,11 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 
 Code Snippets
-glimpse(student_)
-glimpse(professors_)
+glimpse(student_clean)
+glimpse(professors_clean)
 rlang::last_error()
 rlang::last_trace()
+class(bar_stud_pros)
 
 
 
@@ -37,14 +38,20 @@ library(dplyr)
 library(tibble)
 library(readr)
 library(markdown)
+library(datapasta)
+
+# Fuck 
 
 
-students <- read_csv("students.csv")                                                  # read the file
+student <- read_csv("students.csv")                                                  # read the file
+studenti <- as_tibble(rownames_to_column(student, "x1"))
+students <- select(studenti, - X1) 
 students_clean <- clean_names(students) %>%                                            #  names, crate new value
-  select(question = x1,everything()) %>%                                       # rename x1, select all collumns
+    select(question = x1,everything()) %>%                                       # rename x1, select all collumns
  mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%     # add column, summarise row
-write_csv("students_clean.csv")                                                         # crate new csv for late use
-# view(students)
+  write_csv("students_clean.csv")                                                         # crate new csv for late use
+
+
 
 ```
 ## What is the total number of answers obtained from students? 
@@ -56,7 +63,7 @@ library(tibble)
 library(markdown)
 
 
-student_clean %>% 
+students_clean %>% 
   summarise(answers_all = sum(total_answers)) %>% 
   paste("    The total number of answers obtained from students?  ")
   
@@ -78,7 +85,9 @@ library(purrr)
 library(tibble)
 library(ggplot2)
 
-  professors <- read_csv("professors.csv")                                            # read the file
+  profs <- read_csv("professors.csv") # read the file
+  profis <- as_tibble(rownames_to_column(profs, "x1"))
+professors <- select(profis, - X1)
 professors_clean <- clean_names(professors) %>%                                       #  names, create new val
   select(question = x1,everything()) %>%                                              # rename x1, select all cols
  mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%    # create col, summarise row
@@ -103,7 +112,7 @@ professors_clean %>%                                                      # call
 # library(stringr)
 # library(magrittr)
 
-student_same_amount <- student_clean %>%                                       # create a new val
+student_same_amount <- students_clean %>%                                       # create a new val
 pull(total_answers) %>%                                                        # pull value
 unique                                                                         # filter not even val
   
@@ -145,7 +154,10 @@ pro_answer_comb <- c(pro_answers, professors_same_amount)
  
 
 ```
-
+https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html
+https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
+https://community.rstudio.com/t/how-to-apply-a-plotting-function-to-a-list-of-dataframes-and-a-character-vector/26033
+https://cengel.github.io/R-data-wrangling/data-visualization-with-ggplot2.html
 
 ## Part 2
 ### Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.
@@ -153,100 +165,112 @@ pro_answer_comb <- c(pro_answers, professors_same_amount)
 
 library(ggplot2)
 library(gridExtra)
-library(dplyr)
 library(plotly)
 library(tibble)
-library(tidyr)
-
-pprofessors_ <-professors_ %>% 
-  select(question, p_totally_disagree = totally_disagree, p_disagree = disagree, p_agree = agree, p_totally_agree = totally_agree )
-
-sstudent_clean <- student_ %>% 
-  select(totally_disagree, disagree, agree, totally_agree)
-view(sstudent_)
-
-studs_pros <- merge(pprofessors_,sstudent_)
-view(studs_pros)
-# plot(studs_pros)
-
-bar_stud_pros <- bind_cols(pprofessors_, sstudent_) %>% 
-  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
-  group_by(question)
-view(bar_stud_pros)
-# plot(bar_stud_pros)
-
-
-bar_stud_pros <- bind_cols(pprofessors_, sstudent_) %>% 
-  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
-  group_by(question)
-# plot(bar_stud_pros)
-
-
-
-##
-# df <- data.frame(trt = c("a", "b", "c"), outcome = c(2.3, 1.9, 3.2))
-# ggplot(df, aes(trt, outcome)) +
-  #geom_col()
-##
-
-# <---------------
-
 library(cowsay)
 library(dplyr)
+library(tidyverse)
+library(GGally)
+library(mosaic)
 
-question_x <- student_
-question_colls <- select(student_, question)
+# Loading required package: lattice
+# Loading required package: ggformula
+# Loading required package: ggstance
+
+
+pprofessors_clean <-professors_clean %>% 
+  select(question, p_totally_disagree = totally_disagree, p_disagree = disagree, p_agree = agree, p_totally_agree = totally_agree )
+
+sstudent_clean <- students_clean %>% 
+  select(totally_disagree, disagree, agree, totally_agree)
+# sstudent_clean
+
+# Etwas stimmt nicht, 1024 rows anstelle von 32
+studs_pros <- merge(pprofessors_clean , sstudent_clean)
+# studs_pros
+# plot(studs_pros)
+
+# Brauchbar
+bar_stud_pros_bind <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
+  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
+  group_by(question)
+bar_stud_pros_bind
+
+# qbar <- as_tibble(rownames_to_column(bar_stud_pros, "question"))    # convert col questi -> char
+
+
+
+# ohne question
+# bar_stud_pros <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
+  # select(totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree)
+# group_by(question)
+# bar_stud_pros
+# plot(bar_stud_pros)
+
+
+# bar_stud_pros_vec <- c(bar_stud_pros)
+
+# dd <- bar_stud_pros_vec
+ggplot(data = bar_stud_pros_vec )+
+  geom_bar(mapping = aes(x = bar_stud_pros_vec, y = question_col))
+
+dd_bar_stud_pros <- bar_stud_pros_bind
+pp <- ggplot(dd_bar_stud_pros , aes(x = totally_disagree, y = question))
+pp
+
+
+bar_stud_pros_vec %>%
+  ggplot(aes(x=df, y=question_col))+
+  geom_point()+
+  facet_grid(rows = vars(df),
+             cols = vars(totally_disagree))
+
+ggplot(data = bar_stud_pros , mapping = aes(x = , y = weight)) +
+    geom_boxplot(alpha = 0) +
+    geom_jitter(alpha = 0.3, color = "tomato")
+
+
+# https://statisticsglobe.com/ggplot2-histogram-in-r-geom_histogram-function
+# https://statisticsglobe.com/histogram-in-base-r-hist-function
+# https://statisticsglobe.com/r-pairs-plot-example/
+# pairs plots
+
+sp_totally_disagree <- select(bar_stud_pros_bind, totally_disagree , p_totally_disagree)
+sp_totally_disagree
+
+bar_stud_pros %>% 
+  ggplot(aes(x=totally_disagree, y=question_col))+
+  geom_bar()+
+  facet_wrap(~totally_disagree)
+
+bar_stud_pros_bind
+  ggplot(aes(x=df))+
+  geom_col (mapping = aes(color=p_totally_disagree),alpha=0.3)
+  geom_point(data=filter(question_col, shape=1, size=4, stroke=2, color="red" ))
+
+df <- data.frame(bar_stud_pros)
+df
+
+bar_stud_pros_num <- as.list.numeric_version(bar_stud_pros)   
+hist(bar_stud_pros_num)
+
+pairs(data)
+ggpairs(data)  
+
+
+
+
+question_x <- student_clean
+question_colls <- select(student_clean, question)
 view(question_x)
 view(question_colls)
 
-
-ggplot(data = bar_stud_pros )+
-    geom_bar(mapping = aes(x = bar_stud_pros , y = question_colls ))+
-#    ggplot(bar_stud_pros, aes(x=Pteal.Length)) + geom_historgram()+
-  labs(title = "Students and professors comapred", x = "Students and Professors", y="questions")
-
-bar_stud_pros %>% 
-ggplot(data, aes(x=group, y=value, fill=group))+
-  geom_boxplot()+
-  labs(title="boxplot of student scores")+
-  theme_classic()
-
-bar_stud_pros %>% 
-ggplot(data, aes_(x=group)) + 
-  geom_boxplot() +
-  labs(title="Box plots of student scores") +
-  theme_classic()
-
-mean(bar_stud_pros)
-
-?aes
-help(aes)  
-
-bar_stud_pros %>% 
-  ggplot(mapping = aes(x = "totally_disagree",y = question))+
-           geom_bar(mapping = aes, data = bar_stud_pros, stat = "count",
-  position = "stack", 1, width = NULL, binwidth = NULL,
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
-  view(bar_stud_pros)
-  
-  bar_stud_pros %>% 
-  geom_col(mapping = aes(), data = NULL, position = "stack", x,
-  width = NULL, na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
-  
-  bar_stud_pros %>% 
-    ggplot(mapping = aes(x = question)+
-             geom_col(stat = "identity"))
-
-glimpse(studs_pros)
-
-# ggplot(bar_stud_pros, aes(class))+
- # geom_bar()
+rlang::last_error()
+rlang::last_trace()
 
 
-ggplot(mtcars, aes(x = factor(cyl)))+
-  geom_bar()
-view(mtcars)
+
+
 
 ```
 
@@ -256,24 +280,18 @@ view(mtcars)
 
 ```{r}
 
-
 library(dplyr)
 library(tidyselect)
 library(tidyverse)
 library(tidyr)
-library(janitor)
-library(rlang) 
-library(rlang)
 library(datapasta)
-library(tidyr)
 library(tibble)
 library(readr)
-library(dplyr)
 library(lubridate)
 library(janitor)
 library(cowsay)
          
-tagree_agree_av <-student_clean %>% 
+tagree_agree_av <-students_clean %>% 
 select(totally_agree,disagree) %>% 
     mutate(average = (totally_agree + disagree) / 2)
   
@@ -285,27 +303,8 @@ total_toal <- c(total_average / 32)
 
 the_total_is <- c("The total average of totally_agree and disagree is  ")
 answer_average <- c(the_total_is, total_toal)
-answer_average
+print(answer_average)
 
-
-  # student_clean
-# Funktioniert !!! 
-    #totally_agrs <- c(filter(select(student_clean, totally_agree, disagree)))
-    # totally_agrs
-    # totally_agrss <- select(student_clean, totally_agree, disagree)
-    # totally_agrss
-  
-
-# https://achilleaskostoulas.com/2013/02/13/on-likert-scales-ordinal-data-and-mean-values/
-# https://measuringu.com/mean-ordinal/
-# https://rcompanion.org/handbook/E_01.html
-# https://ourcodingclub.github.io/2018/01/29/qualitative.html
-# https://www.princeton.edu/~otorres/sessions/s2r.pdf
-# https://data.library.virginia.edu/using-and-interpreting-cronbachs-alpha/
-# https://learningstatisticswithr.com/lsr-0.6.pdf
-# https://learningstatisticswithr.com/book/datahandling.html
-# http://guianaplants.stir.ac.uk/seminar/resources/R_in_a_Nutshell_Second_Edition.pdf
-# https://cran.r-project.org/web/packages/umx/umx.pdf
 
 ```
 ## The most appropriate measure of central tendency is the mode. 
@@ -313,51 +312,77 @@ answer_average
 
 ```{r}
 
-view(student_)
-names(student_)
 
-view(professors_
-     names(professors_)
+library(tibble)
+library(dplyr)
+library(shiny)
+library(stringr)
 
-student_ %>% 
-glimpse(student_)
-     
-     library(tibble)
-    student_ %>% 
-     select(totally_disagree) %>% 
-      pull(totally_disagree)
-    
-selectMethod(f, signature, optional = FALSE, useInherited =,
-             mlist = , fdef = , verbose = , doCache = )
-        
+
+# mode students per question
+# totally_disagree
+#   students_clean              # totally_disagree
+s_tdisag  <-c(pull(students_clean, totally_disagree))                             # pull val col totally_disagree
+mode_s_tdisag <- names(table(s_tdisag))[table(s_tdisag)==max(table(s_tdisag))]    # calculate mode
+ban_tdisag <- c("Mode of Students totally disagree")                              # create text
+answer_mode_tdisag <-c(ban_tdisag,mode_s_tdisag)                                  # create vector
+
+
+# disagree
+s_disag <- c(pull(students_clean, disagree))                                      # pull val col totally_disagree
+mode_s_disag <-names(table(s_disag))[table(s_disag)==max(table(s_disag))]         # calculate mode
+ban_sdisag <- c("Mode of disagree")                                               # create text
+answer_mode_disagree <- c(ban_sdisag, mode_s_disag)                               # create vector
+
+# agree
+s_agree   <- c(pull(students_clean, agree))                                       # pull val col totally_disagree
+mode_s_agree <- names(table(s_agree))[table(s_agree)== max(table(s_agree))]       # calculate mode
+ban_sagree <- c("Mode of agree")                                                  # create text
+answer_mode_agree <- c(ban_sagree, mode_s_agree)                                  # create vector
+
+# totally agree
+s_tagree  <- c(pull(students_clean, totally_agree))                               # pull val col totally_disagree
+mode_s_tagree <-names(table(s_tagree))[table(s_tagree)==max(table(s_tagree))]     # calculate mode
+ban_tagree <- c("Mode of totally agree")                                          # create text
+answer_mode_tagree <- c(ban_tagree, mode_s_tagree)                                # create vector
+
+
+print(answer_mode_tdisag)                                                         # print results of students
+print(answer_mode_disagree)
+print(answer_mode_agree)  
+print(answer_mode_tagree)
+print("Mode of Professors")                                                       # print results of professors
+print(answer_mode_ptdisag)
+print(answer_mode_pdisag)
+print(answer_pagree)
+print(answer_p_tagree)
+
+# Professors_clean
+# totally disagree
+
+p_tdisag  <- c(pull(professors_clean, totally_disagree))                        # pull val col totally_disagree
+mode_p_tdisag <- names(table(p_tdisag))[table(p_tdisag)==max(table(p_tdisag))]  # calculate mode
+ban_ptdisag <- c("Mode of professors totally disagree")                         # create text
+answer_mode_ptdisag <- c(ban_ptdisag, mode_p_tdisag)                            # create vector
+
+# disagree
+p_disag <- c(pull(professors_clean, disagree))
+mode_p_disag  <- names(table(p_disag))[table(p_disag)==max(table(p_disag))]
+ban_pdisag <- c("Mode of disagree")
+answer_mode_pdisag <- c(ban_pdisag, mode_p_disag)
+
+# agree
+p_agree <- c(pull(professors_clean, agree))
+mode_p_agree <- names(table(p_agree))[table(p_agree)==max(table(p_agree))]
+ban_pagree  <- c("Mode of agree")
+answer_pagree <- c(ban_pagree, mode_p_agree)
+
+# totally agree
+p_tagree  <- c(pull(professors_clean, totally_agree))
+mode_p_tagree <- names(table(p_tagree))[table(p_tagree)==max(table(p_tagree))]
+ban_tagree <- c("Mode of totally agree")
+answer_p_tagree <- c(ban_tagree, mode_p_tagree)
+
+
 ```
     
-    
-```{r}
-
-student_ %>% 
-select(disagree) %>% 
-    pull()
-       
-
-
-
-
-
-```
-```{r}
-
-library(ggplot2)
-ggplot(mtcars, aes(mpg, hp)) +
-geom_point() +
-stat_smooth(method = "lm_robust") +
-theme_bw()
-
-
-
-
-
-```
-
-
-
