@@ -16,3 +16,125 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+############################
+Code Snippets
+glimpse(student_clean)
+glimpse(professors_clean)
+rlang::last_error()
+rlang::last_trace()
+class(survey_clean)
+
+#############################
+
+# The data
+Under the Resources tab of this unit, you will find the file survey.csv. 
+Download this file and save it in your working directory.
+This file contains the data collected from a survey of participants at a conference in the Netherlands. 
+
+### The participants were asked the following questions:
+
+What university do you come from?
+What is your position?
+How many employees are there in your research group?
+How many Ph.D. students are there in your research group?
+How many postdocs are there in your research group?
+How many professors are there in your research group?
+The answers are stored in the file survey.csv.
+
+## Exercises
+### Part 1
+Load the data and answer the following questions:
+
+```{r echo=FALSE, error=FALSE, include=FALSE}
+
+library(readr)
+
+survey_source<- read_csv("survey.csv")
+survey_roname <-  rownames_to_column(survey_source,"question")
+survey <- select(survey_roname,(-X1))
+survey_clean <- clean_names(survey)
+# survey_clean
+
+
+
+```
+
+How many survey participants were there?
+What are the data types of each column?
+What are the top 3 universities with the most survey participants?
+
+```{r}
+
+# How many survey participants were there?
+# I think I have a problem understanding the meaning of this question. Do you want us to give you 30 as a response or is it something else ?
+# Yes, if this is the number of participants to the survey.
+
+survey_participants <- survey_clean %>% 
+  mutate(numb_of_particip = number_of_employees + number_of_ph_d_students + number_of_postdocs + number_of_professors) %>% 
+select(university, numb_of_particip) %>% 
+as_tibble()
+
+
+ban_survey_participant <- c("How many survey participants were there?")
+result_paricipants <- c(ban_survey_participant, survey_participants)
+print(result_paricipants)
+
+print("How many survey participants were there?", survey_participants)
+
+survey_participants
+#  class(survey_participants)
+
+```
+
+```{r}
+# What are the data types of each column?
+typeof(survey_clean)
+glimpse(survey_clean)
+class(survey_clean)
+#What are the top 3 universities with the most survey participants?
+
+names(survey_clean)
+
+```
+
+Part 2
+Obtain a horizontal bar graph of the number of survey participants for the different positions given in the column Position.
+(Thanks for flagging the needed clarification in Part 2, I have updated the definition of the groups (1-10, 11-20…).)
+
+```{r}
+
+
+```
+
+Part 3
+There is a column (named Sizes) in the dataset that is supposed to group the data in the column Number of employees in the following bins:
+
+Small (0 to 10)
+Medium (11 to 20)
+Large (21 to 100)
+Extra large (over 100)
+Unfortunately, somebody made mistakes in that column…
+
+Recreate this column correctly, then plot a bar chart with {ggplot2} of the number of values in each of the bins.
+
+
+
+```{r}
+
+
+```
+Part 4
+Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are Ph.D. students, postdocs and professors for each research group. Use a custom theme.
+
+We have not covered stacked horizontal bar plot, so you will have to study the documentation, and/or some blog posts. There is also a great book about {ggplot2} recipes that I recommend you check out: The hitchhiker's guide to ggplot2. The book is pay-as-you-want, so select Package "The book" and choose a number from 0 and 30 dollars.
+
+(Regarding part 4, you can consider that each student is in a different research group.)
+
+
+```{r}
+
+
+
+```
+

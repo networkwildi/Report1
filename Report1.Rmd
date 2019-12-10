@@ -104,8 +104,8 @@ professors_clean %>%                                                      # call
   paste("  The total number of answers obtained from professors ")        # supporting result with text
   
 ```
-
-
+## Students
+### Does each question have the same number of answers?
 ```{r}
 
 
@@ -127,7 +127,7 @@ answer                                                                         #
 
 ```
 
-
+## Professors
 ### Does each question have the same number of answers?
 
 ```{r}
@@ -135,12 +135,11 @@ answer                                                                         #
 # rmarkdown::render()
 # LASSEN WIR SO !!!!!!!
 
+# Load librarys
 library(shiny)
 library(stringr)
 library(glue)
 library(dplyr)
-
-# paste("Not all anwers have the same amount") %>%  
 
 professors_same_amount <- professors_clean %>% 
   pull(total_answers) %>% 
@@ -151,25 +150,22 @@ pro_answer_comb <- c(pro_answers, professors_same_amount)
   pro_answer_comb 
  
 
- 
-
 ```
-https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html
-https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
-https://community.rstudio.com/t/how-to-apply-a-plotting-function-to-a-list-of-dataframes-and-a-character-vector/26033
-https://cengel.github.io/R-data-wrangling/data-visualization-with-ggplot2.html
+
 
 ## Part 2
 ### Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.
 ```{r}
 
-library(ggplot2)
+
+library(tidyverse)
+library(dplyr)
 library(gridExtra)
 library(plotly)
 library(tibble)
 library(cowsay)
-library(dplyr)
-library(tidyverse)
+
+
 library(GGally)
 library(mosaic)
 
@@ -177,13 +173,55 @@ library(mosaic)
 # Loading required package: ggformula
 # Loading required package: ggstance
 
+#  Lösung fehlt
 
-pprofessors_clean <-professors_clean %>% 
-  select(question, p_totally_disagree = totally_disagree, p_disagree = disagree, p_agree = agree, p_totally_agree = totally_agree )
 
-sstudent_clean <- students_clean %>% 
-  select(totally_disagree, disagree, agree, totally_agree)
-# sstudent_clean
+ggpairs(data, mapping = NULL, columns = 1:ncol(data), title = NULL,
+  upper = list(continuous = "cor", combo = "box_no_facet", discrete =
+  "facetbar", na = "na"), lower = list(continuous = "points", combo =
+  "facethist", discrete = "facetbar", na = "na"), diag = list(continuous =
+  "densityDiag", discrete = "barDiag", na = "naDiag"), params = NULL, ...,
+  xlab = NULL, ylab = NULL, axisLabels = c("show", "internal", "none"),
+  columnLabels = colnames(data[columns]), labeller = "label_value",
+  switch = NULL, showStrips = NULL, legend = NULL,
+  cardinality_threshold = 15, progress = NULL,
+  legends = stop("deprecated"))
+
+pairs(bar_stud_pros_pus)
+
+
+
+bar_stud_pros_pus <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
+  select(totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree)
+bar_stud_pros_pus
+
+for_questions <- (select(bar_stud_pros_bind, question))
+for_questions
+
+
+ggplot(data = bar_stud_pros_pus)+
+  geom_bar(mapping = aes(x = bar_stud_pros_pus, y = for_questions)+
+  ggpairs(geom_bar(mapping = aes(x = bar_stud_pros_pus, y = for_questions)))
+  
+  
+ggpairs(data = bar_stud_pros_pus, mapping = NULL, columns = 1:ncol(bar_stud_pros_pus) )
+  
+ggpairs()
+
+bar_stud_pros_bind %>% 
+  ggplot(aes(x = totally_disagree))+
+  geom_bar()+
+  facet_wrap(~totally_disagree)
+
+
+ggplot(data= bar_stud_pros_bind)+
+  geom_bar(mapping = aes(totally_disagree, y = question)+
+  plot()
+  
+x_test_x <- bar_stud_pros_bind %>% 
+  group_by(question) %>% 
+  select(totally_disagree, p_totally_disagree)
+
 
 # Etwas stimmt nicht, 1024 rows anstelle von 32
 studs_pros <- merge(pprofessors_clean , sstudent_clean)
@@ -196,38 +234,11 @@ bar_stud_pros_bind <- bind_cols(pprofessors_clean, sstudent_clean) %>%
   group_by(question)
 bar_stud_pros_bind
 
-# qbar <- as_tibble(rownames_to_column(bar_stud_pros, "question"))    # convert col questi -> char
-
-
-
-# ohne question
-# bar_stud_pros <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
-  # select(totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree)
-# group_by(question)
-# bar_stud_pros
-# plot(bar_stud_pros)
-
-
-# bar_stud_pros_vec <- c(bar_stud_pros)
-
-# dd <- bar_stud_pros_vec
-ggplot(data = bar_stud_pros_vec )+
-  geom_bar(mapping = aes(x = bar_stud_pros_vec, y = question_col))
 
 dd_bar_stud_pros <- bar_stud_pros_bind
 pp <- ggplot(dd_bar_stud_pros , aes(x = totally_disagree, y = question))
 pp
 
-
-bar_stud_pros_vec %>%
-  ggplot(aes(x=df, y=question_col))+
-  geom_point()+
-  facet_grid(rows = vars(df),
-             cols = vars(totally_disagree))
-
-ggplot(data = bar_stud_pros , mapping = aes(x = , y = weight)) +
-    geom_boxplot(alpha = 0) +
-    geom_jitter(alpha = 0.3, color = "tomato")
 
 
 # https://statisticsglobe.com/ggplot2-histogram-in-r-geom_histogram-function
@@ -235,35 +246,18 @@ ggplot(data = bar_stud_pros , mapping = aes(x = , y = weight)) +
 # https://statisticsglobe.com/r-pairs-plot-example/
 # pairs plots
 
-sp_totally_disagree <- select(bar_stud_pros_bind, totally_disagree , p_totally_disagree)
-sp_totally_disagree
 
-bar_stud_pros %>% 
-  ggplot(aes(x=totally_disagree, y=question_col))+
-  geom_bar()+
-  facet_wrap(~totally_disagree)
 
-bar_stud_pros_bind
-  ggplot(aes(x=df))+
-  geom_col (mapping = aes(color=p_totally_disagree),alpha=0.3)
-  geom_point(data=filter(question_col, shape=1, size=4, stroke=2, color="red" ))
 
-df <- data.frame(bar_stud_pros)
-df
 
 bar_stud_pros_num <- as.list.numeric_version(bar_stud_pros)   
 hist(bar_stud_pros_num)
 
-pairs(data)
+
+ggpairs(barlauch)
+
+pairs(bar_stud_pros_bind)
 ggpairs(data)  
-
-
-
-
-question_x <- student_clean
-question_colls <- select(student_clean, question)
-view(question_x)
-view(question_colls)
 
 rlang::last_error()
 rlang::last_trace()
@@ -287,7 +281,6 @@ library(tidyr)
 library(datapasta)
 library(tibble)
 library(readr)
-library(lubridate)
 library(janitor)
 library(cowsay)
          
