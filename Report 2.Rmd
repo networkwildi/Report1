@@ -66,6 +66,9 @@ What are the top 3 universities with the most survey participants?
 
 ```{r}
 
+library(tidyr)
+library(tibble)
+
 # How many survey participants were there?
 # I think I have a problem understanding the meaning of this question. Do you want us to give you 30 as a response or is it something else ?
 # Yes, if this is the number of participants to the survey.
@@ -75,40 +78,61 @@ survey_participants <- survey_clean %>%
 select(university, numb_of_particip) %>% 
 as_tibble()
 
-
 ban_survey_participant <- c("How many survey participants were there?")
 result_paricipants <- c(ban_survey_participant, survey_participants)
 print(result_paricipants)
 
 print("How many survey participants were there?", survey_participants)
 
-survey_participants
-#  class(survey_participants)
+##   done ##
+
 
 ```
-
-```{r}
 # What are the data types of each column?
-typeof(survey_clean)
+```{r}
+print("What are the data types of each column?")
+
 glimpse(survey_clean)
-class(survey_clean)
+print("or more detailed")
+str(survey_clean)
+
+##  Done  ##
+
+```
+```{r}
+
+library(dplyr)
+
 #What are the top 3 universities with the most survey participants?
 
-names(survey_clean)
+survey_participants %>% 
+  arrange(desc(numb_of_particip)) %>% 
+  top_n(3)
+
+
+## Done ##
 
 ```
 
-Part 2
-Obtain a horizontal bar graph of the number of survey participants for the different positions given in the column Position.
-(Thanks for flagging the needed clarification in Part 2, I have updated the definition of the groups (1-10, 11-20…).)
+# Part 2
+### Obtain a horizontal bar graph of the number of survey participants for the different positions given in the column Position.
+### (Thanks for flagging the needed clarification in Part 2, I have updated the definition of the groups (1-10, 11-20…).)
 
 ```{r}
 
+library(dplyr)
+library(tibble)
+
+
+survey_clean
+
+rlang::last_error()
+rlang::last_trace()
 
 ```
 
-Part 3
-There is a column (named Sizes) in the dataset that is supposed to group the data in the column Number of employees in the following bins:
+# Part 3
+### There is a column (named Sizes) in the dataset that is supposed to group the data in the column Number of employees in the following bins:
 
 Small (0 to 10)
 Medium (11 to 20)
@@ -124,12 +148,14 @@ Recreate this column correctly, then plot a bar chart with {ggplot2} of the numb
 
 
 ```
-Part 4
-Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are Ph.D. students, postdocs and professors for each research group. Use a custom theme.
 
-We have not covered stacked horizontal bar plot, so you will have to study the documentation, and/or some blog posts. There is also a great book about {ggplot2} recipes that I recommend you check out: The hitchhiker's guide to ggplot2. The book is pay-as-you-want, so select Package "The book" and choose a number from 0 and 30 dollars.
+# Part 4
+### Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are Ph.D. students, postdocs and professors for each research group. Use a custom theme.
 
-(Regarding part 4, you can consider that each student is in a different research group.)
+### We have not covered stacked horizontal bar plot, so you will have to study the documentation, and/or some blog posts. 
+### There is also a great book about {ggplot2} recipes that I recommend you check out: The hitchhiker's guide to ggplot2. 
+### The book is pay-as-you-want, so select Package "The book" and choose a number from 0 and 30 dollars.
+## (Regarding part 4, you can consider that each student is in a different research group.)
 
 
 ```{r}
