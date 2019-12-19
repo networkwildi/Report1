@@ -120,16 +120,90 @@ survey_participants %>%
 
 ```{r}
 
+
 library(dplyr)
 library(tibble)
+library(ggplot2)
+library(tidyr)
+library(GGally)
+# data()
+
+survey_position <- survey_clean %>% select(position) %>% 
+as.tibble(survey_position)
+str(survey_position)
+
+survey_positions <- (survey_clean %>%  select(position)) %>% 
+tibble::as_tibble(survey_positions)
+str(survey_positions)
+
+survey_parts <- (survey_clean %>%  select(number_of_employees,number_of_ph_d_students,number_of_postdocs,  number_of_professors)) %>% 
+as.tibble(survey_parts) 
+str(survey_parts)
+
+survey_pos_parts  <- (survey_clean %>% select(position, number_of_employees,number_of_ph_d_students,number_of_postdocs,  number_of_professors)) %>% as_tibble(survey_pos_parts)
+str(survey_pos_parts)
+as_data_frame(survey_pos_parts)
+
+###   Data
+
+# example pot
+
+sales_data_xls %>% 
+  ggplot(aes(x=quantity_ordered, y=sales))+
+  geom_point(mapping = aes(color=dealsize), alpha=0.3)+
+  geom_point(data=filter(sales_data_xls, territory=="APAC",
+                         status=="Disputed"),
+             shape=1, size=4, stroke=2, color="blue")
+```
+
+```{r}
+survey_clean %>% 
+  group_by(position) %>% 
+  ggplot(aes(x=number_of_employees, y=position))+
+  geom_point(mapping = aes(color=university), alpha=0.3)+
+  # geom_point(data=filter(survey_clean, territory=="Large",
+    #                     sizes=="Small"),
+     #        shape=1, size=4, stroke=2, color="blue")
+
+```
+names(survey_clean)
+
+# example plot
 
 
-survey_clean
+```{r}
 
+library(ggplot2)
+
+sur_pos <- survey_clean %>% 
+  group_by(position)
+sur_pos
+
+ggplot(data = sur_pos)+
+  geom_bar(mapping = aes(x=number_of_employees, y=number_of_professors))
+
+ # str(survey_clean)
+
+```
+  
+```{r}  
+library(mosaic)
+
+ggplot(mapping = aes(x=survey_parts, y=survey_positions))+
+aes(class, fill=p )+
+ geom_bar(position = position_stack(reverse = TRUE))+
+   coord_flip() +
+  theme(legend.position = "top")+
+# stat(survey_parts,"bin")
+
+```
+# help("stat")
+str()
+plot(survey_parts
+names(survey_clean)
 rlang::last_error()
 rlang::last_trace()
 
-```
 
 # Part 3
 ### There is a column (named Sizes) in the dataset that is supposed to group the data in the column Number of employees in the following bins:
@@ -146,8 +220,44 @@ Recreate this column correctly, then plot a bar chart with {ggplot2} of the numb
 
 ```{r}
 
+library(readr)
+library(tibble)
+library(tidyselect)
+library(tidyr)
+library(dplyr)
+library(stringr)
+library(janitor)
+
+employees <- survey_clean %>% 
+  select(number_of_employees)
+
+# small     # (0 to 10)
+small <-employees %>% 
+  filter(number_of_employees <=10) %>% 
+    mutate(sizes = ("Small (0 to 10)"))
+
+# medium  # Medium (11 to 20)
+medium <-employees %>% 
+  filter(number_of_employees >10, number_of_employees <=20) %>% 
+  mutate(sizes = ("Medium (11 to 20"))
+  
+# large # (21 to 100)
+large <- employees %>% 
+  filter(number_of_employees >20, number_of_employees <=100) %>% 
+  mutate(sizes = ("Large (21 to 100"))
+
+# extra_large   #(over 100)
+extra_large <- employees %>% 
+  filter(number_of_employees >100) %>% 
+  mutate(sizes = ("Extra Large (over 100"))
+
+sizes_ordered <-bind_rows(small,medium,large, extra_large)
+sizes_ordered
+
+
 
 ```
+
 
 # Part 4
 ### Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are Ph.D. students, postdocs and professors for each research group. Use a custom theme.
