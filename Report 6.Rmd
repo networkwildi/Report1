@@ -1,0 +1,108 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+
+###  08. Report 6
+
+Content
+Resources 1
+Questions 3
+Introduction
+Our last project takes us back to a spreadsheet. You will need to extract the data from it before starting your analysis.
+
+
+We will look at a dataset that contains data about athletes at the Olympic Games.
+
+The data
+The data is split in four sheets.
+
+games: basic data about the games (season, city…)
+athletes: contains basic data about the athletes (name, height, weight, gender…) that are constant for all games. Note that we only have one measure of weight, height and gender so you will have to assume that this did not change even if the athlete participated to the Games more than once
+country: contains basic data about the athletes that sometimes changed over time (country, age)
+medals: a list of results (type of medals for the winners, NA for the others)
+Before you start doing lots of joins, check what happened at the 1956 games, it might be interesting…
+
+Exercises
+Part 1
+Have some athletes competed for different countries over time?
+```{r}
+ 
+
+```
+
+Part 2
+Who are the ten athletes that took part in most games?
+
+```{r}
+
+```
+
+Part 3
+What athlete(s) kept a Gold medal for the longest time?
+
+```{r}
+
+```
+
+Part 4
+What country(ies) kept a Gold medal for the longest time?
+
+```{r}
+
+```
+
+
+Part 5
+Who are the ten athletes that competed in the most events (some athletes take part in more than one event during games) ?
+
+```{r}
+
+```
+
+Part 6
+Create a new table showing the number of medals per country (rows) and per year (column). Keep only the 15 countries with the most medals overall.
+
+```{r}
+
+```
+
+Part 7
+Create a scatterplot showing the average height and weight of competitors per sport (one dot per sport). Add labels with the sport names for:
+
+the largest average height
+the largest average weight
+the smallest average height
+the smallest average weight
+the largest average BMI
+the smallest average BMI
+It might be that the same dot qualify for multiple labels. The formula to calculate Body Mass Index (BMI) is:
+
+weight in kg / (height in meters)^2
+Part 8
+Create a line plot showing the number of medals given by year (one line for Gold, one line for Silver and one line for Bronze). Does it change over time? Use facet to separate the medals at Summer games and Winter games.
+
+RESOURCES
+50  Data/olympics.xlsx.zip
+
+```{r}
+
+
+```
+

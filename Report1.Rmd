@@ -32,6 +32,7 @@ class(bar_stud_pros)
 ```{r include=FALSE, echo=FALSE, warning=FALSE}                    
 # surpess warings
 # no visible result output
+# LOAD DATA OF STUDENTS SOURCE
 
 library(janitor)
 library(dplyr)
@@ -40,18 +41,15 @@ library(readr)
 library(markdown)
 library(datapasta)
 
-# Fuck 
+student <- read_csv("students.csv")                                                     # read the file
+studenti <- as_tibble(rownames_to_column(student, "x1"))                                # create new column
+students <- select(studenti, - X1)                                                      # select columns without -X1
+students_clean <- clean_names(students) %>%                                             #  names, crate new value
+    select(question = x1,everything()) %>%                                              # rename x1, select all collumns
+ mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%      # add column, summarise row
+  write_csv("students_clean.csv")                                                       # crate new csv for late use
 
-
-student <- read_csv("students.csv")                                                  # read the file
-studenti <- as_tibble(rownames_to_column(student, "x1"))
-students <- select(studenti, - X1) 
-students_clean <- clean_names(students) %>%                                            #  names, crate new value
-    select(question = x1,everything()) %>%                                       # rename x1, select all collumns
- mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%     # add column, summarise row
-  write_csv("students_clean.csv")                                                         # crate new csv for late use
-
-
+# DONE
 
 ```
 ## What is the total number of answers obtained from students? 
@@ -63,10 +61,12 @@ library(tibble)
 library(markdown)
 
 
-students_clean %>% 
-  summarise(answers_all = sum(total_answers)) %>% 
-  paste("    The total number of answers obtained from students?  ")
+students_clean %>%                                                      # Soursce file
+  summarise(answers_all = sum(total_answers)) %>%                       # Summarise all answers
+  paste("    The total number of answers obtained from students?  ")    # create output
   
+# DONE
+
 ```
 
 
@@ -74,6 +74,7 @@ students_clean %>%
 
 # surpess warings
 # no visible result output
+# LOADING DATA OF PROFESSORS
 
 library(tidyselect)
 library(dplyr)
@@ -85,13 +86,15 @@ library(purrr)
 library(tibble)
 library(ggplot2)
 
-  profs <- read_csv("professors.csv") # read the file
-  profis <- as_tibble(rownames_to_column(profs, "x1"))
-professors <- select(profis, - X1)
-professors_clean <- clean_names(professors) %>%                                       #  names, create new val
+  profs <- read_csv("professors.csv")                       # read the file
+  profis <- as_tibble(rownames_to_column(profs, "x1"))      # create new column
+professors <- select(profis, - X1)                          # get rid of X1
+professors_clean <- clean_names(professors) %>%                                       # clean names
   select(question = x1,everything()) %>%                                              # rename x1, select all cols
  mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%    # create col, summarise row
   write_csv("professors_clean.csv")                                                   # write a new csv for later use
+
+# DONE
 
 ```
 ##  What is the total number of answers obtained from professors?
@@ -102,6 +105,8 @@ library(markdown)
 professors_clean %>%                                                      # calling data
   summarise(anwers_allpros = sum(total_answers)) %>%                      # summarising column
   paste("  The total number of answers obtained from professors ")        # supporting result with text
+
+# DONE
   
 ```
 ## Students
@@ -123,7 +128,7 @@ amount_answers <- c(" Not all questions did get the same amount of anwers  "  ) 
 answer <- c(amount_answers , student_same_amount)                         # combine two vec
 answer                                                                         # run single vec
 
-
+# DONE
 
 ```
 
@@ -141,15 +146,16 @@ library(stringr)
 library(glue)
 library(dplyr)
 
-professors_same_amount <- professors_clean %>% 
-  pull(total_answers) %>% 
-    unique()
+professors_same_amount <- professors_clean %>%            # create new val
+  pull(total_answers) %>%                                 # pull data
+    unique()                                              # pull uneven val
 
-pro_answers <-  c(" Not all anwers have the same amount.  "  )  
-pro_answer_comb <- c(pro_answers, professors_same_amount)
-  pro_answer_comb 
+pro_answers <-  c(" Not all anwers have the same amount.  "  )    # Text to vec
+pro_answer_comb <- c(pro_answers, professors_same_amount)         # combine text and result in a new vec
+  pro_answer_comb                                                 # call vec
  
-
+# DONE
+  
 ```
 
 
@@ -164,8 +170,6 @@ library(gridExtra)
 library(plotly)
 library(tibble)
 library(cowsay)
-
-
 library(GGally)
 library(mosaic)
 
@@ -174,6 +178,8 @@ library(mosaic)
 # Loading required package: ggstance
 
 #  Lösung fehlt
+
+
 
 
 ggpairs(data, mapping = NULL, columns = 1:ncol(data), title = NULL,
@@ -206,14 +212,13 @@ ggplot(data = bar_stud_pros_pus)+
   
 ggpairs(data = bar_stud_pros_pus, mapping = NULL, columns = 1:ncol(bar_stud_pros_pus) )
   
-ggpairs()
-
 bar_stud_pros_bind %>% 
   ggplot(aes(x = totally_disagree))+
   geom_bar()+
   facet_wrap(~totally_disagree)
 
 
+# GIBT EIN RESULTAT
 ggplot(data= bar_stud_pros_bind)+
   geom_bar(mapping = aes(totally_disagree, y = question)+
   plot()
@@ -235,8 +240,10 @@ bar_stud_pros_bind <- bind_cols(pprofessors_clean, sstudent_clean) %>%
 bar_stud_pros_bind
 
 
+# GIBT NUR EINE LEERE TABELLE
 dd_bar_stud_pros <- bar_stud_pros_bind
-pp <- ggplot(dd_bar_stud_pros , aes(x = totally_disagree, y = question))
+pp <- ggplot(dd_bar_stud_pros , aes(x = totally_disagree, y = question))+
+   geom_bar(data = dd_bar_stud_pros, position = "stack", y=pp)
 pp
 
 
@@ -246,23 +253,8 @@ pp
 # https://statisticsglobe.com/r-pairs-plot-example/
 # pairs plots
 
-
-
-
-
 bar_stud_pros_num <- as.list.numeric_version(bar_stud_pros)   
 hist(bar_stud_pros_num)
-
-
-ggpairs(barlauch)
-
-pairs(bar_stud_pros_bind)
-ggpairs(data)  
-
-rlang::last_error()
-rlang::last_trace()
-
-
 
 
 
@@ -284,20 +276,21 @@ library(readr)
 library(janitor)
 library(cowsay)
          
-tagree_agree_av <-students_clean %>% 
-select(totally_agree,disagree) %>% 
-    mutate(average = (totally_agree + disagree) / 2)
+tagree_agree_av <-students_clean %>%                                      # create new variable 
+select(totally_agree,disagree) %>%                                        # select columns
+    mutate(average = (totally_agree + disagree) / 2)                      # calculate average  
   
-total_average <- tagree_agree_av %>% 
-  select(average) %>% 
-summarise(average_sum = sum(average))
+total_average <- tagree_agree_av %>%                                      # create new variable
+  select(average) %>%                                                     # select column
+summarise(average_sum = sum(average))                                     # summarise average
 
-total_toal <- c(total_average / 32)    
+total_toal <- c(total_average / 32)                                       # calculate average
 
-the_total_is <- c("The total average of totally_agree and disagree is  ")
-answer_average <- c(the_total_is, total_toal)
-print(answer_average)
+the_total_is <- c("The total average of totally_agree and disagree is  ")   # text to vec
+answer_average <- c(the_total_is, total_toal)                               # combine text and result to new vec  
+print(answer_average)                                                       # print text and result
 
+#   DONE
 
 ```
 ## The most appropriate measure of central tendency is the mode. 
@@ -314,7 +307,9 @@ library(stringr)
 
 # mode students per question
 # totally_disagree
-#   students_clean              # totally_disagree
+#   students_clean
+
+# totally_disagree
 s_tdisag  <-c(pull(students_clean, totally_disagree))                             # pull val col totally_disagree
 mode_s_tdisag <- names(table(s_tdisag))[table(s_tdisag)==max(table(s_tdisag))]    # calculate mode
 ban_tdisag <- c("Mode of Students totally disagree")                              # create text
@@ -376,6 +371,8 @@ mode_p_tagree <- names(table(p_tagree))[table(p_tagree)==max(table(p_tagree))]
 ban_tagree <- c("Mode of totally agree")
 answer_p_tagree <- c(ban_tagree, mode_p_tagree)
 
+
+# DONE
 
 ```
     

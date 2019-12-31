@@ -82,7 +82,9 @@ ban_survey_participant <- c("How many survey participants were there?")
 result_paricipants <- c(ban_survey_participant, survey_participants)
 print(result_paricipants)
 
-print("How many survey participants were there?", survey_participants)
+
+#print(survey_participants, "How many survey participants were there?") 
+
 
 ##   done ##
 
@@ -103,7 +105,7 @@ str(survey_clean)
 
 library(dplyr)
 
-#What are the top 3 universities with the most survey participants?
+# What are the top 3 universities with the most survey participants?
 
 survey_participants %>% 
   arrange(desc(numb_of_particip)) %>% 
@@ -160,44 +162,14 @@ sales_data_xls %>%
 survey_clean %>% 
   group_by(position) %>% 
   ggplot(aes(x=number_of_employees, y=position))+
-  geom_point(mapping = aes(color=university), alpha=0.3)+
+  geom_point(mapping = aes(color=university), alpha=0.3)
   # geom_point(data=filter(survey_clean, territory=="Large",
     #                     sizes=="Small"),
      #        shape=1, size=4, stroke=2, color="blue")
 
-```
-names(survey_clean)
-
-# example plot
-
-
-```{r}
-
-library(ggplot2)
-
-sur_pos <- survey_clean %>% 
-  group_by(position)
-sur_pos
-
-ggplot(data = sur_pos)+
-  geom_bar(mapping = aes(x=number_of_employees, y=number_of_professors))
-
- # str(survey_clean)
-
-```
   
-```{r}  
-library(mosaic)
-
-ggplot(mapping = aes(x=survey_parts, y=survey_positions))+
-aes(class, fill=p )+
- geom_bar(position = position_stack(reverse = TRUE))+
-   coord_flip() +
-  theme(legend.position = "top")+
-# stat(survey_parts,"bin")
-
 ```
-# help("stat")
+
 str()
 plot(survey_parts
 names(survey_clean)
@@ -227,6 +199,8 @@ library(tidyr)
 library(dplyr)
 library(stringr)
 library(janitor)
+library(ggplot2)
+library(tidyverse)
 
 employees <- survey_clean %>% 
   select(number_of_employees)
@@ -235,25 +209,56 @@ employees <- survey_clean %>%
 small <-employees %>% 
   filter(number_of_employees <=10) %>% 
     mutate(sizes = ("Small (0 to 10)"))
+small <-rename(small, small = number_of_employees)
 
 # medium  # Medium (11 to 20)
 medium <-employees %>% 
   filter(number_of_employees >10, number_of_employees <=20) %>% 
   mutate(sizes = ("Medium (11 to 20"))
-  
+medium <-rename(medium, medium = number_of_employees)
+
+
 # large # (21 to 100)
 large <- employees %>% 
   filter(number_of_employees >20, number_of_employees <=100) %>% 
   mutate(sizes = ("Large (21 to 100"))
+large <- rename(large, large = number_of_employees)
 
 # extra_large   #(over 100)
 extra_large <- employees %>% 
   filter(number_of_employees >100) %>% 
   mutate(sizes = ("Extra Large (over 100"))
+extra_large <- rename(extra_large, extra_large = number_of_employees)
 
-sizes_ordered <-bind_rows(small,medium,large, extra_large)
-sizes_ordered
+sizes_ordered <- bind_rows(small,medium,large, extra_large)
+sog <- sizes_ordered %>% group_by(sizes)
+sog
 
+# employees_o <- add_column(small_o, medium_o, large_o, extra_large_o)
+
+small_o <- select(small,small)
+medium_o <- select(medium, medium)
+large_o <- select(large,large)
+extra_large_o <- select(extra_large, extra_large)
+
+
+emg <-c(small_o, medium_o, large_o, extra_large_o)
+sg <- c(select(sog,sizes))
+
+emg_o <- mutate(small_o, medium_o, large_o, extra_large_o)
+
+plot(small_o)
+
+
+sog %>%
+  ggplot(aes(x=sizes, y=number_of_employees))+
+  geom_bar(aes(y = stat (count / max(count))))
+
+# Recreate this column correctly, then plot a bar chart with {ggplot2} of the number of values in each of the bins.
+
+#################             D O N E     ###############
+
+medium
 
 
 ```
@@ -270,7 +275,14 @@ sizes_ordered
 
 ```{r}
 
+library(tidyverse)
+survey_clean %>% 
+    filter(position == ("PhD Student")) %>% 
+      group_by(university)
 
+survey_clean %>%
+  arrange(university) %>% 
+  filter(position == ("PhD Student"))
+summarise(university = sum(number_of_employees))
 
 ```
-

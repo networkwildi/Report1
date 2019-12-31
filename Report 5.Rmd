@@ -1,0 +1,127 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+# 07. Report 5
+
+Content
+Questions 1
+
+Introduction
+In this project, you will have to use an API to get your data from the web. By the end of it, you will have done projects with flat files, databases, scraping and API: enough to show that you know enough to kickstart data analysis with any type of data source.
+
+
+The API used in this project is the "The Movie DB". Unlike the APIs we used in the units, this one will ask you to create an account and use a key in all your queries (i.e. inside the URL). This is much closer to a real-life scenario as most serious APIs use this kind of authentication system.
+
+Getting access to "The Movie DB"
+First, you will need to create an account. You can use your @extensionschool.com email for this.
+
+
+You will probably be asked to verify your account (i.e. click on a link sent to your email and reenter your username and password).
+
+Once this is done, you will have an account on "The Movie DB", but that is not enough to use the API. We now need to create an "API application" in the account (i.e. a project).
+
+Creating an "application" is a common API pattern, lots of API providers (including Google and Twitter) ask you to do such thing. This is a way for them to see if you will use their data for commercial purpose (and charge you if so). You can see which commercial products already use "The Movie DB" here.
+
+Go to the settings of your account by clicking on the little initial logo on the top right-hand side and click "Settings".
+
+
+In your "Settings" page, click on "API" in the left-hand side menu (➊), then "Create" (➋) and choose "Developer" (➌), since you are an individual and developing a not for profit project.
+
+
+After you accept the "Terms and Conditions", you will be asked for some information. If you do not want to give out your personal details, please use the Extension School ones (as we checked with "The Movie DB" that this course was fair use):
+
+
+Type of Use: Education (from the drop-down menu)
+Application name: your EXTS username (or anything else)
+First Name: First two letters of your username
+Last Name: Last two letters of your username
+Application URL: Since we do not plan to really use the data in a web application, you can simply write "localhost.com" for the URL (it means that this application will only live in your computer).
+Application Summary: Course project for EPFL EXTS
+Email Address: This should be filled automatically with the email you provided for your account
+Phone Number: 0216935041
+Address1: EPFL Extension School
+Address2: EPFL Innovation Park, Building E
+Zip Code: 1015
+City: Lausanne
+State: Vaud
+Country: Switzerland
+If all went well, you should now have an API Key in your "Settings" page. Congratulations, you just created a real account on a real professional API!
+
+
+The key you received for your project is a random string of letters and numbers (➊). You will have to use it in the URLs when you query the API: it is like your login/password to the service when you use the API.
+
+So to get the data from the movie with ID 550, you cannot just send a GET request to this address:
+
+https://api.themoviedb.org/3/movie/550
+Instead you have to add an api_key= parameter at the end of all the URLs you use (using your personal key number—the one below is fake):
+
+https://api.themoviedb.org/3/movie/550?api_key=f193f4e58300
+Like often with well-documented APIs, you can find a page listing a bunch of example queries to help you understand what is possible.
+
+### Exercises
+
+## Part 1
+Try to send a GET request to some of the example queries and inspect the result. Inspired just by these examples, how would create new requests:
+
+What are the highest grossing dramas from 2010?
+Have Will Ferrell and Liam Neeson even been in a movie together?
+Can you find kids movies with Tom Cruise in it?
+
+```{r}
+
+```
+
+Part 2
+As you can see in the examples, there are two types of parameters used in the URLs:
+
+parameters that take an "explicit" value, like primary_release_year= or sort_by=. When you read their values (e.g. 2014 or popularity.desc), you know straight away what is queried.
+parameters that take an "id" value, like with_cast= or with_genres=. When you read their values (e.g. 23659 or 878), you don't really know what is queried if you don't know what id means what.
+This is common as well with APIs. Parameters that might have complicated/long/confusing spelling (like the title of a movie or the full name of an actor) often use ID. What if two movies or two actors have the same name? That's also a situation where IDs would help.
+
+The problem is that you need to find these ids before sending the query that you are really interested in. And to do that you need to prepare another query. This is when you start reading the full API documentation.
+
+In this case, you would want to check the Search endpoints. The Search endpoints let you search by name and find the id for different kinds of resources (companies, people, movie title…). If you are unsure on how to write these URLs, there is a helpful tab "Try it out" that lets you experiment with the URLs.
+
+From RStudio, what query would you make to find the id of the animation movies company "Pixar"? Show both the query and how you extract the id from the result in your report.
+
+
+```{r}
+
+
+```
+
+Part 3
+Now that we have the ID of Pixar, we should be able to find all the movies that they have worked on. But you don't know how do a search for movies by companies…
+
+Go read the documentation for the /discover/movies endpoint. You will see the full list of parameters that you can use for filtering your results. Some will be familiar since they were used in the examples (e.g. with_cast=, primary_release_year= or with_genre=). Other will be new (e.g. with_runtime.lte= that lets you select just the movies that are shorter than a certain time).
+
+Write a query that will give you all the Pixar movies that have a runtime greater than an hour and sort them by descending revenue.
+
+At the time of this writing (September 2019), it looks like there is a problem with the API. Requests using a runtime filter don't yield any results anymore. We put a request on the TheMovieDB forum to ask for a fix, but in the meantime, feel free to answer this exercise with all possible runtime (so no runtime filter applied).
+
+The result will be given to you as a JSON (parsed to a list by {httr}). Convert this list to a tibble so you have one row per film and one column per interesting piece of information.
+
+Also have a close look at the keys in your list. You will notice that the API sends "paginated" results (i.e. look at these page and total_pages keys). It means that you never get more than x results at a time (at the time of this writing, this API sends 20 results at a time). Paginated APIs are extremely common as administrators don't want users to send queries that would require a ton of data and block the service for others for a long time. If you want to get the other pages (if any), you might need to play with the page parameter in your url.
+
+```{r}
+
+
+```
+

@@ -8,7 +8,7 @@
 
 ## Part 2
 ### Obtain side-by-side bar charts comparing the distribution of answers of the students versus the professors for each question.
-```{r}
+
 
 library(ggplot2)
 library(gridExtra)
@@ -25,124 +25,11 @@ library(mosaic)
 # Loading required package: ggstance
 
 
-pprofessors_clean <-professors_clean %>% 
-  select(question, p_totally_disagree = totally_disagree, p_disagree = disagree, p_agree = agree, p_totally_agree = totally_agree )
-
-sstudent_clean <- student_clean %>% 
-  select(totally_disagree, disagree, agree, totally_agree)
-# sstudent_clean
-
-# Etwas stimmt nicht, 1024 rows anstelle von 32
-studs_pros <- merge(pprofessors_clean , sstudent_clean)
-view(studs_pros)
-# plot(studs_pros)
-
-# Brauchbar
-bar_stud_pros_bind <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
-  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
-  group_by(question)
-
-bar_stud_pros_pus <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
-  select(totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree)
-bar_stud_pros_pus
-
-pairs(bar_stud_pros_bind)
-ggpairs(bar_stud_pros_pus)
-
-# view(bar_stud_pros)
-# plot(bar_stud_pros)
-
-# ohne question
-bar_stud_pros <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
-  select(totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree)
-# group_by(question)
-# bar_stud_pros
-# plot(bar_stud_pros)
-
-
-# bar_stud_pros_vec <- c(bar_stud_pros)
-
-# dd <- bar_stud_pros_vec
-ggplot(data = bar_stud_pros_vec )+
-  geom_bar(mapping = aes(x = bar_stud_pros_vec, y = question_col))
-
-dd_bar_stud_pros <- bar_stud_pros_bind
-pp <- ggplot(dd_bar_stud_pros , aes(x = totally_disagree, y = question))
-pp
-
-
-bar_stud_pros_vec %>%
-  ggplot(aes(x=df, y=question_col))+
-  geom_point()+
-  facet_grid(rows = vars(df),
-             cols = vars(totally_disagree))
-
-ggplot(data = bar_stud_pros , mapping = aes(x = , y = weight)) +
-  geom_boxplot(alpha = 0) +
-  geom_jitter(alpha = 0.3, color = "tomato")
-
 
 # https://statisticsglobe.com/ggplot2-histogram-in-r-geom_histogram-function
 # https://statisticsglobe.com/histogram-in-base-r-hist-function
 # https://statisticsglobe.com/r-pairs-plot-example/
 # pairs plots
-
-sp_totally_disagree <- select(bar_stud_pros_bind, totally_disagree , p_totally_disagree)
-sp_totally_disagree
-
-bar_stud_pros %>% 
-  ggplot(aes(x=totally_disagree, y=question_col))+
-  geom_bar()+
-  facet_wrap(~totally_disagree)
-
-bar_stud_pros_bind
-ggplot(aes(x=df))+
-  geom_col (mapping = aes(color=p_totally_disagree),alpha=0.3)
-geom_point(data=filter(question_col, shape=1, size=4, stroke=2, color="red" ))
-
-df <- data.frame(bar_stud_pros)
-df
-
-bar_stud_pros_num <- as.list.numeric_version(bar_stud_pros)   
-hist(bar_stud_pros_num)
-
-pairs(data)
-ggpairs(data)  
-
-
-
-
-question_x <- student_clean
-question_colls <- select(student_clean, question)
-view(question_x)
-view(question_colls)
-
-rlang::last_error()
-rlang::last_trace()
-
-ncol(bar_stud_pros)
-rownames(bar_stud_pros)
-glimpse(bar_stud_pros)
-bar_stud_pros
-glimpse(question_col)
-rownames(bar_stud_pros_bind)
-colnames(bar_stud_pros_bind)
-qbar <- as_tibble(rownames_to_column(bar_stud_pros, "question")) 
-qbar
-ncol(qbar)
-nrow(qbar)
-bar_stud_pros_bind
-
-students_clean
-students
-
-
-# student_clean
-# Funktioniert !!! 
-#totally_agrs <- c(filter(select(student_clean, totally_agree, disagree)))
-# totally_agrs
-# totally_agrss <- select(student_clean, totally_agree, disagree)
-# totally_agrss
 
 
 # https://achilleaskostoulas.com/2013/02/13/on-likert-scales-ordinal-data-and-mean-values/
@@ -155,3 +42,85 @@ students
 # https://learningstatisticswithr.com/book/datahandling.html
 # http://guianaplants.stir.ac.uk/seminar/resources/R_in_a_Nutshell_Second_Edition.pdf
 # https://cran.r-project.org/web/packages/umx/umx.pdf
+
+
+# Part 4
+### Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are 
+# Ph.D. students, postdocs and professors for each research group. Use a custom theme.
+
+### We have not covered stacked horizontal bar plot, so you will have to study the documentation, and/or some blog posts. 
+### There is also a great book about {ggplot2} recipes that I recommend you check out: The hitchhiker's guide to ggplot2. 
+### The book is pay-as-you-want, so select Package "The book" and choose a number from 0 and 30 dollars.
+## (Regarding part 4, you can consider that each student is in a different research group.)
+
+survey_grouped <- survey_clean %>% 
+  group_by(university) %>% 
+  unique() %>% 
+  ungroup() %>% 
+  pull()
+survey_grouped
+
+
+numb_of_pariticipants
+numb_of_pariticipants <- survey_clean %>% 
+  mutate(numb_of_particip = number_of_employees + number_of_ph_d_students + number_of_postdocs + number_of_professors) %>% 
+  as_tibble() %>% 
+  unique()
+
+survey_participants_ppp
+survey_participants_ppp <- numb_of_pariticipants %>% 
+ select(university,numb_of_particip, number_of_ph_d_students, number_of_postdocs, number_of_professors)
+
+nop <- select(survey_participants_ppp, numb_of_particip) %>% 
+as.data.frame(nop)
+nop_p <- (100 / nop)
+nop_p
+
+phd <- select(survey_participants_ppp, number_of_ph_d_students) %>% 
+as.data.frame(phd)
+phd_p <- round(nost * nop_p)
+
+
+####
+
+posd <- select(survey_participants_ppp, number_of_postdocs) %>% 
+as.data.frame(posd)
+posd_p <- round(posd * nop_p)
+posd_p
+
+###
+
+nopr <- select(survey_participants_ppp, number_of_professors) %>% 
+  as.data.frame(nopr)
+nopr_p <- round(nopr * nop_p)
+
+
+##   result
+
+survey_participants_ppp_p
+survey_participants_ppp_p <-dplyr::bind_cols(nop, phd_p, posd_p, nopr_p)
+
+
+
+
+
+
+
+
+
+library(plotly)
+p1 <- plot_ly(survey_participants_ppp, x=number_of_ph_d_students) %>% 
+  add_histogram()
+
+
+library(tidyverse)
+survey_clean %>% 
+  filter(position == ("PhD Student")) %>% 
+  group_by(university)
+
+survey_clean %>%
+  arrange(university) %>% 
+  filter(position == ("PhD Student"))
+summarise(university = sum(number_of_employees))
+
+

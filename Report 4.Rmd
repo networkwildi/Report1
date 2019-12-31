@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+# 06. Report 4
+
+Introduction
+This project is more challenging on the data extraction side. You are going to get your dataset from a website (a fake rental agency). The goal is to practice your scraping skills with {rvest} and end up with a clean tibble that you can use for analysis.
+
+
+The data
+The data doesn't come to you as a dataset, it comes to you as a website.
+
+https://epfl-exts.github.io/rental-scrape/
+
+Your first challenge is to write the code needed to scrape the data contained in it. To help you see what the end goal is, you can find a sample extract of the final dataset in the Resources tab (only 5 rows).
+
+
+
+sample_scraped_rental.csv.zip
+
+### Exercises
+
+Part 1
+Get the full dataset out of the site. Your code should end up with a tibble of a bit more than 600 rows and 9 columns. Make sure you take the time to convert each columns to the right type and not all character.
+
+```{r}
+
+```
+
+Part 2
+Create a scatterplot showing how price evolves with living space of the flat.
+
+```{r}
+
+```
+
+Part 3
+Create a bar plot showing the number of properties by postcode. Is this agency more "active" in certain areas?
+
+```{r}
+
+```
+
+
+Part 4
+Create a more complex scatterplot, showing how price evolves with living space of the flat by postcode and by floor. You can use colors and/or facets to make the categories visible.
+
+
+Can you conclude anything from it? Put your thoughts below your plot. Don't overthink this: this is not so much about the quality of your analysis than checking that you can put a report together. For example, integrate the most expensive and least expensive mean postcode/floor combo in your text with inline code.
+
+```{r}
+
+```
+
+
+Part 5
+Can you see any trends for listings with addresses only available on demand? Are they more expansive or less? Bigger living space? Higher floor? Keep in mind that boxplot/violin plots work really well to compare distributions of values between groups!
+
+```{r}
+
+```
+
+Part 6
+Convert a subset of 30 addresses to latitude and longitude using an API and plot them on a map using {ggmap} (or {leaflet} if you could not get {ggmap} to work).
+
+```{r}
+
+```
+
+
+
