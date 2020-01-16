@@ -53,6 +53,97 @@ library(mosaic)
 ### The book is pay-as-you-want, so select Package "The book" and choose a number from 0 and 30 dollars.
 ## (Regarding part 4, you can consider that each student is in a different research group.)
 
+#############################
+
+all_survey <- survey_clean %>% 
+  select(number_of_employees)
+total_survey <- all_survey %>% 
+  summarise(number_of_employees = sum(number_of_employees))
+
+paste(("How many survey participants were there?"),total_survey)
+
+
+# etwas  ist falsch
+most_parti <- survey_clean %>% 
+  select(university, number_of_employees)
+
+arrange(most_parti,university, number_of_employees) %>% 
+  top_n(3)
+
+
+sort_uni <- arrange(most_parti,university, number_of_employees) 
+sort_uni
+
+sort_uni %>%  
+  group_by(university, number_of_employees)
+
+sorted_gropuped <- sort_uni %>%  
+  group_by(university, number_of_employees)  
+
+  bbbb <- sorted_gropuped %>% 
+    as_tibble(bbbb)  
+    summarise(number_of_employees)
+bbbb 
+  summarise(bbbb, number_of_employees = sum(number_of_employees))
+    
+delft <- sort_uni %>% 
+  filter(university == ("Delft University of Technology"),(number_of_employees )) %>% 
+    summarise(number_of_employees = sum(number_of_employees))
+delft
+    
+eindhov <- sort_uni %>% 
+  filter(university == ("Eindhoven University of Technology")) %>% 
+  summarise(number_of_employees = sum(number_of_employees))
+
+erasm <-sort_uni %>% 
+  filter(university == ("Erasmus University Rotterdam")) %>% 
+summarise(number_of_employees = sum(number_of_employees))
+
+leiden <- sort_uni %>% 
+  filter(university == ("Leiden University")) %>% 
+summarise(number_of_employees = sum(number_of_employees))
+
+groning <- sort_uni %>%  
+  filter(university == ("University of Groningen")) %>% 
+summarise(number_of_employees = sum(number_of_employees))
+
+
+delft
+eindhov
+erasm
+leiden
+groning
+
+result_top3 <- bind_rows(delft,eindhov,erasm,leiden,groning) %>% 
+  arrange(desc(number_of_employees,university)) %>% 
+  top_n(3)
+
+inspect(result_top3)
+favstats(~number_of_employees, data = sort_uni)
+
+#####################
+str(most_parti)
+most_parti
+sort_uni
+most_parti %>% 
+sort(university)
+
+
+
+survey_parts
+survey_parts <- survey_clean %>% 
+select(university, position, number_of_employees)
+as.vector(survey_parts)
+sort(survey_parts)
+
+  survey_parts
+
+  str(survey_parts)
+
+.....help("group_by")
+# Versuch university zu summieren
+###############################
+
 survey_grouped <- survey_clean %>% 
   group_by(university) %>% 
   unique() %>% 
@@ -99,7 +190,6 @@ nopr_p <- round(nopr * nop_p)
 
 survey_participants_ppp_p
 survey_participants_ppp_p <-dplyr::bind_cols(nop, phd_p, posd_p, nopr_p)
-
 
 
 

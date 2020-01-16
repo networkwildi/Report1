@@ -47,6 +47,7 @@ students <- select(studenti, - X1)                                              
 students_clean <- clean_names(students) %>%                                             #  names, crate new value
     select(question = x1,everything()) %>%                                              # rename x1, select all collumns
  mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%      # add column, summarise row
+  mutate(question = "question") %>%
   write_csv("students_clean.csv")                                                       # crate new csv for late use
 
 # DONE
@@ -89,10 +90,14 @@ library(ggplot2)
   profs <- read_csv("professors.csv")                       # read the file
   profis <- as_tibble(rownames_to_column(profs, "x1"))      # create new column
 professors <- select(profis, - X1)                          # get rid of X1
-professors_clean <- clean_names(professors) %>%                                       # clean names
-  select(question = x1,everything()) %>%                                              # rename x1, select all cols
- mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%    # create col, summarise row
-  write_csv("professors_clean.csv")                                                   # write a new csv for later use
+professors_clean <- clean_names(professors) %>%             # clean names
+    select(question = x1,everything()) %>%                                              # rename x1, select all cols
+   mutate(total_answers = totally_disagree + disagree +  agree + totally_agree ) %>%    # create col, summarise row
+  mutate(question = "question") %>%
+    write_csv("professors_clean.csv")                                                   # write a new csv for later use
+
+pprofessors_clean <- dplyr::rename(professors_clean, p_totally_disagree = totally_disagree, p_disagree = disagree, p_totally_agree = totally_agree, p_agree = agree)
+
 
 # DONE
 
@@ -143,7 +148,7 @@ answer                                                                         #
 # Load librarys
 library(shiny)
 library(stringr)
-library(glue)
+# library(glue)
 library(dplyr)
 
 professors_same_amount <- professors_clean %>%            # create new val
@@ -172,6 +177,7 @@ library(tibble)
 library(cowsay)
 library(GGally)
 library(mosaic)
+library(janitor)
 
 # Loading required package: lattice
 # Loading required package: ggformula
@@ -205,6 +211,7 @@ for_questions <- (select(bar_stud_pros_bind, question))
 for_questions
 
 
+bar_stud_pros_pus
 ggplot(data = bar_stud_pros_pus)+
   geom_bar(mapping = aes(x = bar_stud_pros_pus, y = for_questions)+
   ggpairs(geom_bar(mapping = aes(x = bar_stud_pros_pus, y = for_questions)))
@@ -212,6 +219,7 @@ ggplot(data = bar_stud_pros_pus)+
   
 ggpairs(data = bar_stud_pros_pus, mapping = NULL, columns = 1:ncol(bar_stud_pros_pus) )
   
+bar_stud_pros_bind
 bar_stud_pros_bind %>% 
   ggplot(aes(x = totally_disagree))+
   geom_bar()+
@@ -227,17 +235,27 @@ x_test_x <- bar_stud_pros_bind %>%
   group_by(question) %>% 
   select(totally_disagree, p_totally_disagree)
 
-
+professors_clean
 # Etwas stimmt nicht, 1024 rows anstelle von 32
 studs_pros <- merge(pprofessors_clean , sstudent_clean)
 # studs_pros
 # plot(studs_pros)
 
+pprofessors_clean
+sstudent_clean
+
 # Brauchbar
-bar_stud_pros_bind <- bind_cols(pprofessors_clean, sstudent_clean) %>% 
-  select(question, totally_disagree,p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
+bar_stud_pros_bind <- bind_cols(professors_clean, students_clean) %>% 
+  select(question, totally_disagree, p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree) %>% 
   group_by(question)
 bar_stud_pros_bind
+
+pprofessors_clean
+pprofessors_clean <- dplyr::rename(professors_clean, p_totally_disagree = totally_disagree, p_disagree = disagree, p_totally_agree = totally_agree, p_agree = agree)
+bar_stud_pros_bind <- bind_cols(professors_clean, students_clean) %>% 
+  
+  select(question, totally_disagree, p_totally_disagree, disagree, p_disagree, totally_agree, p_totally_agree, agree, p_agree)
+
 
 
 # GIBT NUR EINE LEERE TABELLE
@@ -286,9 +304,7 @@ summarise(average_sum = sum(average))                                     # summ
 
 total_toal <- c(total_average / 32)                                       # calculate average
 
-the_total_is <- c("The total average of totally_agree and disagree is  ")   # text to vec
-answer_average <- c(the_total_is, total_toal)                               # combine text and result to new vec  
-print(answer_average)                                                       # print text and result
+paste(("The total average of totally_agree and disagree is"),total_toal)  # Amswer Text output
 
 #   DONE
 

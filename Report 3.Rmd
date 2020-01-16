@@ -16,6 +16,8 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+# ########################################################################3
+
 
 05. Report 3
 Content
@@ -30,7 +32,8 @@ In this project, we will increase the complexity a bit. First the data is on fou
 The data
 Under the Resources tab of this unit you will find a zip file with the following files:
 
-zh_politicians.db
+## zh_politicians.db
+
 This file is a SQLite database and contains data about elected politicians in Zürich over the years. Some columns like activity are in German but this won't affect your analysis. The different tables have information about:
 
 The elected persons (name, gender, year of birth, year of death…)
@@ -42,23 +45,45 @@ This is a relational database, so you will probably need to do a lot of JOINS be
 Warning
 This dataset is quite messy: consider this as a real-life example! Missing dates, misspelled names…
 
-Your goal is to do your best with what you were given and explain your thought process along the way. For example, if a politician seems to be 3 years old or 200 years old, filter him/her out before calculating the average age of politicians…
+## Your goal is to do your best with what you were given and explain your thought process along the way. For example, if a politician seems to be 3 years old or 200 years old, filter him/her out before calculating the average age of politicians…
 
 Before you start
-There is a technique that we did not cover in the course and that you will have to explore for this report. The idea is:
+## There is a technique that we did not cover in the course and that you will have to explore for this report. The idea is:
 
-What if I create a column with mutate() that put not one value in each cells, but a collection of values in each cell (vector or list)?
+## What if I create a column with mutate() that put not one value in each cells, but a collection of values in each cell (vector or list)?
 
-There is a dataset, called starwars that comes pre-installed with {dplyr} that will show you that kind of table. Try the code below:
+## There is a dataset, called starwars that comes pre-installed with {dplyr} that will show you that kind of table. Try the code below:
+
+```{r}
+library(dplyr)
+starwars
 
 library(dplyr)
 starwars %>%
+  select(name, species, films) %>%
+  View()
+
+library(dplyr)
+starwars %>%
+  pull(films) %>%
+  head(3) # showing just the first result...
+
+library(dplyr)
+library(tidyr)
+starwars %>%
+  select(name, species, films) %>%
+  unnest(films)
+
+
+
+```  
   select(name, species, films) # Showing only a few columns for clarity
 # A tibble: 87 x 3
    name               species films    
    <chr>              <chr>   <list>   
  1 Luke Skywalker     Human   <chr [5]>
  2 C-3PO              Droid   <chr [6]>
+
 As you can see the cells in the column films do not contain "single value". Instead, they have vector of character. Row 1 has 5 items (probably meaning that "Luke Skywalker" was in 5 films), Row 2 has 6 items (probably meaning that "C-3PO" was in 6 films)…
 
 You can get a better look at the content of the film column if you use View():
@@ -88,9 +113,10 @@ starwars %>%
 [1] "Attack of the Clones"    "The Phantom Menace"      "Revenge of the Sith"    
 [4] "Return of the Jedi"      "The Empire Strikes Back" "A New Hope"             
 [7] "The Force Awakens" 
+
 Here again, looking at these double brackets ([[) we see that we are dealing with a list with each item being a vector of films.
 
-The list-columns, as they are called, are one of the most powerful features of the {tidyverse}: they kind of let you create "multi-dimensional" tibble. But this only become interesting if they let you "come back" to a normal "flat" tibble…which is what the unnest() function from {tidyr} is used for!
+# The list-columns, as they are called, are one of the most powerful features of the {tidyverse}: they kind of let you create "multi-dimensional" tibble. But this only become interesting if they let you "come back" to a normal "flat" tibble…which is what the unnest() function from {tidyr} is used for!
 
 Let's say that I want to calculate the number of characters that have been in each movie. For that I need to be able to use group_by() on a per-film basis. How can I get a column that will contains only one film? unnest() to the rescue!
 
@@ -99,6 +125,8 @@ library(tidyr)
 starwars %>%
   select(name, species, films) %>%
   unnest(films)
+  
+  
 # A tibble: 173 x 3
    name           species films                  
    <chr>          <chr>   <chr>                  
@@ -113,6 +141,9 @@ starwars %>%
  9 C-3PO          Droid   Return of the Jedi     
 10 C-3PO          Droid   The Empire Strikes Back
 # ... with 163 more rows
+
+#########3##
+
 Just like that we now have one film per row (with all the other values being repeated)! That is why our tibble went from 87 to 173 rows. And this tibble can be used to do calculation per film!
 
 In this project, you will need this concept to work your way easily from items that only have start date and end date to something usable for analysis.
@@ -132,7 +163,7 @@ Hey, my url argument (which is GET() first argument) must be of length 1!
 
 …which basically its way to say that it can only accept one url at a time.
 
-map() is a great workaround in these situation. map() takes a collection as its first argument and a function as its second argument. Then it applies the function to each element in the collection and wrap all the results in a new list that we can use for analysis.
+## map() is a great workaround in these situation. map() takes a collection as its first argument and a function as its second argument. Then it applies the function to each element in the collection and wrap all the results in a new list that we can use for analysis.
 
 So if we have three urls, we could do:
 
@@ -148,7 +179,7 @@ map(GET(urls))
 This is something that always confuse people when they discover map(). They will say:
 
 But I put it in map()! It should work now!
-
+   # ###############
 But if you do it this way, R will first execute GET(urls) and crash even before it ever get the chance to run map(). That is why the collection and the function are given separately.
 
 What does this mean if you want to use a function on two collections? For example, you want to use the function seq() which takes a start value (the argument is called from=) and an end value (the argument is called to=) and create a vector with all the value in between.
@@ -183,7 +214,7 @@ What if I have 3, 6 or 28 collections?
 Realistically, it nearly never happens. Even map2() is rare. But if you want to venture into more collections, you can explore the pmap() function, which we won't cover here.
 
 Why is map2() important if it is so niche? First I think understanding map2() helps you understanding map(). Second, you might want to use mutate and seq() with two columns from your tibble and get a result for each row in this project. Who knows, map2() could be handy if you ever found yourself in this situation…
-
+#  ############################################################
 
 
 ###  Resources  zh_politicians.db.zip
@@ -195,7 +226,44 @@ Using a line plot, show how the number of people with an active mandate changed 
 
 You can see above what it will roughly look like. You can base your "active" years just on years, even if this creates some "dents" in the line (i.e. when looking only at active years, not precise dates, some mandates are double counted on election years since the old mandates end and the new mandates start).
 
+Read zh_politicians.db
+
 ```{r}
+library(DBI)
+library(RSQLite)
+library(ggplot2)
+
+zh_politicians.db 
+
+
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+db_list_tables(politician_dbq)
+View(politician_dbq)
+
+# politician_db  <- DBI::dbGetQuery(zh_politicians.db)
+
+# #######
+# shop_db <- dbConnect(RSQLite::SQLite(), "shop.db")
+# dbListTables(shop_db)
+
+# Only close connection when you don't need to talk to the database anymore
+# (usually toward the end of your script)
+# view(shop_db)
+# dbDisconnect(shop_db)
+
+#sales_db <- DBI::dbGetQuery(shop_db,
+                          "SELECT date, price FROM sales;")
+
+```
+
+
+Line plot , one line per assembly
+
+```{r}
+# Line plot , one line per assembly
+
+
+
 
 ```
 

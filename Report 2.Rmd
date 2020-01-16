@@ -48,13 +48,28 @@ Load the data and answer the following questions:
 
 ```{r echo=FALSE, error=FALSE, include=FALSE}
 
-library(readr)
+# surpess warings
+# no visible result output
 
-survey_source<- read_csv("survey.csv")
-survey_roname <-  rownames_to_column(survey_source,"question")
-survey <- select(survey_roname,(-X1))
-survey_clean <- clean_names(survey)
-# survey_clean
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(janitor)
+
+# install.packages("devtools")
+# library(devtools)
+# install_github("easyGgplot2", "kassambara")
+
+
+
+survey_source <- read_csv("survey.csv") %>%                                             # read source file
+rename(question = X1)                                                               # rename column with new name 
+# survey_roname <-  rownames_to_column(survey_source,"question")                  # alternative create column with new name
+# survey <- select(survey_roname,(-X1))                                           # alternative load data withou Col X1 
+survey_clean <- clean_names(survey_source)                                               # clean col names
+
+
+# DONE
 
 
 
@@ -73,18 +88,12 @@ library(tibble)
 # I think I have a problem understanding the meaning of this question. Do you want us to give you 30 as a response or is it something else ?
 # Yes, if this is the number of participants to the survey.
 
-survey_participants <- survey_clean %>% 
-  mutate(numb_of_particip = number_of_employees + number_of_ph_d_students + number_of_postdocs + number_of_professors) %>% 
-select(university, numb_of_particip) %>% 
-as_tibble()
+all_survey <- survey_clean %>%                                        # calling data
+  # select(number_of_employees) %>%                                   # select column
+# total_survey <- all_survey %>%                                      # in case of problem
+  summarise(number_of_employees = sum(number_of_employees))           # summarise column
 
-ban_survey_participant <- c("How many survey participants were there?")
-result_paricipants <- c(ban_survey_participant, survey_participants)
-print(result_paricipants)
-
-
-#print(survey_participants, "How many survey participants were there?") 
-
+paste(("How many survey participants were there?"),all_survey)        # paste value
 
 ##   done ##
 
@@ -92,32 +101,87 @@ print(result_paricipants)
 ```
 # What are the data types of each column?
 ```{r}
-print("What are the data types of each column?")
+
+print("What are the data types of each column?")  
 
 glimpse(survey_clean)
-print("or more detailed")
+print("or more detailed")  
 str(survey_clean)
 
 ##  Done  ##
 
 ```
+
+## What are the top 3 universities with the most survey participants?
+
 ```{r}
 
 library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(tibble)
+
 
 # What are the top 3 universities with the most survey participants?
+#survey_participants %>% 
+ 
+############
 
-survey_participants %>% 
-  arrange(desc(numb_of_particip)) %>% 
-  top_n(3)
+most_parti <- survey_clean %>% 
+  select(university, number_of_employees)
+
+sort_uni <- arrange(most_parti, number_of_employees, university) 
+
+delft <- sort_uni %>% 
+  filter(university == ("Delft University of Technology")) %>% 
+  group_by(university) %>% 
+    summarise(number_of_employees = sum(number_of_employees)) %>% 
+  ungroup()
+    
+eindhov <- sort_uni %>%
+  filter(university == ("Eindhoven University of Technology")) %>% 
+    group_by(university) %>%
+      summarise(number_of_employees = sum(number_of_employees)) %>% 
+        ungroup()
+
+erasm <-sort_uni %>% 
+  filter(university == ("Erasmus University Rotterdam")) %>% 
+    group_by(university) %>%
+      summarise(number_of_employees = sum(number_of_employees)) %>% 
+        ungroup()
+
+leiden <- sort_uni %>% 
+  filter(university == ("Leiden University")) %>% 
+    group_by(university) %>%
+      summarise(number_of_employees = sum(number_of_employees)) %>% 
+        ungroup()
+
+groning <- sort_uni %>% 
+  filter(university == ("University of Groningen")) %>% 
+    group_by(university) %>%
+      summarise(number_of_employees = sum(number_of_employees)) %>% 
+        ungroup()
+
+top_three_uni <- bind_rows(delft,eindhov,erasm,leiden,groning) 
+  as_tibble(top_three_uni) %>% 
+    arrange(desc(number_of_employees, university)) %>% 
+      group_by(university) %>%
+      dplyr::top_n(3) %>% 
+          ungroup()
 
 
-## Done ##
+dplyr::top_n(top_three_uni,3, university)
+
+#paste(("What are the top 3 universities with the most survey participants?"),result_top3)
+
+
+
+## Done ##  
 
 ```
 
 # Part 2
-### Obtain a horizontal bar graph of the number of survey participants for the different positions given in the column Position.
+### Obtain a horizontal bar graph of the number of survey participants for the different .positions given in the column Position.
 ### (Thanks for flagging the needed clarification in Part 2, I have updated the definition of the groups (1-10, 11-20…).)
 
 ```{r}
@@ -128,46 +192,61 @@ library(tibble)
 library(ggplot2)
 library(tidyr)
 library(GGally)
+
 # data()
 
-survey_position <- survey_clean %>% select(position) %>% 
-as.tibble(survey_position)
-str(survey_position)
+# survey_position <- survey_clean %>% select(position, number_of_employees) %>% 
+# as.tibble(survey_position)
+# str(survey_position)
 
-survey_positions <- (survey_clean %>%  select(position)) %>% 
-tibble::as_tibble(survey_positions)
-str(survey_positions)
+# phd_students
+survey_phd <- survey_clean %>%                                             # calling data
+   select(position, number_of_ph_d_students) %>%                           # select columns
+    as_tibble(survey_phd) %>%                                             # using data as tibble
+      group_by(position) %>%                                              # grouping by position
+        filter(position == "PhD Student") %>%                             # filter by expression
+          rename(number_of_employees = number_of_ph_d_students) %>%       # rename col for later merge
+            summarise(number_of_employees = sum(number_of_employees)) %>%   # summarise 
+              ungroup()                                                     # ungrouping     
 
-survey_parts <- (survey_clean %>%  select(number_of_employees,number_of_ph_d_students,number_of_postdocs,  number_of_professors)) %>% 
-as.tibble(survey_parts) 
-str(survey_parts)
+# number_of_postdocs
 
-survey_pos_parts  <- (survey_clean %>% select(position, number_of_employees,number_of_ph_d_students,number_of_postdocs,  number_of_professors)) %>% as_tibble(survey_pos_parts)
-str(survey_pos_parts)
-as_data_frame(survey_pos_parts)
+survey_posdd <- survey_clean %>%                                         # same procedure as above
+   select(position, number_of_postdocs) %>%  
+   as_tibble(survey_posdd) %>% 
+    group_by(position) %>% 
+      filter(position == "Postdoc") %>% 
+      rename(number_of_employees = number_of_postdocs) %>% 
+        summarise(number_of_employees = sum(number_of_employees)) %>% 
+          ungroup()
+                  
 
-###   Data
+# professors
+survey_ppros <- survey_clean %>%                                           # same procedure as above
+     select(position, number_of_professors) %>% 
+      as_tibble(survey_ppros) %>% 
+        group_by(position) %>% 
+          filter(position == "Professor") %>% 
+            rename(number_of_employees = number_of_professors) %>%
+              summarise(number_of_employees = sum(number_of_employees)) %>% 
+                ungroup()
 
-# example pot
+part_by_pos <- bind_rows(survey_phd, survey_posdd, survey_ppros)          # bind rows of the filtered and summarised data
 
-sales_data_xls %>% 
-  ggplot(aes(x=quantity_ordered, y=sales))+
-  geom_point(mapping = aes(color=dealsize), alpha=0.3)+
-  geom_point(data=filter(sales_data_xls, territory=="APAC",
-                         status=="Disputed"),
-             shape=1, size=4, stroke=2, color="blue")
-```
+part_by_pos %>%                                                           # data
+  ggplot(aes(x=position, y=number_of_employees))+                         # define x and y for plot
+    geom_bar(stat = "identity")+                                          # define type of plot
+      facet_grid()+                                                           # define type of grid
+        coord_flip()+                                                         # flip plot
+          labs(title = "participants for the different positions")                # label
 
-```{r}
-survey_clean %>% 
-  group_by(position) %>% 
-  ggplot(aes(x=number_of_employees, y=position))+
-  geom_point(mapping = aes(color=university), alpha=0.3)
-  # geom_point(data=filter(survey_clean, territory=="Large",
-    #                     sizes=="Small"),
-     #        shape=1, size=4, stroke=2, color="blue")
+# Funktioniert tip top
 
-  
+
+
+#  Done  #  
+
+
 ```
 
 str()
@@ -202,15 +281,27 @@ library(janitor)
 library(ggplot2)
 library(tidyverse)
 
+# https://plot.ly/ggplot2/geom_bar/
+
+
 employees <- survey_clean %>% 
   select(number_of_employees)
 
 # small     # (0 to 10)
 small <-employees %>% 
   filter(number_of_employees <=10) %>% 
-    mutate(sizes = ("Small (0 to 10)"))
-small <-rename(small, small = number_of_employees)
+    mutate(sizes = ("Small (0 to 10)")) 
+small_r <-rename(small, small = number_of_employees) %>% 
+  select(sizes, small)
+#  arrange(desc(small)
+# as_tibble(small) 
+small_size <- c(select(small_r, small) %>%
+                  pull()
 
+
+# small_r
+# str(small)
+  
 # medium  # Medium (11 to 20)
 medium <-employees %>% 
   filter(number_of_employees >10, number_of_employees <=20) %>% 
@@ -234,6 +325,98 @@ sizes_ordered <- bind_rows(small,medium,large, extra_large)
 sog <- sizes_ordered %>% group_by(sizes)
 sog
 
+######
+# https://ggplot2.tidyverse.org/reference/theme.html
+# https://statisticsglobe.com/adjust-space-between-ggplot2-axis-labels-and-plot-area-in-r
+
+test_scores2 <- c(2,6,7,5,5,4,3,10,9,10,6,2,9,4,6,5,8,9,8,6)
+df2 <- tibble(x = test_scores2)
+
+ggplot(data = df2, aes(x))+
+  geom_histogram(binwidth = 0.5, fill =I("orange"),size=0.3)+
+  scale_x_continuous(name = "Score", breaks = seq(0,10,1))+
+  scale_y_continuous(name = "Count")+
+  ggtitle("Histogram of student scores")+
+  theme_classic()
+
+####   Fuck
+
+small_c <-c(small_r)
+barplot(small_c)
+str(small_c)
+
+
+s <- ggplot(df4, aes(x, fill=x))
+s + geom_bar(position = "dodge")
+
+ggplot(data = df4, aes(x))+
+  geom_histogram(binwidth = 0.1, fill =I("orange"),size=0.1)+
+  scale_x_continuous(name = "Score", breaks = seq(0,10,1))+
+  scale_y_continuous(name = "Count")+
+  ggtitle("Histogram of student scores")+
+  theme_classic()
+
+
+df4 <- small_r %>% 
+  select(small)
+df4_c <-c(df4)
+
+df3 <-c(10,10,9,9)
+df4 <-  tibble(x = df3)
+df4
+
+str(df5)
+df4
+as_data_frame(df3)
+df3 <- c(tibble(x = df4))
+library(ggplot2)
+ggplot(data = df4, aes(x))+
+  geom_histogram(binwidth = 0.5, fill =I("orange"),size=0.2)+
+  scale_x_continuous(name = "sizes", breaks = seq(1,7,1))+
+  scale_y_continuous(name = "number")+
+  ggtitle("sizes small")+
+  theme_classic()
+
+small_r
+small_r %>% 
+  arrange() %>% 
+    ggplot(mapping=aes(y = small(count / max(count))))+
+      geom_bar(stat = "small", weight = 1)+
+        facet_grid(scales = "free", space = "free")+
+          labs("sizes small")
+            # coord_flip()
+help("stat")
+
+medium %>% 
+  arrange() %>% 
+  ggplot2(aes(x=medium, y=sizes))+
+  geom_bar(stat = "identity", position="stack")+     #  weight = 1
+    facet_grid()+
+  labs("sizes medium")+
+  theme_collapse
+  # coord_fixed(ratio = 1/5)
+
+large %>% 
+  # as_tibble() %>% 
+  ggplot(aes(x=large, y=large))+
+    geom_bar(stat = "identity",weight = 1)+
+      facet_grid()+
+        labs("large")
+
+  large  
+  
+  
+  extra_large %>% 
+    
+
+  
+str(large)
+help("fortify")
+
+extralarge
+    
+    
+str(small)
 # employees_o <- add_column(small_o, medium_o, large_o, extra_large_o)
 
 small_o <- select(small,small)
@@ -256,7 +439,7 @@ sog %>%
 
 # Recreate this column correctly, then plot a bar chart with {ggplot2} of the number of values in each of the bins.
 
-#################             D O N E     ###############
+#################                 ###############
 
 medium
 
@@ -264,8 +447,8 @@ medium
 ```
 
 
-# Part 4
-### Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are Ph.D. students, postdocs and professors for each research group. Use a custom theme.
+## Part 4
+Obtain a stacked horizontal bar plot with {ggplot2} that gives the percentage of employees that are Ph.D. students, postdocs and professors for each research group. Use a custom theme.
 
 ### We have not covered stacked horizontal bar plot, so you will have to study the documentation, and/or some blog posts. 
 ### There is also a great book about {ggplot2} recipes that I recommend you check out: The hitchhiker's guide to ggplot2. 
@@ -276,13 +459,113 @@ medium
 ```{r}
 
 library(tidyverse)
-survey_clean %>% 
-    filter(position == ("PhD Student")) %>% 
-      group_by(university)
+library(ggplot2)
+library(tibble)
+library(plotly)
+library(dplyr)
 
-survey_clean %>%
+# Funktioniert 
+
+phd_rg <- survey_clean %>% 
+  select(university ,number_of_ph_d_students, number_of_postdocs, number_of_professors) %>% 
   arrange(university) %>% 
-  filter(position == ("PhD Student"))
-summarise(university = sum(number_of_employees))
+    group_by(university, number_of_ph_d_students)
+
+phd_rgc <- c(y = phd_rg)
+    
+ggplot(phd_rg)+
+  geom_bar(aes(x=number_of_ph_d_students, y=university),stat = "identity", position = "stack")+
+geom_bar(aes(x=number_of_postdocs, y=university),stat = "identity", position = "stack")+
+  geom_bar(aes(x=number_of_professors, y=university),stat = "identity", position = "stack")+
+  theme(axis.text = element_text(angle = 90, hjust = 1))+
+  facet_grid(~number_of_ph_d_students~number_of_postdocs~number_of_professors)
+
+
+ggplot(data = phd_rg, xName="university", groupName = "number_of_ph_d_students")+
+  geom_bar(stat = "identity", position = "stack", x=)+
+  coord_flip()
+
+help("xlim")
+#############
+
+    
+
+# nach uni geordnet
+stpdpr <- survey_clean %>% 
+  select(university, number_of_ph_d_students, number_of_postdocs, number_of_professors) %>% 
+    arrange(university) %>% 
+      group_by(university, number_of_ph_d_students) %>% 
+        group_by(university, number_of_postdocs) %>% 
+          group_by(university, number_of_professors)
+
+ggplot(stpdpr, mapping = aes(university))+
+  geom_bar(position = "stack")
+
+##########
+
+delft_stpdpr <- stpdpr %>% 
+  filter(university == "Delft University of Technology") %>%
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students),(number_of_postdocs =       sum(number_of_postdocs), (number_of_professors =  sum(number_of_professors))))
+
+
+ 
+
+
+einhov_stpdpr <- stpdpr %>% 
+  filter(university == "Eindhoven University of Technology") %>%
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), (number_of_postdocs = sum(number_of_postdocs), (number_of_professors = sum(number_of_professors))))
+
+
+erasm_stpdpr <- stpdpr %>% 
+  filter(university == "Erasmus University Rotterdam") %>%
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))
+
+leiden_stpdpr <- stpdpr %>% 
+  filter(university == "Leiden University") %>%
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))
+
+groning_stpdpr <- stpdpr %>% 
+  filter(university == "University of Groningen") %>%
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))
+
+
+
+
+
+#############
+stpdprc <- c(x = stpdpr)
+as_tibble(stpdprc)
+ggplot(stpdprc, mapping = aes(x))
+
+stpdprc
+
+##########
+
+as_tibble(rownames_to_column(stpdpr))
+
+stpdpr <- survey_clean %>% 
+  select(number_of_ph_d_students, number_of_postdocs, number_of_professors)
+  # as_tibble(rownames_to_column(stpdpr))
+stpdprc <- c(stpdpr)
+stpdprc
+
+  ggplot(stpdpr,aes(x={number_of_ph_d_students, number_of_postdocs, number_of_professors}))+
+    geom_bar(stat = "identity", position = "stack", theme(line()))+
+    coord_flip()
+
+
+
+
+stpdprc
+  ggplot(mapping=aes(x=stpdprc, y=count(n)))+
+    geom_bar(stat = "identity", position = "stack")+
+    coord_flip()
+
+library(ggplot2
+ggplot2(data=stpdprc, mapping=aes(x=stpdprc))
 
 ```
