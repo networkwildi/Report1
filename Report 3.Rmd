@@ -337,6 +337,103 @@ Expand on the plot you just produced. This time you want to show a facet charts 
 ```{r}
 
 
+#  ignore errors  !!!
+
+library(DBI)
+library(RSQLite)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(tibble)
+library(stringr)
+library(shiny)
+
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+db_list_tables(politician_dbq)
+# dbDisconnect(politician_dbq)                # use if disconnect
+
+persons <- tbl(politician_dbq, "PERSONS")
+persons_tbl <- as_tibble(persons)
+  persons_tbl <- persons_tbl %>% 
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
+      rename(PERSON_ID = ID)
+
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
+mandates_tbl <- as_tibble(mandates)
+mandates_tbl <- mandates_tbl %>% 
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+addresses <- tbl(politician_dbq, "ADDRESSES")
+addresses_tbl <- as_tibble(addresses)
+addresses_tbl <- addresses_tbl %>% 
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")
+affiliations_tbl <- as_tibble(affiliations)
+affiliations_tbl <- affiliations_tbl %>% 
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR)
+
+# Funktioniert
+mand_addr <- full_join(mandates_tbl,addresses_tbl, by = "PERSON_ID", copy = true) %>% 
+clean_names()
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
+  clean_names()
+
+# Funktioniert
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+
+#########################
+
+# Funktioniert !!
+age_try <- mand_addr3 %>% 
+  select(assembly,gender,mandate_start_year_x,mandate_end_year_x, year_of_birth, year_of_death) %>%
+  filter(year_of_birth != "", year_of_death != "") %>% 
+      filter(year_of_birth != year_of_death) %>% 
+        filter(gender !="") %>% 
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=70) %>%  
+                  group_by(assembly) %>% 
+                    arrange(desc(mandate_start_year_x))
+                      
+  
+gender_man_count <- age_try %>% 
+  select(assembly,gender, mandate_start_year_x, mandate_end_year_x) %>% 
+    mutate(gender_man_count$count) %>% 
+      count(assembly, gender, mandate_start_year_x, mandate_end_year_x,)
+        
+ggplot(data=gender_man_count, mapping = aes(x=mandate_start_year_x,y=n))+
+   geom_line()+
+  geom_line(size=0.5, aes(color=assembly))+
+    facet_grid(vars(assembly, gender))+
+    labs(x="Spread over time", y="Number ob members")
+      
+
+count_gen_per_assembly <- age_try %>% 
+  select(assembly,gender) %>% 
+    group_by(assembly) %>% 
+      count(gender, assembly)
+    
+# Plot    # Funktioniert
+
+ggplot(data=count_gen_per_assembly, mapping = aes(x=assembly, y=n))+
+  geom_point()+
+  geom_point(size=4, aes(color=assembly))+
+    facet_grid(vars(assembly, gender,n))+
+    labs(x="Counil", y="Spread over time")+
+      coord_flip()
+   
+  ggplot(data=gender_man_count, mapping = aes(x=mandate_start_year_x,y=n))+
+   geom_line()+
+  geom_line(size=0.5, aes(color=assembly))+
+    facet_grid(vars(assembly, gender))+
+    labs(x="Spread over time", y="Number ob members")
+
+
 
 ``` 
 
