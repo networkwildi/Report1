@@ -450,7 +450,86 @@ There are several ways to create nice-looking tables in R notebook. Have a look 
 
 ```{r}
 
+library(DBI)
+library(RSQLite)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(tibble)
+library(stringr)
+library(shiny)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(flextable)
 
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+# db_list_tables(politician_dbq)
+# dbDisconnect(politician_dbq)                # use if disconnect
+
+persons <- tbl(politician_dbq, "PERSONS")
+persons_tbl <- as_tibble(persons)
+  persons_tbl <- persons_tbl %>% 
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
+      rename(PERSON_ID = ID)
+
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
+mandates_tbl <- as_tibble(mandates)
+mandates_tbl <- mandates_tbl %>% 
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+addresses <- tbl(politician_dbq, "ADDRESSES")
+addresses_tbl <- as_tibble(addresses)
+addresses_tbl <- addresses_tbl %>% 
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")
+affiliations_tbl <- as_tibble(affiliations)
+affiliations_tbl <- affiliations_tbl %>% 
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+       
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
+clean_names()
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
+  clean_names()
+
+# Funktioniert
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+
+
+
+mandate_2000 <- mand_addr3 %>% 
+  select(assembly, mandate_start_year_x, party) %>% 
+    group_by(assembly) %>% 
+      filter(mandate_start_year_x == 2000, party != "", assembly != "") %>% 
+        count(assembly, party) %>% 
+          arrange(desc(n)) %>% 
+            mutate(lab_prop = prop.table(n)*100)
+
+
+
+myTable = tableGrob(mandate_2000)
+  myPlot = ggplot(mandate_2000, aes(x = party, y = n))+
+    geom_point()
+      grid.arrange(myTable, myPlot , nrow = 1)   
+      
+
+mycols <- c("#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF")
+
+pai_plot = ggplot(mandate_2000, aes(x = "", y = lab_prop, fill=party))+
+  geom_bar(width = 1, stat= "identity" ,color = "white")+
+    coord_polar("y", start=0)+
+      geom_text(aes(y = lab_prop, label = ""), color = "white")+
+        scale_fill_manual(values = mycols)+
+          theme_void()
+            # labels()
+
+  myTable = tableGrob(mandate_2000)
+  grid.arrange(myTable, pai_plot, nrow = 1)
+ 
 
 
 ```
