@@ -538,6 +538,107 @@ Part 4
 Have another look at the composition of the assemblies: this time use a line chart to show how it changed over the years.
 
 ```{r}
+library(DBI)
+library(RSQLite)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(tibble)
+library(stringr)
+library(shiny)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(flextable)
+
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+# db_list_tables(politician_dbq)
+# dbDisconnect(politician_dbq)                # use if disconnect
+
+persons <- tbl(politician_dbq, "PERSONS")
+persons_tbl <- as_tibble(persons)
+  persons_tbl <- persons_tbl %>% 
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
+      rename(PERSON_ID = ID)
+
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
+mandates_tbl <- as_tibble(mandates)
+mandates_tbl <- mandates_tbl %>% 
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+addresses <- tbl(politician_dbq, "ADDRESSES")
+addresses_tbl <- as_tibble(addresses)
+addresses_tbl <- addresses_tbl %>% 
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")
+affiliations_tbl <- as_tibble(affiliations)
+affiliations_tbl <- affiliations_tbl %>% 
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+       
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
+clean_names()
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
+  clean_names()
+
+# Funktioniert
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+
+#########################
+
+# Funktioniert !!
+age_try <- mand_addr3 %>% 
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
+  filter(year_of_birth != "", year_of_death != "") %>% 
+    filter(gender !="") %>%
+      filter(year_of_birth != year_of_death) %>% 
+        filter(party !="") %>%
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=70) %>%  
+                  group_by(assembly) %>% 
+                    arrange(desc(mandate_start_year_x))
+                      
+#Part 4
+# Have another look at the composition of the assemblies: this time use a line chart to show how it changed over the years.
+
+###################
+# passt !
+
+party_list <- as_tibble(age_try) %>% 
+    select(assembly, mandate_start_year_x, mandate_end_year_x ,party) %>% 
+      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x)) %>% 
+        mutate(mandate_end_year_x = as.numeric(mandate_end_year_x)) %>% 
+          mutate(party = as.character(party)) %>% 
+            filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
+              group_by(assembly) %>% 
+                count(party) %>% 
+                   mutate(party_prop = prop.table(n)*100)
+
+##################
+
+party_list_all <- as_tibble(age_try) %>% 
+    select(assembly, mandate_start_year_x, mandate_end_year_x ,party) %>% 
+    mutate(party = as.character(party)) %>% 
+      filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
+        mutate(mandate_start_year_x = as.numeric(mandate_start_year_x)) %>% 
+          mutate(mandate_end_year_x = as.numeric(mandate_end_year_x)) %>% 
+            group_by(assembly, party, mandate_start_year_x, mandate_end_year_x) %>% 
+              count(party)
+
+
+## Plot 1  ok   - Problem Start und End year sind nicht vebuden, man sieht nur die Start year !
+
+party_list_all %>%                  
+ggplot(aes(x=mandate_start_year_x, y=assembly, fill(party)))+
+  geom_line()+
+    geom_point(size= 2,aes(color=party))+
+  facet_grid(vars(assembly, party, n))
+  
 
 
 ```
