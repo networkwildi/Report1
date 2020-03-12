@@ -648,6 +648,119 @@ For the politicians that have a YEAR_OF_DEATH in the data, find the average life
 
 ```{r}
 
+library(DBI)
+library(RSQLite)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(tibble)
+library(stringr)
+library(shiny)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(flextable)
+
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+# db_list_tables(politician_dbq)
+# dbDisconnect(politician_dbq)                # use if disconnect
+
+persons <- tbl(politician_dbq, "PERSONS")
+persons_tbl <- as_tibble(persons)
+  persons_tbl <- persons_tbl %>% 
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
+      rename(PERSON_ID = ID)
+
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
+mandates_tbl <- as_tibble(mandates)
+mandates_tbl <- mandates_tbl %>% 
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+addresses <- tbl(politician_dbq, "ADDRESSES")
+addresses_tbl <- as_tibble(addresses)
+addresses_tbl <- addresses_tbl %>% 
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")
+affiliations_tbl <- as_tibble(affiliations)
+affiliations_tbl <- affiliations_tbl %>% 
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+       
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
+clean_names()
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
+  clean_names()
+
+# Funktioniert
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+
+#########################
+
+# Funktioniert !!
+age_try <- mand_addr3 %>% 
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
+  filter(year_of_birth != "", year_of_death != "") %>% 
+    filter(gender !="") %>%
+      filter(year_of_birth != year_of_death) %>% 
+        filter(party !="") %>%
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=70) %>%  
+                  group_by(assembly) %>% 
+                    arrange(desc(mandate_start_year_x))
+                      
+
+
+# Part 5
+# For the politicians that have a YEAR_OF_DEATH in the data, find the average life span. Does it change if you go by a TITLE? Use # a plot to show the difference (or its absence).
+
+year_of_death <- mand_addr3 %>% 
+  select(assembly,gender, party, title, year_of_birth, year_of_death) %>%
+  filter(year_of_birth != "", year_of_death != "") %>% 
+    filter(gender !="") %>%
+      filter(year_of_birth != year_of_death) %>% 
+        filter(party !="") %>%
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=70) %>%  
+                  group_by(assembly)
+
+
+avarage_live_span <-ave(year_of_death$age) %>% 
+  round(2)
+  as_factor(avarage_live_span)
+avarage_live <-  unique(avarage_live_span)
+
+live_span_result <- paste("The average live span ist",avarage_live)
+
+
+year_of_death_by_title <- mand_addr3 %>% 
+  select(title, year_of_birth, year_of_death) %>%
+  filter(year_of_birth != "", year_of_death != "") %>% 
+    filter(title !="") %>%
+      filter(year_of_birth != year_of_death) %>% 
+        mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=70)
+                  
+
+avarage_live_span_by_title <- ave(year_of_death_by_title$age) %>% 
+  round(2)
+  as_factor(avarage_live_span_by_title)
+    avarage_live_by_title <- unique(avarage_live_span_by_title)
+
+        title_live_span <-  paste("The avarage live span by title is", avarage_live_by_title)
+                    
+  
+avarage_both <- c(live_span_result, title_live_span)
+avarage_both
+
 
 ```
 
