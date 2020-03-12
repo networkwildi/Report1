@@ -720,15 +720,13 @@ age_try <- mand_addr3 %>%
 
 year_of_death <- mand_addr3 %>% 
   select(assembly,gender, party, title, year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(gender !="") %>%
+    filter(year_of_birth != "", year_of_death != "") %>% 
       filter(year_of_birth != year_of_death) %>% 
-        filter(party !="") %>%
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly)
+        mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+          mutate(year_of_death = as.numeric(year_of_death)) %>% 
+            mutate(age = (year_of_death - year_of_birth)) %>% 
+              filter(age >=20 & age <=110) %>%  
+                group_by(assembly)
 
 
 avarage_live_span <-ave(year_of_death$age) %>% 
@@ -747,7 +745,7 @@ year_of_death_by_title <- mand_addr3 %>%
         mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
             mutate(year_of_death = as.numeric(year_of_death)) %>% 
               mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70)
+                filter(age >=20 & age <=110)
                   
 
 avarage_live_span_by_title <- ave(year_of_death_by_title$age) %>% 
