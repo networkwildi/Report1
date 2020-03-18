@@ -864,7 +864,10 @@ most_mandates_top_1 <- most_mandates %>%
 
 #  barplot
 
-
+ggplot(data=most_mandates_top_1,aes(x=lastname, y=n,fill(party)))+
+  geom_bar(stat = "identity", show.legend = TRUE, inherit.aes = TRUE,col= "darkblue")+
+    coord_flip()+
+        labs(title = "Politicians with the most mandates", x="Person", y="Mandates")
 ```
 
 
