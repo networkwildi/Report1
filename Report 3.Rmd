@@ -874,9 +874,103 @@ ggplot(data=most_mandates_top_1,aes(x=lastname, y=n,fill(party)))+
 Part 7
 Do some politicians have multiple mandates at the same time?
 
-```{r}
+```{r  echo=FALSE, warning=FALSE}
 
 
+library(DBI)
+library(RSQLite)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(tibble)
+library(stringr)
+library(shiny)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(flextable)
+
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+
+
+persons <- tbl(politician_dbq, "PERSONS")
+persons_tbl <- as_tibble(persons)
+  persons_tbl <- persons_tbl %>% 
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
+      rename(PERSON_ID = ID)
+
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
+mandates_tbl <- as_tibble(mandates)
+mandates_tbl <- mandates_tbl %>% 
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+addresses <- tbl(politician_dbq, "ADDRESSES")
+addresses_tbl <- as_tibble(addresses)
+addresses_tbl <- addresses_tbl %>% 
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+
+
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")
+affiliations_tbl <- as_tibble(affiliations)
+affiliations_tbl <- affiliations_tbl %>% 
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+       
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
+clean_names()
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
+  clean_names()
+
+# Funktioniert
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+
+  dbDisconnect(politician_dbq)                # use if disconnect
+
+#########################
+
+# Funktioniert !!
+age_try <- mand_addr3 %>% 
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
+  filter(year_of_birth != "", year_of_death != "") %>% 
+    filter(gender !="") %>%
+      filter(year_of_birth != year_of_death) %>% 
+        filter(party !="") %>%
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=70) %>%  
+                  group_by(assembly) %>% 
+                    arrange(desc(mandate_start_year_x))
+ 
+ ########################
+ 
+ # Part 7
+# Do some politicians have multiple mandates at the same time?
+ 
+ double_mandates <- mand_addr3 %>% 
+  select(lastname, firstname, year_of_birth, year_of_death, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%
+    filter(year_of_birth != "", year_of_death != "") %>% 
+      filter(party != "", firstname != "", lastname != "") %>% 
+        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
+            mutate(year_of_death = as.numeric(year_of_death)) %>% 
+              mutate(age = (year_of_death - year_of_birth)) %>% 
+                filter(age >=20 & age <=80) %>%  
+                  mutate(person_id = as.numeric(person_id)) %>% 
+                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>% 
+      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%
+  distinct(person_id, mandate_start_year_x, mandate_end_year_x,party, .keep_all = TRUE) %>% 
+    group_by(person_id, lastname, firstname,party)
+
+   double_mandates_top_10 <- double_mandates %>% 
+    distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>% 
+     count(lastname, firstname, person_id) %>%  
+      group_by(lastname, firstname, person_id) %>% 
+        arrange(desc(n)) %>% 
+          ungroup()
+   
+             paste(" There ar no double mandates ")
 ```
 
 
