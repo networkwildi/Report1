@@ -1048,48 +1048,26 @@ age_try <- mand_addr3 %>%
  
  ########################
  
- # Part 7
-# Do some politicians have multiple mandates at the same time?
  
  different_parties <- mand_addr3 %>% 
   select(lastname, firstname, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%
-    # filter(year_of_birth != "", year_of_death != "") %>% 
-      filter(party != "", firstname != "", lastname != "") %>% 
+       filter(party != "", firstname != "", lastname != "") %>% 
         filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-    #       mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-    #        mutate(year_of_death = as.numeric(year_of_death)) %>% 
-    #           mutate(age = (year_of_death - year_of_birth)) %>% 
-    #            filter(age >=20 & age <=80) %>%  
-                  mutate(person_id = as.numeric(person_id)) %>% 
+                     mutate(person_id = as.numeric(person_id)) %>% 
                   mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>% 
       mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%
    distinct(person_id, mandate_start_year_x, mandate_end_year_x, party, .keep_all = TRUE) %>% 
     group_by(person_id, lastname, firstname,party)
 
 
-# Part 8
-# Have some politicians been affiliated to different parties over the years?
-
-are_there_affiliation_changes <- different_parties %>% 
-     distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>% 
-     count(lastname, firstname, person_id) %>%  
-      group_by(lastname, firstname, person_id) %>% 
-        arrange(desc(n)) %>% 
-          ungroup()
-   
-             paste(" There were no persons affiliated to differen parties ")
-
-different_parties_test <- mand_addr3 %>% 
-  select(person_id, lastname, firstname, party) %>% 
-      filter(party != "", firstname != "", lastname != "") %>% 
-        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-          distinct(person_id, lastname, firstname, party) %>% 
-        #    filter_if()           # filter wenn allesperson id = aber party ungleich
-  count(person_id, lastname, firstname) %>% 
-             arrange(desc(n)) %>% 
-              filter(n != 1) %>% 
-                   group_by(person_id)
-
+are_there_affiliation_changes <- different_parties %>%
+  ungroup() %>% 
+    distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>%
+      group_by(person_id) %>% 
+        filter(n()!= 1)
+            
+paste(" There were persons affiliated to differen parties ")
+are_there_affiliation_changes
 
 ```
 
