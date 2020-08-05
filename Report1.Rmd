@@ -96,7 +96,7 @@ professors_clean <- clean_names(professors) %>%             # clean names
   mutate(question = "question") %>%
     write_csv("professors_clean.csv")                                                   # write a new csv for later use
 
-pprofessors_clean <- dplyr::rename(professors_clean, p_totally_disagree = totally_disagree, p_disagree = disagree, p_totally_agree = totally_agree, p_agree = agree)
+pprofessors_clean <- dplyr::rename(professors_clean, p_totally_disagree = totally_disagree, p_disagree = disagree, p_totally_agree = totally_agree, p_agree = agree)   # rename cols
 
 
 # DONE
@@ -183,7 +183,7 @@ library(janitor)
 # Loading required package: ggformula
 # Loading required package: ggstance
 
-#  Lösung fehlt
+###############                Not solved  - tryed a lot !
 
 
 
@@ -274,7 +274,7 @@ pp
 bar_stud_pros_num <- as.list.numeric_version(bar_stud_pros)   
 hist(bar_stud_pros_num)
 
-
+###############    Not solved  
 
 ```
 

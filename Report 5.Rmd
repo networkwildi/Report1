@@ -85,6 +85,68 @@ Have Will Ferrell and Liam Neeson even been in a movie together?
 Can you find kids movies with Tom Cruise in it?
 
 ```{r}
+library(httr)
+library(dplyr)
+library(jsonlite)
+library(TMDb)
+library(purrr)
+library(httr)
+library(tidyverse)
+library(shiny)
+library(tidyselect)
+library(stats)
+library(readr)
+library(janitor)
+library(DT)
+library(wordcloud)
+library(ggplot2)
+library(lubridate)
+library(plotly)
+library(stringr)
+
+# What kind of genres is available?
+genres <- httr::GET("https://api.themoviedb.org/3/genre/movie/list?api_key=54d37afd6cfdb6d71170db511bcf51b0&language=en-US")    # get genres list
+
+genres_content <- httr::content(genres, as="parsed")   # modify to readable
+  
+genres_list <- as.data.frame(genres_content)    # convert list to df
+  genres_list_clean <- clean_names(genres_list)  # clean names
+
+  genres_dt_clean <- datatable(head(genres_list_clean, n = 100)) %>%  # get data table 
+  as.list.data.frame()   # transform to list
+
+#############
+
+tom_cruise <- search_person("54d37afd6cfdb6d71170db511bcf51b0", "tom cruise", include_adult = NA) %>%   as.data.frame() %>%  # search for TC
+select(results.name, results.id)   # select name and id
+
+will_ferrel <- search_person("54d37afd6cfdb6d71170db511bcf51b0", "will ferrel", page = 1, include_adult = NA) %>%    # search for WF
+  as.data.frame() %>%    # transform to DF
+    select(results.name, results.id)   # select name and id 
+
+liam_neeson <- search_person("54d37afd6cfdb6d71170db511bcf51b0", "liam neeson", page = 1, include_adult = NA) %>%    #  search for LN
+  as.data.frame() %>%   # transform to DF
+    select(results.name, results.id)  # select name and id
+
+print(tom_cruise)   # print name and id
+print(will_ferrel)  # print name and id
+print(liam_neeson)  # print name and id
+
+
+
+###############
+
+# What are the highest grossing dramas from 2010?  done
+
+most_revenue <- httr::GET("https://api.themoviedb.org/3/discover/movie?api_key=54d37afd6cfdb6d71170db511bcf51b0 &primary_release_year=2010&sort_by=revenue.desc")    # search for movie  2010 with most revenue, sort desc
+
+
+most_revenue_parsed <-(httr::content(most_revenue, as = "parsed")    # transform to list
+mr_list <-most_revenue_parsed[["results"]]
+
+print(mr_list)[[2]][[1]]
+
+##############
 
 ```
 
@@ -103,6 +165,27 @@ From RStudio, what query would you make to find the id of the animation movies c
 
 
 ```{r}
+library(httr)
+library(dplyr)
+library(jsonlite)
+library(TMDb)
+library(purrr)
+
+
+# Search the company
+pixar_id <- search_company("54d37afd6cfdb6d71170db511bcf51b0", "Pixar", page=1)   # search company
+pixar_df <-as.data.frame(pixar_id)  # transform to df for readability
+pixar_df      # result
+
+# check the result
+comp_pixar <- company("54d37afd6cfdb6d71170db511bcf51b0", 3, append_to_response = NA)  # get company by id
+id_pixar <- as.data.frame(comp_pixar)   # transform to df
+pix_id <-pluck(id_pixar, "id")  # grab id
+pix_name <- pluck(id_pixar, "name")   # grab name
+
+print(pix_name)   # print name
+print(pix_id)     # print ID
+
 
 
 ```

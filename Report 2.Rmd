@@ -104,9 +104,9 @@ paste(("How many survey participants were there?"),all_survey)        # paste va
 
 print("What are the data types of each column?")  
 
-glimpse(survey_clean)
-print("or more detailed")  
-str(survey_clean)
+glimpse(survey_clean)              # use glimpse
+print("or more detailed")          
+str(survey_clean)                 # use str
 
 ##  Done  ##
 
@@ -127,50 +127,50 @@ library(tibble)
  
 ############
 
-most_parti <- survey_clean %>% 
-  select(university, number_of_employees)
+most_parti <- survey_clean %>%                 # transfer data to new container
+  select(university, number_of_employees)      # select cols
 
-sort_uni <- arrange(most_parti, number_of_employees, university) 
+sort_uni <- arrange(most_parti, number_of_employees, university)       # arrange data and move to container
 
-delft <- sort_uni %>% 
-  filter(university == ("Delft University of Technology")) %>% 
-  group_by(university) %>% 
-    summarise(number_of_employees = sum(number_of_employees)) %>% 
-  ungroup()
+delft <- sort_uni %>%                                                  # move to new container
+  filter(university == ("Delft University of Technology")) %>%         # filter university
+  group_by(university) %>%                                             # group by uni
+    summarise(number_of_employees = sum(number_of_employees)) %>%      # sum employees
+  ungroup()                                                            # ungroup
     
-eindhov <- sort_uni %>%
-  filter(university == ("Eindhoven University of Technology")) %>% 
-    group_by(university) %>%
-      summarise(number_of_employees = sum(number_of_employees)) %>% 
-        ungroup()
+eindhov <- sort_uni %>%                                                # move to new container
+  filter(university == ("Eindhoven University of Technology")) %>%     # filter by uni
+    group_by(university) %>%                                           # group by uni
+      summarise(number_of_employees = sum(number_of_employees)) %>%    # sum empl
+        ungroup()                                                      # ungroup
 
-erasm <-sort_uni %>% 
-  filter(university == ("Erasmus University Rotterdam")) %>% 
-    group_by(university) %>%
-      summarise(number_of_employees = sum(number_of_employees)) %>% 
-        ungroup()
+erasm <-sort_uni %>%                                                   # move to new container
+  filter(university == ("Erasmus University Rotterdam")) %>%           # filter by uni
+    group_by(university) %>%                                           # group by uni
+      summarise(number_of_employees = sum(number_of_employees)) %>%    # sum empl
+        ungroup()                                                      # ungroup
 
-leiden <- sort_uni %>% 
+leiden <- sort_uni %>%                                                 # same as above
   filter(university == ("Leiden University")) %>% 
     group_by(university) %>%
       summarise(number_of_employees = sum(number_of_employees)) %>% 
         ungroup()
 
-groning <- sort_uni %>% 
+groning <- sort_uni %>%                                                # same as above
   filter(university == ("University of Groningen")) %>% 
     group_by(university) %>%
       summarise(number_of_employees = sum(number_of_employees)) %>% 
         ungroup()
 
-top_three_uni <- bind_rows(delft,eindhov,erasm,leiden,groning) 
-  as_tibble(top_three_uni) %>% 
-    arrange(desc(number_of_employees, university)) %>% 
-      group_by(university) %>%
-      dplyr::top_n(3) %>% 
-          ungroup()
+top_three_uni <- bind_rows(delft,eindhov,erasm,leiden,groning)        # bind rows from universitys
+  as_tibble(top_three_uni) %>%                                        # convert as tibble
+    arrange(desc(number_of_employees, university)) %>%                # arrange desc number of empl
+      group_by(university) %>%                                        # group by uni
+      dplyr::top_n(3) %>%                                             # pick top 3
+          ungroup()                                                   # ungroup
 
 
-dplyr::top_n(top_three_uni,3, university)
+dplyr::top_n(top_three_uni,3, university)                             # top 3 uni with most participants
 
 #paste(("What are the top 3 universities with the most survey participants?"),result_top3)
 
@@ -280,168 +280,93 @@ library(stringr)
 library(janitor)
 library(ggplot2)
 library(tidyverse)
+library(plotly)
 
 # https://plot.ly/ggplot2/geom_bar/
 
 
-employees <- survey_clean %>% 
-  select(number_of_employees)
+employees <- survey_clean %>%                                         # move data to new container
+  select(number_of_employees)                                         # select cols
 
 # small     # (0 to 10)
-small <-employees %>% 
-  filter(number_of_employees <=10) %>% 
-    mutate(sizes = ("Small (0 to 10)")) 
-small_r <-rename(small, small = number_of_employees) %>% 
-  select(sizes, small)
-#  arrange(desc(small)
-# as_tibble(small) 
-small_size <- c(select(small_r, small) %>%
-                  pull()
+small <-employees %>%                                                 # move to new container small
+  filter(number_of_employees <=10) %>%                                # filter by number
+    mutate(sizes = ("Small (0 to 10)"))                               # mutate sizes
 
+small_r <-rename(small, small = number_of_employees) %>%              # rename number_of... to small
+  select(sizes, small)                                                # select cols
 
-# small_r
-# str(small)
+small_size <- c(select(small_r, small) %>%                           # pull data from small_r and small to small_size
+#  as.data.frame() %>% 
+pull()
   
-# medium  # Medium (11 to 20)
-medium <-employees %>% 
-  filter(number_of_employees >10, number_of_employees <=20) %>% 
-  mutate(sizes = ("Medium (11 to 20"))
-medium <-rename(medium, medium = number_of_employees)
+# medium Medium (11 to 20)
+medium <-employees %>%                                               # move data to new container
+  filter(number_of_employees >10, number_of_employees <=20) %>%      # filter employees >10
+  mutate(sizes = ("Medium (11 to 20"))                               # mutate medium
+medium <- rename(medium, medium = number_of_employees)                # rename number_of_empl....
 
 
 # large # (21 to 100)
-large <- employees %>% 
-  filter(number_of_employees >20, number_of_employees <=100) %>% 
-  mutate(sizes = ("Large (21 to 100"))
-large <- rename(large, large = number_of_employees)
+large <- employees %>%                                               # move data to new container
+  filter(number_of_employees >20, number_of_employees <=100) %>%     # filter number of empl
+  mutate(sizes = ("Large (21 to 100"))                               # mutate col name
+large <- rename(large, large = number_of_employees)                  # rename number_of_empl....
 
 # extra_large   #(over 100)
-extra_large <- employees %>% 
+extra_large <- employees %>%                                         # same as above
   filter(number_of_employees >100) %>% 
   mutate(sizes = ("Extra Large (over 100"))
 extra_large <- rename(extra_large, extra_large = number_of_employees)
 
-sizes_ordered <- bind_rows(small,medium,large, extra_large)
-sog <- sizes_ordered %>% group_by(sizes)
+sizes_ordered <- bind_rows(small,medium,large, extra_large)          # bind rows from div containers
+sog <- sizes_ordered %>% group_by(sizes)                             # group by size
 sog
 
-######
-# https://ggplot2.tidyverse.org/reference/theme.html
-# https://statisticsglobe.com/adjust-space-between-ggplot2-axis-labels-and-plot-area-in-r
+#######################################
 
-test_scores2 <- c(2,6,7,5,5,4,3,10,9,10,6,2,9,4,6,5,8,9,8,6)
-df2 <- tibble(x = test_scores2)
-
-ggplot(data = df2, aes(x))+
-  geom_histogram(binwidth = 0.5, fill =I("orange"),size=0.3)+
-  scale_x_continuous(name = "Score", breaks = seq(0,10,1))+
-  scale_y_continuous(name = "Count")+
-  ggtitle("Histogram of student scores")+
-  theme_classic()
-
-####   Fuck
-
-small_c <-c(small_r)
-barplot(small_c)
-str(small_c)
-
-
-s <- ggplot(df4, aes(x, fill=x))
-s + geom_bar(position = "dodge")
-
-ggplot(data = df4, aes(x))+
-  geom_histogram(binwidth = 0.1, fill =I("orange"),size=0.1)+
-  scale_x_continuous(name = "Score", breaks = seq(0,10,1))+
-  scale_y_continuous(name = "Count")+
-  ggtitle("Histogram of student scores")+
-  theme_classic()
-
-
-df4 <- small_r %>% 
-  select(small)
-df4_c <-c(df4)
-
-df3 <-c(10,10,9,9)
-df4 <-  tibble(x = df3)
-df4
-
-str(df5)
-df4
-as_data_frame(df3)
-df3 <- c(tibble(x = df4))
-library(ggplot2)
-ggplot(data = df4, aes(x))+
-  geom_histogram(binwidth = 0.5, fill =I("orange"),size=0.2)+
-  scale_x_continuous(name = "sizes", breaks = seq(1,7,1))+
-  scale_y_continuous(name = "number")+
-  ggtitle("sizes small")+
-  theme_classic()
-
-small_r
-small_r %>% 
-  arrange() %>% 
-    ggplot(mapping=aes(y = small(count / max(count))))+
-      geom_bar(stat = "small", weight = 1)+
-        facet_grid(scales = "free", space = "free")+
-          labs("sizes small")
-            # coord_flip()
-help("stat")
-
-medium %>% 
-  arrange() %>% 
-  ggplot2(aes(x=medium, y=sizes))+
-  geom_bar(stat = "identity", position="stack")+     #  weight = 1
-    facet_grid()+
-  labs("sizes medium")+
-  theme_collapse
-  # coord_fixed(ratio = 1/5)
-
-large %>% 
-  # as_tibble() %>% 
-  ggplot(aes(x=large, y=large))+
-    geom_bar(stat = "identity",weight = 1)+
+small_r %>%                                                         # data
+  ggplot(aes(x=small, y=small))+                                    # axis
+    geom_bar(stat = "identity", posiposition = "stack", weights=1)+   # bar plot
       facet_grid()+
-        labs("large")
-
-  large  
-  
-  
-  extra_large %>% 
-    
-
-  
-str(large)
-help("fortify")
-
-extralarge
-    
-    
-str(small)
-# employees_o <- add_column(small_o, medium_o, large_o, extra_large_o)
-
-small_o <- select(small,small)
-medium_o <- select(medium, medium)
-large_o <- select(large,large)
-extra_large_o <- select(extra_large, extra_large)
+        labs("small")                                                 # label
 
 
-emg <-c(small_o, medium_o, large_o, extra_large_o)
-sg <- c(select(sog,sizes))
+#######################################
 
-emg_o <- mutate(small_o, medium_o, large_o, extra_large_o)
+medium %>%                                                            # data
+  ggplot(aes(x=medium, y= medium))+                                    
+    geom_bar(stat = "Identity", position = "stack", weights = 1)+     # bar 
+      facet_grid()+
+        labs("medium")                                                # label
 
-plot(small_o)
 
 
-sog %>%
-  ggplot(aes(x=sizes, y=number_of_employees))+
-  geom_bar(aes(y = stat (count / max(count))))
+#######################################
+
+large %>%                                                             # data large
+  ggplot(aes(x=large, y=large))+
+    geom_bar(stat = "identity",weight = 1)+                           # bar plot
+      facet_grid()+
+        labs("large")                                                 # label
+
+
+
+#######################################
+
+extra_large %>%                                                      # data
+  ggplot(aes(x=extra_large, y=extra_large))+                         # axis
+    geom_bar(stat = "identity", position = "stack", weights=1)+      # bar plot
+      facet_grid()+
+        labs("extra large")                                          # label
+
+#######################################
+sog %>%                                                 # data of all bins
+  ggplot(aes(x=sizes, y=number_of_employees))+          # axis
+  geom_bar(aes(y = stat (count / max(count))))          # bar plot of all 4 bins
 
 # Recreate this column correctly, then plot a bar chart with {ggplot2} of the number of values in each of the bins.
 
-#################                 ###############
-
-medium
 
 
 ```
@@ -466,84 +391,77 @@ library(dplyr)
 
 # Funktioniert 
 
-phd_rg <- survey_clean %>% 
-  select(university ,number_of_ph_d_students, number_of_postdocs, number_of_professors) %>% 
-  arrange(university) %>% 
-    group_by(university, number_of_ph_d_students)
+phd_rg <- survey_clean %>%                                                        # mode data to new container              
+  select(university ,number_of_ph_d_students, number_of_postdocs, number_of_professors) %>%    # select cols
+  arrange(university) %>%                                                         # arrange by uni
+    group_by(university, number_of_ph_d_students)                                 # group by uni
 
-phd_rgc <- c(y = phd_rg)
+phd_rgc <- c(y = phd_rg)           # move data to vector
     
-ggplot(phd_rg)+
-  geom_bar(aes(x=number_of_ph_d_students, y=university),stat = "identity", position = "stack")+
-geom_bar(aes(x=number_of_postdocs, y=university),stat = "identity", position = "stack")+
-  geom_bar(aes(x=number_of_professors, y=university),stat = "identity", position = "stack")+
-  theme(axis.text = element_text(angle = 90, hjust = 1))+
-  facet_grid(~number_of_ph_d_students~number_of_postdocs~number_of_professors)
+#  returns no good plot 
 
+# ggplot(phd_rg)+
+#   geom_bar(aes(x=number_of_ph_d_students, y=university),stat = "identity", position = "stack")+
+# geom_bar(aes(x=number_of_postdocs, y=university),stat = "identity", position = "stack")+
+#  geom_bar(aes(x=number_of_professors, y=university),stat = "identity", position = "stack")+
+#  theme(axis.text = element_text(angle = 45, hjust = 1))+
+#  facet_grid(~number_of_ph_d_students~number_of_postdocs~number_of_professors)
 
-ggplot(data = phd_rg, xName="university", groupName = "number_of_ph_d_students")+
-  geom_bar(stat = "identity", position = "stack", x=)+
-  coord_flip()
-
-help("xlim")
 #############
 
     
 
-# nach uni geordnet
-stpdpr <- survey_clean %>% 
-  select(university, number_of_ph_d_students, number_of_postdocs, number_of_professors) %>% 
-    arrange(university) %>% 
-      group_by(university, number_of_ph_d_students) %>% 
-        group_by(university, number_of_postdocs) %>% 
-          group_by(university, number_of_professors)
+# sorted by uni geordnet all data together
 
-ggplot(stpdpr, mapping = aes(university))+
-  geom_bar(position = "stack")
+stpdpr <- survey_clean %>%                                                    # move data to new container
+  select(university, number_of_ph_d_students, number_of_postdocs, number_of_professors) %>%  # select cols
+    arrange(university) %>%                                                   # arrange by uni
+      group_by(university, number_of_ph_d_students) %>%                       # group by uni, phd students
+        group_by(university, number_of_postdocs) %>%                          # group by postdocs
+          group_by(university, number_of_professors)                          # group by professors
+
+ggplot(stpdpr, mapping = aes(university))+                                     # working plot
+  geom_bar(position = "stack")                                                 # bar plot
+
+##########
+
+# Filter per university # summarise phd, postdocs, professors
+
+# data summarised
+delft_stpdpr <- stpdpr %>%                                                    # uni delft
+  filter(university == "Delft University of Technology") %>%                  # filter for Delft uni 
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students),number_of_postdocs =       sum(number_of_postdocs), number_of_professors =  sum(number_of_professors))                         # summarise phd, postdocs, professors
+
+# data summarised
+eindhov_stpdpr <- stpdpr %>%                                                  # uni eindhoven
+  filter(university == "Eindhoven University of Technology") %>%             # filter for uni eindhoven
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))                         # summarise phd, postdocs, professors
+
+# data summarised
+erasm_stpdpr <- stpdpr %>%                                                   # uni erasm
+  filter(university == "Erasmus University Rotterdam") %>%                   # filter for uni erasm
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))                            # summarise phd, postdocs, professors
+
+# data summarised
+leiden_stpdpr <- stpdpr %>%                                                  # uni leiden
+  filter(university == "Leiden University") %>%                              # filter for uni
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))                            # summarise phd, postdocs, professors
+
+# data summarised
+groning_stpdpr <- stpdpr %>%                                                 # uni groning
+  filter(university == "University of Groningen") %>%                        # filter for uni groning
+    ungroup() %>% 
+    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))                            # summarise phd, postdocs, professors
 
 ##########
 
-delft_stpdpr <- stpdpr %>% 
-  filter(university == "Delft University of Technology") %>%
-    summarise(number_of_ph_d_students = sum(number_of_ph_d_students),(number_of_postdocs =       sum(number_of_postdocs), (number_of_professors =  sum(number_of_professors))))
+# Plot missing
 
 
- 
-
-
-einhov_stpdpr <- stpdpr %>% 
-  filter(university == "Eindhoven University of Technology") %>%
-    ungroup() %>% 
-    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), (number_of_postdocs = sum(number_of_postdocs), (number_of_professors = sum(number_of_professors))))
-
-
-erasm_stpdpr <- stpdpr %>% 
-  filter(university == "Erasmus University Rotterdam") %>%
-    ungroup() %>% 
-    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))
-
-leiden_stpdpr <- stpdpr %>% 
-  filter(university == "Leiden University") %>%
-    ungroup() %>% 
-    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))
-
-groning_stpdpr <- stpdpr %>% 
-  filter(university == "University of Groningen") %>%
-    ungroup() %>% 
-    summarise(number_of_ph_d_students = sum(number_of_ph_d_students), number_of_postdocs = sum(number_of_postdocs), number_of_professors = sum(number_of_professors))
-
-
-
-
-
-#############
-stpdprc <- c(x = stpdpr)
-as_tibble(stpdprc)
-ggplot(stpdprc, mapping = aes(x))
-
-stpdprc
-
-##########
 
 as_tibble(rownames_to_column(stpdpr))
 
@@ -560,12 +478,14 @@ stpdprc
 
 
 
-stpdprc
+stpdprc %>% 
   ggplot(mapping=aes(x=stpdprc, y=count(n)))+
     geom_bar(stat = "identity", position = "stack")+
     coord_flip()
 
 library(ggplot2
 ggplot2(data=stpdprc, mapping=aes(x=stpdprc))
+
+
 
 ```
