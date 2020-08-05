@@ -208,7 +208,45 @@ The result will be given to you as a JSON (parsed to a list by {httr}). Convert 
 
 Also have a close look at the keys in your list. You will notice that the API sends "paginated" results (i.e. look at these page and total_pages keys). It means that you never get more than x results at a time (at the time of this writing, this API sends 20 results at a time). Paginated APIs are extremely common as administrators don't want users to send queries that would require a ton of data and block the service for others for a long time. If you want to get the other pages (if any), you might need to play with the page parameter in your url.
 
+Write a query that will give you all the Pixar movies that have a runtime greater than an hour and sort them by descending revenue.
+
 ```{r}
+library(readr)
+library(jsonlite)
+library(tidyr)
+library(dplyr)
+library(DT)
+library(knitr)
+library(ggplot2)
+library(ggpubr)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+
+# Description
+# Get the list of movies associated with a particular company.
+
+# Usage
+# company_movies(api_key, id, page = 1, language = NA, append_to_response = NA)
+
+# Arguments
+# api_key Your TMDb Consumer Key.
+# id The company ID.
+# page The number of the page to show. Minimum 1, maximum 1000.
+# language A ISO 639-1 code.
+# append_to_response
+# Comma separated, any company method.
+
+# get pixar movies, time +60, revenue = desc
+pixar_60 <- httr::GET("https://api.themoviedb.org/3/discover/movie?api_key=54d37afd6cfdb6d71170db511bcf51b0 &runtime.lte=>60&sort_by=revenue.desc")
+
+# parse content as list df
+pixar_60_parse_df <- httr::content(pixar_60, as = "parsed") %>% 
+  as.list.data.frame()
+
+# print result
+print(pixar_60_parse_df[["results"]][[1]])
+
 
 
 ```
