@@ -40,6 +40,7 @@ Part 1
 Get the full dataset out of the site. Your code should end up with a tibble of a bit more than 600 rows and 9 columns. Make sure you take the time to convert each columns to the right type and not all character.
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -47,6 +48,7 @@ Part 2
 Create a scatterplot showing how price evolves with living space of the flat.
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -54,6 +56,7 @@ Part 3
 Create a bar plot showing the number of properties by postcode. Is this agency more "active" in certain areas?
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -65,6 +68,7 @@ Create a more complex scatterplot, showing how price evolves with living space o
 Can you conclude anything from it? Put your thoughts below your plot. Don't overthink this: this is not so much about the quality of your analysis than checking that you can put a report together. For example, integrate the most expensive and least expensive mean postcode/floor combo in your text with inline code.
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -74,12 +78,16 @@ Can you see any trends for listings with addresses only available on demand? Are
 
 ```{r}
 
+# not solved yet
+
 ```
 
 Part 6
 Convert a subset of 30 addresses to latitude and longitude using an API and plot them on a map using {ggmap} (or {leaflet} if you could not get {ggmap} to work).
 
 ```{r}
+
+# not solved yet
 
 ```
 
