@@ -244,43 +244,43 @@ library(shiny)
 # zh_politicians.db 
 
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
-db_list_tables(politician_dbq)
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")              # Load data from db
+db_list_tables(politician_dbq)                                                   # list remote table
 # dbDisconnect(politician_dbq)                # use if disconnect
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                  # extract and move to newcontainer MANDATES
+mandates_tbl <- as_tibble(mandates)                                              # convert to tibble and new container
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                               # mutate to numeric cols
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
+addresses <- tbl(politician_dbq, "ADDRESSES")                                    # extract addresses
+addresses_tbl <- as_tibble(addresses)                                            # convert to tibbl
 addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                               # mutate to numeric cols
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                              # extract affiliations and move to cont.
+affiliations_tbl <- as_tibble(affiliations)                                      # convert to tibble
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                           # convert to numeric cols
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                        # extract persons and move to container
+persons_tbl <- as_tibble(persons)                                                # convert to tibble
  persons_tbl <- persons_tbl %>% 
-  mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>% 
-  rename(PERSON_ID = ID)
+  mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                            # mutate to numeric cols
+  rename(PERSON_ID = ID)                                                         # rename person_id to ID
     
   
   
 # Funktioniert
-mand_addr <- full_join(mandates_tbl,addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl,addresses_tbl, by = "PERSON_ID", copy = true) %>%      # full join mandates, address
+clean_names()                                                                             # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%   # full join affiliation, persons
+  clean_names()                                                                             # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)               # full join mand_addr, mand_addr2
 
 
 
@@ -288,33 +288,33 @@ mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
 
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,mandate_start_year_x,mandate_end_year_x, year_of_birth, year_of_death) %>%  
-    filter(year_of_birth != "", year_of_death != "") %>% 
-      filter(year_of_birth != year_of_death) %>% 
-        mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-          mutate(year_of_death = as.numeric(year_of_death)) %>% 
-            mutate(age = (year_of_death - year_of_birth)) %>% 
-              filter(age >=20 & age <=70) %>%  
-                group_by(assembly) %>% 
-                  arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                                       # move to new container
+  select(assembly,mandate_start_year_x,mandate_end_year_x, year_of_birth, year_of_death) %>%    # select cols
+    filter(year_of_birth != "", year_of_death != "") %>%                                        # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                                # filter not = year of d
+        mutate(year_of_birth = as.numeric(year_of_birth)) %>%                                   # mutate col as numeric
+          mutate(year_of_death = as.numeric(year_of_death)) %>%                                 # mutate cols as numeric
+            mutate(age = (year_of_death - year_of_birth)) %>%                                   # calculate age
+              filter(age >=20 & age <=70) %>%                                                   # filter older 20, junger 70
+                group_by(assembly) %>%                                                          # group
+                  arrange(desc(mandate_start_year_x))                                           # arrange
                       
   
-filt_mandates <- age_try %>% 
-  select(assembly, mandate_start_year_x,mandate_end_year_x)
+filt_mandates <- age_try %>%                                                                    # move to new container
+  select(assembly, mandate_start_year_x,mandate_end_year_x)                                     # select cols
 
-man_count <- age_try %>% 
-  count(assembly, mandate_start_year_x, mandate_end_year_x) %>% 
+man_count <- age_try %>%                                                                        # move to new cont
+  count(assembly, mandate_start_year_x, mandate_end_year_x) %>%                                 # count
     mutate(count = n)
                   
 #########################
 
 # Funktioniert
 
-ggplot(data=man_count, mapping = aes(x=mandate_end_year_x , y=count))+
-  geom_line()+
-  geom_point(size=4, aes(color=assembly))+
-    labs(x="Mandates from 1800 - 2020", y="Count of assembly")
+ggplot(data=man_count, mapping = aes(x=mandate_end_year_x , y=count))+                          # plot
+  geom_line()+                                                                                  # line
+  geom_point(size=4, aes(color=assembly))+                                                      # point
+    labs(x="Mandates from 1800 - 2020", y="Count of assembly")                                  # label
   
     #  Done
 
@@ -349,93 +349,93 @@ library(shiny)
 library(ggpubr)
 
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")                   # loead date from db, move to container
 # db_list_tables(politician_dbq)
 # dbDisconnect(politician_dbq)                # use if disconnect
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                             # extract persons
+persons_tbl <- as_tibble(persons)                                                     # convert to tibble
   persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                               # mutate to numeric
+      rename(PERSON_ID = ID)                                                          # rename
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                       # loade data from db
+mandates_tbl <- as_tibble(mandates)                                                   # convert to tibble
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                    # mutate cols to numeric
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
+addresses <- tbl(politician_dbq, "ADDRESSES")                                         # load data from db
+addresses_tbl <- as_tibble(addresses)                                                 # convert to tibble
 addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                    # mutate to numeric
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                                   # load data from db
+affiliations_tbl <- as_tibble(affiliations)                                           # convert to numeric
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                                # mutate cols to numeric
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%    # full join mandates, addresses
+clean_names()                                                                             # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%   # full join affiliation, persons
+  clean_names()                                                                             # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)               # full join the rest
 
 #########################
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,gender,mandate_start_year_x,mandate_end_year_x, year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-      filter(year_of_birth != year_of_death) %>% 
-        filter(gender !="") %>% 
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly) %>% 
-                    arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                              # move to new container
+  select(assembly,gender,mandate_start_year_x,mandate_end_year_x, year_of_birth, year_of_death) %>%     # select cols
+  filter(year_of_birth != "", year_of_death != "") %>%                                  # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                        # filter year of b not = year of d
+        filter(gender !="") %>%                                                         # filter gender not = empty
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                         # mutate to numeric
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                       # mutate to numeric
+              mutate(age = (year_of_death - year_of_birth)) %>%                         # calculate age
+                filter(age >=20 & age <=70) %>%                                         # filter age 20 - 70
+                  group_by(assembly) %>%                                                # group
+                    arrange(desc(mandate_start_year_x))                                 # arrange desc
                       
   
-gender_man_count <- age_try %>% 
-  select(assembly,gender, mandate_start_year_x, mandate_end_year_x) %>% 
+gender_man_count <- age_try %>%                                                         # move to new container
+  select(assembly,gender, mandate_start_year_x, mandate_end_year_x) %>%                 # selcect cols
     # mutate(count) %>% 
-      count(assembly, gender, mandate_start_year_x, mandate_end_year_x,)
+      count(assembly, gender, mandate_start_year_x, mandate_end_year_x,)                # count cols
         
-ggplot(data=gender_man_count, mapping = aes(x=assembly,y=n))+
-   geom_line()+
-  geom_point(size=0.5, aes(color=assembly))+
-    facet_grid(vars(assembly, gender))+
-    labs(x="Spread over time", y="Number ob members")
+ggplot(data=gender_man_count, mapping = aes(x=assembly,y=n))+                           # plot 
+   geom_line()+                                                                         # line
+  geom_point(size=0.5, aes(color=assembly))+                                            # point
+    facet_grid(vars(assembly, gender))+                                                 # cols
+    labs(x="Spread over time", y="Number ob members")                                   # label
       
 
-count_gen_per_assembly <- age_try %>% 
-  select(assembly,gender) %>% 
-    group_by(assembly) %>% 
-      count(gender, assembly)
+count_gen_per_assembly <- age_try %>%                                                   # move to new container
+  select(assembly,gender) %>%                                                           # select cols
+    group_by(assembly) %>%                                                              # group
+      count(gender, assembly)                                                           # count
     
 # Plot    # Funktioniert
 
-bp <- ggplot(data=count_gen_per_assembly, mapping = aes(x=assembly, y=n))+
-  geom_point()+
-  geom_point(size=4, aes(color=assembly))+
+bp <- ggplot(data=count_gen_per_assembly, mapping = aes(x=assembly, y=n))+              # move plot to variable
+  geom_point()+                                                                         # point
+  geom_point(size=4, aes(color=assembly))+                                              # point size
     facet_grid(vars(assembly, gender,n))+
-    labs(x="Counil", y="Spread over time")+
-      coord_flip()
+    labs(x="Counil", y="Spread over time")+                                             # label
+      coord_flip()                                                                      # horizontal 
    
-  dp <- ggplot(data=gender_man_count, mapping = aes(x=mandate_start_year_x,y=n))+
-   geom_line()+
-  geom_line(size=0.5, aes(color=assembly))+
+  dp <- ggplot(data=gender_man_count, mapping = aes(x=mandate_start_year_x,y=n))+       # move plot to variable
+   geom_line()+                                                                         # line
+  geom_line(size=0.5, aes(color=assembly))+                                             # line size
     facet_grid(vars(assembly, gender))+
-    labs(x="Spread over time", y="Number of members")
+    labs(x="Spread over time", y="Number of members")                                   # lable
 
 
-  ggarrange(dp, bp + rremove("x.text"), 
-          labels = c("A", "B"),
-          ncol = 1, nrow = 2)
+  ggarrange(dp, bp + rremove("x.text"),                                                 # combine plots
+          labels = c("A", "B"),                                                         # lable
+          ncol = 1, nrow = 2)                                                           # two rows
 
 # Done
 
@@ -464,70 +464,70 @@ library(gridExtra)
 library(grid)
 library(flextable)
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")               # load data from db
 # db_list_tables(politician_dbq)
 # dbDisconnect(politician_dbq)                # use if disconnect
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                         # extract personds
+persons_tbl <- as_tibble(persons)                                                 # convert to tibble
   persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                           # mutate to numeric
+      rename(PERSON_ID = ID)                                                      # rename
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                   # load data from db
+mandates_tbl <- as_tibble(mandates)                                               # convert to tibble
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                # mutate cols to numeric
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
-addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+addresses <- tbl(politician_dbq, "ADDRESSES")                                     # load data from db
+addresses_tbl <- as_tibble(addresses)                                             # convert to tibble
+addresses_tbl <- addresses_tbl %>%                 
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                # mutate to numeric
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                               # load data from db
+affiliations_tbl <- as_tibble(affiliations)                                       # convert to tibble
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                            # mutate to numeric
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%   # full join two container
+clean_names()                                                                           # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%     # full join two container
+  clean_names()                                                                               # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)                 # full join the rest
 
 
 
-mandate_2000 <- mand_addr3 %>% 
-  select(assembly, mandate_start_year_x, party) %>% 
-    group_by(assembly) %>% 
-      filter(mandate_start_year_x == 2000, party != "", assembly != "") %>% 
-        count(assembly, party) %>% 
-          arrange(desc(n)) %>% 
-            mutate(lab_prop = prop.table(n)*100)
+mandate_2000 <- mand_addr3 %>%                                                    # move to new container   
+  select(assembly, mandate_start_year_x, party) %>%                               # select cols
+    group_by(assembly) %>%                                                        # group
+      filter(mandate_start_year_x == 2000, party != "", assembly != "") %>%       # filter start at 2000, party not = empty
+        count(assembly, party) %>%                                                # count
+          arrange(desc(n)) %>%                                                    # arrange desc
+            mutate(lab_prop = prop.table(n)*100)                                  # calcultate %
 
 
 
-myTable = tableGrob(mandate_2000)
-  myPlot = ggplot(mandate_2000, aes(x = party, y = n))+
-    geom_point()
-      grid.arrange(myTable, myPlot , nrow = 1)   
+myTable = tableGrob(mandate_2000)                                                 # 
+  myPlot = ggplot(mandate_2000, aes(x = party, y = n))+                           # plot
+    geom_point()                                                                  # point
+      grid.arrange(myTable, myPlot , nrow = 1)                                    # combine plot
       
 
 mycols <- c("#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF")
 
-pai_plot = ggplot(mandate_2000, aes(x = "", y = lab_prop, fill=party))+
-  geom_bar(width = 1, stat= "identity" ,color = "white")+
-    coord_polar("y", start=0)+
-      geom_text(aes(y = lab_prop, label = ""), color = "white")+
-        scale_fill_manual(values = mycols)+
-          theme_void()
+pai_plot = ggplot(mandate_2000, aes(x = "", y = lab_prop, fill=party))+           # plot
+  geom_bar(width = 1, stat= "identity" ,color = "white")+                         # bar
+    coord_polar("y", start=0)+                                                    # color
+      geom_text(aes(y = lab_prop, label = ""), color = "white")+                  # text, color
+        scale_fill_manual(values = mycols)+                                       # fill
+          theme_void()                                                            # theme
             # labels()
 
-  myTable = tableGrob(mandate_2000)
+  myTable = tableGrob(mandate_2000)                                               # combine table
   grid.arrange(myTable, pai_plot, nrow = 1)
  
 
@@ -552,56 +552,56 @@ library(gridExtra)
 library(grid)
 library(flextable)
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")                 # load data from db
 # db_list_tables(politician_dbq)
 # dbDisconnect(politician_dbq)                # use if disconnect
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                            # extract persons
+persons_tbl <- as_tibble(persons)                                                    # convert to tibble
   persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                              # mutate cols as numeric
+      rename(PERSON_ID = ID)                                                         # rename 
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                      # load data from db
+mandates_tbl <- as_tibble(mandates)                                                  # convert to tibble 
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                   # mutate to numeric 
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
+addresses <- tbl(politician_dbq, "ADDRESSES")                                        # load data from db
+addresses_tbl <- as_tibble(addresses)                                                # convert to tibble
 addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                   # mutate to numeric
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                                  # load data from db
+affiliations_tbl <- as_tibble(affiliations)                                          # convert to tibble
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                               # mutate to numeric
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%    # full join container
+clean_names()                                                                             # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%   # full join container
+  clean_names()                                                                           # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)           # full join the rest
 
 #########################
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(gender !="") %>%
-      filter(year_of_birth != year_of_death) %>% 
-        filter(party !="") %>%
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly) %>% 
-                    arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                               # move to new container
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%   # select cols
+  filter(year_of_birth != "", year_of_death != "") %>%                                  # filter not = empty
+    filter(gender !="") %>%                                                             # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                        # filter year of b = year of d
+        filter(party !="") %>%                                                          # filter party not = empty
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                         # mutate to numeric
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                       # mutate to numeric
+              mutate(age = (year_of_death - year_of_birth)) %>%                         # calculate age
+                filter(age >=20 & age <=70) %>%                                         # filter age 20 - 70
+                  group_by(assembly) %>%                                                # group
+                    arrange(desc(mandate_start_year_x))                                 # arrange desc
                       
 #Part 4
 # Have another look at the composition of the assemblies: this time use a line chart to show how it changed over the years.
@@ -609,35 +609,35 @@ age_try <- mand_addr3 %>%
 ###################
 # passt !
 
-party_list <- as_tibble(age_try) %>% 
-    select(assembly, mandate_start_year_x, mandate_end_year_x ,party) %>% 
-      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x)) %>% 
-        mutate(mandate_end_year_x = as.numeric(mandate_end_year_x)) %>% 
-          mutate(party = as.character(party)) %>% 
-            filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-              group_by(assembly) %>% 
-                count(party) %>% 
-                   mutate(party_prop = prop.table(n)*100)
+party_list <- as_tibble(age_try) %>%                                                    # move to new container
+    select(assembly, mandate_start_year_x, mandate_end_year_x ,party) %>%               # select cols
+      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x)) %>%               # mutate to numeric
+        mutate(mandate_end_year_x = as.numeric(mandate_end_year_x)) %>%                 # mutate to numeric
+          mutate(party = as.character(party)) %>%                                       # mutate to char
+            filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>%  # filter party
+              group_by(assembly) %>%                                                    # group
+                count(party) %>%                                                        # count
+                   mutate(party_prop = prop.table(n)*100)                               # calculate %
 
 ##################
 
-party_list_all <- as_tibble(age_try) %>% 
-    select(assembly, mandate_start_year_x, mandate_end_year_x ,party) %>% 
-    mutate(party = as.character(party)) %>% 
-      filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-        mutate(mandate_start_year_x = as.numeric(mandate_start_year_x)) %>% 
-          mutate(mandate_end_year_x = as.numeric(mandate_end_year_x)) %>% 
-            group_by(assembly, party, mandate_start_year_x, mandate_end_year_x) %>% 
-              count(party)
+party_list_all <- as_tibble(age_try) %>%                                                # move to new container
+    select(assembly, mandate_start_year_x, mandate_end_year_x ,party) %>%               # select cols
+    mutate(party = as.character(party)) %>%                                             # mutate as char
+      filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>%   # filter party
+        mutate(mandate_start_year_x = as.numeric(mandate_start_year_x)) %>%             # mutate as num
+          mutate(mandate_end_year_x = as.numeric(mandate_end_year_x)) %>%               # mutate as num
+            group_by(assembly, party, mandate_start_year_x, mandate_end_year_x) %>%     # group
+              count(party)                                                              # count 
 
 
 ## Plot 1  ok   - Problem Start und End year sind nicht vebuden, man sieht nur die Start year !
 
-party_list_all %>%                  
-ggplot(aes(x=mandate_start_year_x, y=assembly, fill(party)))+
-  geom_line()+
-    geom_point(size= 2,aes(color=party))+
-  facet_grid(vars(assembly, party, n))
+party_list_all %>%                                                                      # container
+ggplot(aes(x=mandate_start_year_x, y=assembly, fill(party)))+                           # plot
+  geom_line()+                                                                          # line
+    geom_point(size= 2,aes(color=party))+                                               # point
+  facet_grid(vars(assembly, party, n))                                                  # cols
   
 
 
@@ -662,101 +662,101 @@ library(gridExtra)
 library(grid)
 library(flextable)
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")                   # load data from db
 # db_list_tables(politician_dbq)
 # dbDisconnect(politician_dbq)                # use if disconnect
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
-  persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+persons <- tbl(politician_dbq, "PERSONS")                                             # extract persos
+persons_tbl <- as_tibble(persons)                                                     # convert to tibble
+  persons_tbl <- persons_tbl %>%                    
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                               # mutate cols as num
+      rename(PERSON_ID = ID)                                                          # rename col
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                       # load data from db
+mandates_tbl <- as_tibble(mandates)                                                   # convert to tibble
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                    # mutate to num
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
-addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+addresses <- tbl(politician_dbq, "ADDRESSES")                                         # load data from db
+addresses_tbl <- as_tibble(addresses)                                                 # convert to tibble
+addresses_tbl <- addresses_tbl %>%                                
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                    # mutate to num
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
-affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                                   # Load data from db
+affiliations_tbl <- as_tibble(affiliations)                                           # convert to tibble
+affiliations_tbl <- affiliations_tbl %>%           
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                                # mutate to num
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%      # full join two container
+clean_names()                                                                               # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%   # full join two container
+  clean_names()                                                                             # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)               # full join the rest
 
 #########################
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(gender !="") %>%
-      filter(year_of_birth != year_of_death) %>% 
-        filter(party !="") %>%
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly) %>% 
-                    arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                                  # move to new container
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%    # select cols
+  filter(year_of_birth != "", year_of_death != "") %>%                                     # filter not = empty
+    filter(gender !="") %>%                                                                # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                           # filter yob = yod 
+        filter(party !="") %>%                                                             # filter not = empty
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                            # mutate to num
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                          # mutate to num
+              mutate(age = (year_of_death - year_of_birth)) %>%                            # calculate age
+                filter(age >=20 & age <=70) %>%                                            # filter age 20 - 70
+                  group_by(assembly) %>%                                                   # group
+                    arrange(desc(mandate_start_year_x))                                    # arrange
                       
 
 
 # Part 5
 # For the politicians that have a YEAR_OF_DEATH in the data, find the average life span. Does it change if you go by a TITLE? Use # a plot to show the difference (or its absence).
 
-year_of_death <- mand_addr3 %>% 
-  select(assembly,gender, party, title, year_of_birth, year_of_death) %>%
-    filter(year_of_birth != "", year_of_death != "") %>% 
-      filter(year_of_birth != year_of_death) %>% 
-        mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-          mutate(year_of_death = as.numeric(year_of_death)) %>% 
-            mutate(age = (year_of_death - year_of_birth)) %>% 
-              filter(age >=20 & age <=110) %>%  
-                group_by(assembly)
+year_of_death <- mand_addr3 %>%                                                            # move to new container
+  select(assembly,gender, party, title, year_of_birth, year_of_death) %>%                  # select cols
+    filter(year_of_birth != "", year_of_death != "") %>%                                   # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                           # filter yob not = yod
+        mutate(year_of_birth = as.numeric(year_of_birth)) %>%                              # mutate to num
+          mutate(year_of_death = as.numeric(year_of_death)) %>%                            # mutate to num
+            mutate(age = (year_of_death - year_of_birth)) %>%                              # calculate age
+              filter(age >=20 & age <=110) %>%                                             # filtr age 20 - 110
+                group_by(assembly)                                                         # group
 
 
-avarage_live_span <-ave(year_of_death$age) %>% 
-  round(2)
-  as_factor(avarage_live_span)
-avarage_live <-  unique(avarage_live_span)
+avarage_live_span <-ave(year_of_death$age) %>%                                             # average yod, age
+  round(2)                                                                                 # round
+  as_factor(avarage_live_span)                                                             # convert to factor
+avarage_live <-  unique(avarage_live_span)                                                 # eliminate doubles
 
-live_span_result <- paste("The average live span ist",avarage_live)
+live_span_result <- paste("The average live span ist",avarage_live)                        # move result to variable
 
 
-year_of_death_by_title <- mand_addr3 %>% 
-  select(title, year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(title !="") %>%
-      filter(year_of_birth != year_of_death) %>% 
-        mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=110)
+year_of_death_by_title <- mand_addr3 %>%                                                   # move to new container
+  select(title, year_of_birth, year_of_death) %>%                                          # select cols
+  filter(year_of_birth != "", year_of_death != "") %>%                                     # filter not = empty
+    filter(title !="") %>%                                                                 # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                           # filter yob not = yod
+        mutate(year_of_birth = as.numeric(year_of_birth)) %>%                              # mutate to num
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                          # mutate to num
+              mutate(age = (year_of_death - year_of_birth)) %>%                            # calcultate age
+                filter(age >=20 & age <=110)                                               # filter age 20 - 110
                   
 
-avarage_live_span_by_title <- ave(year_of_death_by_title$age) %>% 
-  round(2)
-  as_factor(avarage_live_span_by_title)
-    avarage_live_by_title <- unique(avarage_live_span_by_title)
+avarage_live_span_by_title <- ave(year_of_death_by_title$age) %>%                          # averag yod by title
+  round(2)                                                                                 # round
+  as_factor(avarage_live_span_by_title)                                                    # convert to factor
+    avarage_live_by_title <- unique(avarage_live_span_by_title)                            # eliminate doubles
 
-        title_live_span <-  paste("The avarage live span by title is", avarage_live_by_title)
+        title_live_span <-  paste("The avarage live span by title is", avarage_live_by_title)  # move result to variable
                     
   
-avarage_both <- c(live_span_result, title_live_span)
+avarage_both <- c(live_span_result, title_live_span)                                      # combine result 
 avarage_both
 
 
@@ -781,93 +781,93 @@ library(gridExtra)
 library(grid)
 library(flextable)
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")                 # load data from db
 
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                           # extract persons
+persons_tbl <- as_tibble(persons)                                                   # convert to tibble
   persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                             # mutate to num
+      rename(PERSON_ID = ID)                                                        # rename
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                     # extract mandates
+mandates_tbl <- as_tibble(mandates)                                                 # convert to tibble
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                  # mutate to num
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
+addresses <- tbl(politician_dbq, "ADDRESSES")                                       # extract addresses
+addresses_tbl <- as_tibble(addresses)                                               # convert to tibble
 addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                  # mutate to num 
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                                 # extract affiliation
+affiliations_tbl <- as_tibble(affiliations)                                         # convert to tibble
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                              # mutate to num
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%       # full join two tibble
+clean_names()                                                                                # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%    # full join two tibble
+  clean_names()                                                                              # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)                # full join two tibble
 
- dbDisconnect(politician_dbq)                # use if disconnect
+ dbDisconnect(politician_dbq)                                                                # use if disconnect
 
 #########################
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(gender !="") %>%
-      filter(year_of_birth != year_of_death) %>% 
-        filter(party !="") %>%
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly) %>% 
-                    arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                                    # move to new variable
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%  # select cols 
+  filter(year_of_birth != "", year_of_death != "") %>%                                        # filter not = empty
+    filter(gender !="") %>%                                                                   # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                              # filter yob not = yod
+        filter(party !="") %>%                                                                # filter not = empty
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                               # mutate to num
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                             # mutate to num
+              mutate(age = (year_of_death - year_of_birth)) %>%                               # calculate age
+                filter(age >=20 & age <=70) %>%                                               # filter age
+                  group_by(assembly) %>%                                                      # group
+                    arrange(desc(mandate_start_year_x))                                       # arrange desc
                       
 # Part 6
 # Which politicians have had the most mandates? Create a top 10 horizontal bar chart.
 
  ##########################################  Funktioniert
  
-most_mandates <- mand_addr3 %>% 
-  select(lastname, firstname, year_of_birth, year_of_death, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%
-    filter(year_of_birth != "", year_of_death != "") %>% 
-      filter(party != "", firstname != "", lastname != "") %>% 
-        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=80) %>%  
-                  mutate(person_id = as.numeric(person_id)) %>% 
-                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>% 
-      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%
-  distinct(person_id, mandate_start_year_x, mandate_end_year_x, .keep_all = TRUE) %>% 
-    group_by(person_id, lastname, firstname,party) %>% 
-                      unique() %>% 
-                         ungroup()
+most_mandates <- mand_addr3 %>%                                                              # move to new variable
+  select(lastname, firstname, year_of_birth, year_of_death, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%  # select cols
+    filter(year_of_birth != "", year_of_death != "") %>%                                     # filter not = empty
+      filter(party != "", firstname != "", lastname != "") %>%                               # filter not = empty
+        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>%  # filter party
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                              # convert to num
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                            # convert to num
+              mutate(age = (year_of_death - year_of_birth)) %>%                              # calculate age
+                filter(age >=20 & age <=80) %>%                                              # filter age 20 - 80
+                  mutate(person_id = as.numeric(person_id)) %>%                              # mutate to num
+                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>% # mutate to char 
+      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%  # mutate to num
+  distinct(person_id, mandate_start_year_x, mandate_end_year_x, .keep_all = TRUE) %>%   # eliminate doubles
+    group_by(person_id, lastname, firstname,party) %>%                                  # group
+                      unique() %>%                                                      # eliminate doubles
+                         ungroup()                                                      # ungroup
 
-most_mandates_top_1 <- most_mandates %>% 
-  count(lastname, firstname,party, person_id) %>% 
-  arrange(desc(n)) %>% 
-  ungroup() %>% 
-  head(10)
+most_mandates_top_1 <- most_mandates %>%                                                # move to new container end result
+  count(lastname, firstname,party, person_id) %>%                                       # count
+  arrange(desc(n)) %>%                                                                  # arrange desc
+  ungroup() %>%                                                                         # ungroup
+  head(10)                                                                              # top ten
   
 
 #  barplot
 
-ggplot(data=most_mandates_top_1,aes(x=lastname, y=n,fill(party)))+
-  geom_bar(stat = "identity", show.legend = TRUE, inherit.aes = TRUE,col= "darkblue")+
-    coord_flip()+
-        labs(title = "Politicians with the most mandates", x="Person", y="Mandates")
+ggplot(data=most_mandates_top_1,aes(x=lastname, y=n,fill(party)))+                      # plot most mandates
+  geom_bar(stat = "identity", show.legend = TRUE, inherit.aes = TRUE,col= "darkblue")+  # bar plot
+    coord_flip()+                                                                       # horizontal
+        labs(title = "Politicians with the most mandates", x="Person", y="Mandates")    # label
 ```
 
 
@@ -891,86 +891,86 @@ library(gridExtra)
 library(grid)
 library(flextable)
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")                   # load data from db
 
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                             # extract persons
+persons_tbl <- as_tibble(persons)                                                     # convert to tibble
   persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                               # mutate to num
+      rename(PERSON_ID = ID)                                                          # rename
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                       # extract mandates
+mandates_tbl <- as_tibble(mandates)                                                   # convert to tibble
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                    # mutate to num
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
+addresses <- tbl(politician_dbq, "ADDRESSES")                                         # extract addresses
+addresses_tbl <- as_tibble(addresses)                                                 # convert to tibble
 addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                    # mutate to num
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                                   # extract affiliations
+affiliations_tbl <- as_tibble(affiliations)                                           # convert to tibble
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                                # mutate cols num
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%     # full join two tibble
+clean_names()                                                                              # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>%  # full join two tibble
+  clean_names()                                                                            # clean names
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)              # full join rest
 
-  dbDisconnect(politician_dbq)                # use if disconnect
+  dbDisconnect(politician_dbq)                                                             # use if disconnect
 
 #########################
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(gender !="") %>%
-      filter(year_of_birth != year_of_death) %>% 
-        filter(party !="") %>%
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly) %>% 
-                    arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                                  # move to new container
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%  # select cols
+  filter(year_of_birth != "", year_of_death != "") %>%                                     # filter not = empty
+    filter(gender !="") %>%                                                                # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                           # filter yob not = yod
+        filter(party !="") %>%                                                             # filter not = empty
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                            # mutate to num
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                          # mutate to num
+              mutate(age = (year_of_death - year_of_birth)) %>%                            # calculate age
+                filter(age >=20 & age <=70) %>%                                            # filter age 20 - 70
+                  group_by(assembly) %>%                                                   # group
+                    arrange(desc(mandate_start_year_x))                                    # arrange desc
  
  ########################
  
  # Part 7
 # Do some politicians have multiple mandates at the same time?
  
- double_mandates <- mand_addr3 %>% 
-  select(lastname, firstname, year_of_birth, year_of_death, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%
-    filter(year_of_birth != "", year_of_death != "") %>% 
-      filter(party != "", firstname != "", lastname != "") %>% 
-        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=80) %>%  
-                  mutate(person_id = as.numeric(person_id)) %>% 
-                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>% 
-      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%
-  distinct(person_id, mandate_start_year_x, mandate_end_year_x,party, .keep_all = TRUE) %>% 
-    group_by(person_id, lastname, firstname,party)
+ double_mandates <- mand_addr3 %>%                                                        # move to new container  
+  select(lastname, firstname, year_of_birth, year_of_death, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%  # select cols
+    filter(year_of_birth != "", year_of_death != "") %>%                                  # filter not = empty
+      filter(party != "", firstname != "", lastname != "") %>%                            # # filter not = empty
+        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>%   # filter party
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                           # convert to num 
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                         # convert to num
+              mutate(age = (year_of_death - year_of_birth)) %>%                           # calculate age
+                filter(age >=20 & age <=80) %>%                                           # filter age 20 - 80
+                  mutate(person_id = as.numeric(person_id)) %>%                           # mutate to num
+                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>%  # mutate as num
+      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%  # mutate to num
+  distinct(person_id, mandate_start_year_x, mandate_end_year_x,party, .keep_all = TRUE) %>%   # eliminate doubles
+    group_by(person_id, lastname, firstname,party)                                            # group
 
-   double_mandates_top_10 <- double_mandates %>% 
-    distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>% 
-     count(lastname, firstname, person_id) %>%  
-      group_by(lastname, firstname, person_id) %>% 
-        arrange(desc(n)) %>% 
-          ungroup()
+   double_mandates_top_10 <- double_mandates %>%                                              # condense to top ten
+    distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>%                     # eliminate doubles
+     count(lastname, firstname, person_id) %>%                                                # count
+      group_by(lastname, firstname, person_id) %>%                                            # group
+        arrange(desc(n)) %>%                                                                  # arrange
+          ungroup()                                                                           # ungroup
    
-             paste(" There ar no double mandates ")
+             paste(" There ar no double mandates ")                                           # display result
 ```
 
 
@@ -994,80 +994,80 @@ library(gridExtra)
 library(grid)
 library(flextable)
 
-politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")
+politician_dbq <- dbConnect(RSQLite::SQLite(), "zh_politicians.db")               # load data from db
 
 
-persons <- tbl(politician_dbq, "PERSONS")
-persons_tbl <- as_tibble(persons)
+persons <- tbl(politician_dbq, "PERSONS")                                         # extract persons
+persons_tbl <- as_tibble(persons)                                                 # convert to tibble
   persons_tbl <- persons_tbl %>% 
-    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%
-      rename(PERSON_ID = ID)
+    mutate(as.numeric(YEAR_OF_BIRTH,YEAR_OF_DEATH)) %>%                           # mutate to num
+      rename(PERSON_ID = ID)                                                      # rename
 
-mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT
-mandates_tbl <- as_tibble(mandates)
+mandates <- tbl(politician_dbq, "MANDATES")      # FUNKTIONIERT                   # extract mandates
+mandates_tbl <- as_tibble(mandates)                                               # convert to tibble
 mandates_tbl <- mandates_tbl %>% 
-mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                # mutate to num
 
 
-addresses <- tbl(politician_dbq, "ADDRESSES")
-addresses_tbl <- as_tibble(addresses)
+addresses <- tbl(politician_dbq, "ADDRESSES")                                     # extract addresses
+addresses_tbl <- as_tibble(addresses)                                             # convert to tibble
 addresses_tbl <- addresses_tbl %>% 
- mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))
+ mutate(as.numeric(MANDATE_START_DAY, MANDATE_START_MONTH, MANDATE_START_YEAR, MANDATE_END_DAY, MANDATE_END_MONTH, MANDATE_END_YEAR))                                                                # mutate cols num
 
 
-affiliations <- tbl(politician_dbq, "AFFILIATIONS")
-affiliations_tbl <- as_tibble(affiliations)
+affiliations <- tbl(politician_dbq, "AFFILIATIONS")                               # extract affiliations 
+affiliations_tbl <- as_tibble(affiliations)                                       # convert to tibble
 affiliations_tbl <- affiliations_tbl %>% 
-mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))
+mutate(as.numeric(AFFILIATION_START_DAY, AFFILIATION_START_MONTH, AFFILIATION_START_YEAR, AFFILIATION_END_MONTH, AFFILIATION_END_YEAR))                                                            # mutate to num
        
-mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>% 
-clean_names()
-mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% 
-  clean_names()
+mand_addr <- full_join(mandates_tbl, addresses_tbl, by = "PERSON_ID", copy = true) %>%    # full join two tibble
+clean_names()                                                                             # clean names
+mand_addr2 <- full_join(affiliations_tbl, persons_tbl, by = "PERSON_ID", copy = TRUE) %>% # full join two tibble 
+  clean_names()                                                                           # clean names  
 
 # Funktioniert
-mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)
+mand_addr3 <- full_join(mand_addr, mand_addr2, by = "person_id", copy = TRUE)             # full join rest
 
-dbDisconnect(politician_dbq)                # use if disconnect
+dbDisconnect(politician_dbq)                                                              # use if disconnect
 
 #########################
 
 # Funktioniert !!
-age_try <- mand_addr3 %>% 
-  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%
-  filter(year_of_birth != "", year_of_death != "") %>% 
-    filter(gender !="") %>%
-      filter(year_of_birth != year_of_death) %>% 
-        filter(party !="") %>%
-          mutate(year_of_birth = as.numeric(year_of_birth)) %>% 
-            mutate(year_of_death = as.numeric(year_of_death)) %>% 
-              mutate(age = (year_of_death - year_of_birth)) %>% 
-                filter(age >=20 & age <=70) %>%  
-                  group_by(assembly) %>% 
-                    arrange(desc(mandate_start_year_x))
+age_try <- mand_addr3 %>%                                                                 # move to new container
+  select(assembly,gender, party, mandate_start_year_x,mandate_end_year_x,year_of_birth, year_of_death) %>%  # select cols
+  filter(year_of_birth != "", year_of_death != "") %>%                                    # filter not = empty
+    filter(gender !="") %>%                                                               # filter not = empty
+      filter(year_of_birth != year_of_death) %>%                                          # filter yob not = yod
+        filter(party !="") %>%                                                            # filter not = empty
+          mutate(year_of_birth = as.numeric(year_of_birth)) %>%                           # mutate as num
+            mutate(year_of_death = as.numeric(year_of_death)) %>%                         # mutate as num
+              mutate(age = (year_of_death - year_of_birth)) %>%                           # calculate age
+                filter(age >=20 & age <=70) %>%                                           # filter age 20 - 70
+                  group_by(assembly) %>%                                                  # group 
+                    arrange(desc(mandate_start_year_x))                                   # arrange
  
  ########################
  
  
- different_parties <- mand_addr3 %>% 
-  select(lastname, firstname, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%
-       filter(party != "", firstname != "", lastname != "") %>% 
-        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>% 
-                     mutate(person_id = as.numeric(person_id)) %>% 
-                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>% 
-      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%
-   distinct(person_id, mandate_start_year_x, mandate_end_year_x, party, .keep_all = TRUE) %>% 
-    group_by(person_id, lastname, firstname,party)
+ different_parties <- mand_addr3 %>%                                                      # move to new container
+  select(lastname, firstname, mandate_start_year_x, mandate_end_year_x, party,person_id) %>%  # select cols
+       filter(party != "", firstname != "", lastname != "") %>%                           # filter not = empty 
+        filter(party %in% c("SP", "SVP", "FDP", "APS","GP", "POCH","EVP", "CVP", "LdU","BGB","SVP/BGB")) %>%  # filter party
+                     mutate(person_id = as.numeric(person_id)) %>%                        # mutate as num
+                  mutate(lastname = as.character(lastname), firstname = as.character(firstname), party = as.character(party))%>%  # mutate as num 
+      mutate(mandate_start_year_x = as.numeric(mandate_start_year_x), mandate_end_year_x = as.numeric(mandate_end_year_x))%>%  # mutate as num
+   distinct(person_id, mandate_start_year_x, mandate_end_year_x, party, .keep_all = TRUE) %>%  # eliminate doubles
+    group_by(person_id, lastname, firstname,party)                                             # group 
 
 
-are_there_affiliation_changes <- different_parties %>%
-  ungroup() %>% 
-    distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>%
-      group_by(person_id) %>% 
-        filter(n()!= 1)
+are_there_affiliation_changes <- different_parties %>%                                         # move to new cont
+  ungroup() %>%                                                                                # ungroup  
+    distinct(person_id, lastname, firstname, party, .keep_all = TRUE) %>%                      # elim doubles
+      group_by(person_id) %>%                                                                  # group
+        filter(n()!= 1)                                                                        # filter 2 and more
             
-paste(" There were persons affiliated to differen parties ")
-are_there_affiliation_changes
+paste(" There were persons affiliated to differen parties ")                                   # display result text
+are_there_affiliation_changes                                                                  # call data
 
 ```
 
@@ -1077,7 +1077,7 @@ Take a sample of 20 politicians with a listed address and plot them on a {leafle
 
 ```{r}
 
-
+# not done yet
 
 ```
 
