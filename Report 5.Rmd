@@ -117,14 +117,19 @@ genres_list <- as.data.frame(genres_content)    # convert list to df
 
 #############
 
-tom_cruise <- search_person("54d37afd6cfdb6d71170db511bcf51b0", "tom cruise", include_adult = NA) %>%   as.data.frame() %>%  # search for TC
-select(results.name, results.id)   # select name and id
+  # search for tom cruise id
+tom_cruise <- search_person("54d37afd6cfdb6d71170db511bcf51b0", 
+                            "tom cruise", include_adult = NA) %>%   
+    as.data.frame() %>%  # convert to df
+      select(results.name, results.id)   # select name and id
 
-will_ferrel <- search_person("54d37afd6cfdb6d71170db511bcf51b0", "will ferrel", page = 1, include_adult = NA) %>%    # search for WF
+will_ferrel <- search_person("54d37afd6cfdb6d71170db511bcf51b0", 
+                             "will ferrel", page = 1, include_adult = NA) %>% # search for WF
   as.data.frame() %>%    # transform to DF
     select(results.name, results.id)   # select name and id 
 
-liam_neeson <- search_person("54d37afd6cfdb6d71170db511bcf51b0", "liam neeson", page = 1, include_adult = NA) %>%    #  search for LN
+liam_neeson <- search_person("54d37afd6cfdb6d71170db511bcf51b0", 
+                             "liam neeson", page = 1, include_adult = NA) %>%    #  search for LN
   as.data.frame() %>%   # transform to DF
     select(results.name, results.id)  # select name and id
 
@@ -141,10 +146,10 @@ print(liam_neeson)  # print name and id
 most_revenue <- httr::GET("https://api.themoviedb.org/3/discover/movie?api_key=54d37afd6cfdb6d71170db511bcf51b0 &primary_release_year=2010&sort_by=revenue.desc")    # search for movie  2010 with most revenue, sort desc
 
 
-most_revenue_parsed <-(httr::content(most_revenue, as = "parsed")    # transform to list
-mr_list <-most_revenue_parsed[["results"]]
+most_revenue_parsed <-(httr::content(most_revenue, as = "parsed"))    # transform to list
+mr_list <-most_revenue_parsed[["results"]]                            # extract results
 
-print(mr_list)[[2]][[1]]
+print(mr_list)[[2]][[1]]                                              # print results
 
 ##############
 

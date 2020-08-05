@@ -44,6 +44,7 @@ Part 1
 Have some athletes competed for different countries over time?
 ```{r}
  
+# not solved yet
 
 ```
 
@@ -51,6 +52,7 @@ Part 2
 Who are the ten athletes that took part in most games?
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -58,6 +60,7 @@ Part 3
 What athlete(s) kept a Gold medal for the longest time?
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -66,6 +69,8 @@ What country(ies) kept a Gold medal for the longest time?
 
 ```{r}
 
+# not solved yet
+
 ```
 
 
@@ -73,6 +78,7 @@ Part 5
 Who are the ten athletes that competed in the most events (some athletes take part in more than one event during games) ?
 
 ```{r}
+# not solved yet
 
 ```
 
@@ -80,6 +86,8 @@ Part 6
 Create a new table showing the number of medals per country (rows) and per year (column). Keep only the 15 countries with the most medals overall.
 
 ```{r}
+
+# not solved yet
 
 ```
 
@@ -102,6 +110,8 @@ RESOURCES
 50  Data/olympics.xlsx.zip
 
 ```{r}
+
+# not solved yet
 
 
 ```
